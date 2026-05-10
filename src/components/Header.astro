@@ -365,7 +365,12 @@
     position: absolute;
     top: 0;
     right: 0;
-    bottom: 0;
+    /* Hauteur explicite pour fiabiliser le calcul flex enfant.
+       Sur Safari, top:0 + bottom:0 dans un parent fixed peut produire
+       une hauteur calculée à 0 quand un ancêtre a position:sticky +
+       backdrop-filter (cas du Header). 100vh + 100dvh résout ce piège. */
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport height — fallback gracieux */
     width: 76%;
     max-width: 420px;
     background: #fff;
