@@ -4,6 +4,9 @@
 // Source : Sitemap V3 §8.1 + DS V0.12 (header système, hauteur 100px desktop / 64px mobile).
 // Composition desktop : Logo · Le catalogue · La solution ▾ · L'espace client · Nous contacter
 // Bascule menu mobile à 968px (cf. token --m360-bp-tablet).
+//
+// FIX étape 4a-bis : drawer mobile affiche désormais correctement les liens.
+// Remplacement de [hidden] par classe .is-open + accordéon La solution ouvert par défaut.
 ---
 
 <header class="site-header">
@@ -77,25 +80,35 @@
 
   </div>
 
-  {/* Drawer mobile — affiché à l'ouverture du burger */}
-  <div id="mobile-drawer" class="mobile-drawer" hidden>
+  {/* Drawer mobile — fermé par défaut, ouvert via classe .is-open */}
+  <div id="mobile-drawer" class="mobile-drawer">
     <div class="mobile-drawer-overlay" data-close-drawer></div>
-    <div class="mobile-drawer-panel" role="dialog" aria-label="Menu de navigation">
+    <div class="mobile-drawer-panel" role="dialog" aria-label="Menu de navigation" aria-modal="true">
       <div class="mobile-drawer-header">
         <span class="logo-text">métiers360</span>
         <button class="drawer-close-btn" aria-label="Fermer le menu" data-close-drawer>×</button>
       </div>
+
       <nav class="mobile-drawer-nav" aria-label="Navigation principale mobile">
         <a href="/catalogue" class="mobile-link">Le catalogue</a>
-        <details class="mobile-accordion">
-          <summary class="mobile-link mobile-accordion-trigger">La solution</summary>
+
+        {/* Accordéon ouvert par défaut sur mobile : on veut voir les 2 sous-entrées tout de suite */}
+        <details class="mobile-accordion" open>
+          <summary class="mobile-link mobile-accordion-trigger">
+            <span>La solution</span>
+            <svg class="mobile-accordion-chevron" width="12" height="8" viewBox="0 0 12 8" aria-hidden="true">
+              <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
           <div class="mobile-accordion-content">
             <a href="/accompagnement" class="mobile-sublink">Accompagner vers l'emploi et la formation</a>
             <a href="/visibilite-metiers" class="mobile-sublink">Faire découvrir ses métiers</a>
           </div>
         </details>
+
         <a href="/espace-client" class="mobile-link mobile-link-discreet">L'espace client</a>
       </nav>
+
       <a href="#" class="mobile-drawer-cta" data-open-contact-modal>
         Nous contacter →
       </a>
@@ -189,7 +202,7 @@
   }
 
   /* ============================================
-     SOUS-MENU "LA SOLUTION"
+     SOUS-MENU "LA SOLUTION" (desktop)
      ============================================ */
   .nav-dropdown {
     position: relative;
@@ -313,23 +326,30 @@
   }
 
   /* ============================================
-     DRAWER MOBILE
+     DRAWER MOBILE — pattern .is-open (au lieu de [hidden])
      ============================================ */
   .mobile-drawer {
     position: fixed;
     inset: 0;
     z-index: 200;
+    /* Fermé par défaut */
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
   }
 
-  .mobile-drawer[hidden] {
-    display: none;
+  .mobile-drawer.is-open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.2s ease, visibility 0s linear 0s;
   }
 
   .mobile-drawer-overlay {
     position: absolute;
     inset: 0;
     background: rgba(2, 31, 63, 0.4);
-    animation: fadeIn 0.25s ease-out;
   }
 
   .mobile-drawer-panel {
@@ -343,17 +363,12 @@
     box-shadow: var(--m360-shadow-drawer);
     display: flex;
     flex-direction: column;
-    animation: slideIn 0.25s ease-out;
+    transform: translateX(100%);
+    transition: transform 0.25s ease-out;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes slideIn {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
+  .mobile-drawer.is-open .mobile-drawer-panel {
+    transform: translateX(0);
   }
 
   .mobile-drawer-header {
@@ -362,6 +377,7 @@
     justify-content: space-between;
     padding: var(--m360-space-5) var(--m360-space-6);
     border-bottom: 1px solid var(--m360-border);
+    flex-shrink: 0;
   }
 
   .drawer-close-btn {
@@ -375,13 +391,20 @@
     cursor: pointer;
   }
 
+  /* ============================================
+     DRAWER NAV — règles explicites pour garantir l'affichage
+     ============================================ */
   .mobile-drawer-nav {
     flex: 1;
     padding: var(--m360-space-3) var(--m360-space-6);
     overflow-y: auto;
+    /* Force l'affichage en colonne, garantit que les enfants se positionnent bien */
+    display: flex;
+    flex-direction: column;
   }
 
-  .mobile-link {
+  /* Liens principaux du drawer — règle explicite */
+  .mobile-drawer-nav .mobile-link {
     display: block;
     padding: var(--m360-space-4) 0;
     font-family: var(--font-heading);
@@ -392,12 +415,18 @@
     border-bottom: 1px solid var(--m360-border);
   }
 
-  .mobile-link-discreet {
+  .mobile-drawer-nav .mobile-link:hover {
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  .mobile-drawer-nav .mobile-link-discreet {
     color: var(--m360-text-caption);
     font-weight: 500;
     font-size: 14px;
   }
 
+  /* Accordéon La solution — visible et fonctionnel */
   .mobile-accordion {
     border-bottom: 1px solid var(--m360-border);
   }
@@ -407,16 +436,34 @@
     cursor: pointer;
     padding: var(--m360-space-4) 0;
     border-bottom: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
+  /* Suppression du marqueur natif sur tous les navigateurs */
   .mobile-accordion summary::-webkit-details-marker { display: none; }
+  .mobile-accordion summary::marker { display: none; content: ''; }
+
+  .mobile-accordion-chevron {
+    transition: transform 0.2s ease;
+    color: var(--m360-text-caption);
+    flex-shrink: 0;
+  }
+
+  .mobile-accordion[open] .mobile-accordion-chevron {
+    transform: rotate(180deg);
+  }
 
   .mobile-accordion-content {
     padding: 0 0 var(--m360-space-4) var(--m360-space-4);
     background: var(--m360-bg-neutral);
+    margin: 0 calc(-1 * var(--m360-space-6)) 0 0;
+    padding-right: var(--m360-space-4);
+    border-radius: var(--m360-radius-md);
   }
 
-  .mobile-sublink {
+  .mobile-accordion-content .mobile-sublink {
     display: block;
     padding: var(--m360-space-3) 0;
     font-size: 14px;
@@ -424,6 +471,12 @@
     text-decoration: none;
   }
 
+  .mobile-accordion-content .mobile-sublink:hover {
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  /* CTA bas de drawer */
   .mobile-drawer-cta {
     margin: var(--m360-space-5);
     padding: var(--m360-space-4);
@@ -436,11 +489,16 @@
     font-size: 14px;
     text-decoration: none;
     box-shadow: var(--m360-shadow-blue);
+    flex-shrink: 0;
+  }
+
+  .mobile-drawer-cta:hover {
+    text-decoration: none;
+    transform: translateY(-1px);
   }
 
   /* ============================================
-     RESPONSIVE — bascule à 968px (--m360-bp-tablet)
-     Note : les @media ne supportent pas les var() CSS.
+     RESPONSIVE — bascule à 968px
      ============================================ */
   @media (max-width: 967px) {
     .header-inner {
@@ -464,21 +522,23 @@
 </style>
 
 <script>
-  // Comportement du drawer mobile + modale contact (placeholder)
-  const burgerBtn = document.querySelector('.burger-btn') as HTMLButtonElement | null;
+  // ============================================
+  // Drawer mobile — pattern .is-open
+  // ============================================
+  const burgerBtn = document.querySelector<HTMLButtonElement>('.burger-btn');
   const drawer = document.getElementById('mobile-drawer');
   const closeBtns = document.querySelectorAll('[data-close-drawer]');
 
   function openDrawer() {
     if (!drawer || !burgerBtn) return;
-    drawer.hidden = false;
+    drawer.classList.add('is-open');
     burgerBtn.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
   }
 
   function closeDrawer() {
     if (!drawer || !burgerBtn) return;
-    drawer.hidden = true;
+    drawer.classList.remove('is-open');
     burgerBtn.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   }
@@ -486,16 +546,29 @@
   burgerBtn?.addEventListener('click', openDrawer);
   closeBtns.forEach(btn => btn.addEventListener('click', closeDrawer));
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && drawer && !drawer.hidden) closeDrawer();
+  // Fermer le drawer après clic sur un lien (UX mobile attendue)
+  drawer?.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', () => {
+      // Petit délai pour que la navigation soit perçue avant la fermeture visuelle
+      setTimeout(closeDrawer, 100);
+    });
   });
 
-  // Placeholder modale contact — à brancher sur Pipedrive Web Forms
+  // Fermeture clavier
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer?.classList.contains('is-open')) {
+      closeDrawer();
+    }
+  });
+
+  // ============================================
+  // Modale "Nous contacter" — placeholder
+  // À brancher sur Pipedrive Web Forms à l'étape 4b
+  // ============================================
   document.querySelectorAll('[data-open-contact-modal]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      // TODO : déclencher la modale Pipedrive (drawer démo, cf. DS V0.12 §06)
-      console.info('[M360] Modale contact à brancher');
+      console.info('[M360] Modale contact à brancher (étape 4b)');
     });
   });
 </script>
