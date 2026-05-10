@@ -2,11 +2,11 @@
 // src/components/Header.astro
 // Header sticky du site M360.
 // Source : Sitemap V3 §8.1 + DS V0.12 (header système, hauteur 100px desktop / 64px mobile).
-// Composition desktop : Logo · Le catalogue · La solution ▾ · L'espace client · Nous contacter
-// Bascule menu mobile à 968px (cf. token --m360-bp-tablet).
 //
-// FIX étape 4a-bis : drawer mobile affiche désormais correctement les liens.
-// Remplacement de [hidden] par classe .is-open + accordéon La solution ouvert par défaut.
+// FIX étape 4a-fix2 :
+// - z-index renforcés : Header à 1000, drawer à 2000 (au-dessus de tous les contenus)
+// - Drawer mobile pattern .is-open (au lieu de [hidden])
+// - Accordéon La solution ouvert par défaut
 ---
 
 <header class="site-header">
@@ -92,7 +92,6 @@
       <nav class="mobile-drawer-nav" aria-label="Navigation principale mobile">
         <a href="/catalogue" class="mobile-link">Le catalogue</a>
 
-        {/* Accordéon ouvert par défaut sur mobile : on veut voir les 2 sous-entrées tout de suite */}
         <details class="mobile-accordion" open>
           <summary class="mobile-link mobile-accordion-trigger">
             <span>La solution</span>
@@ -118,7 +117,7 @@
 
 <style>
   /* ============================================
-     HEADER — sticky, hauteur 100px desktop / 64px mobile
+     HEADER — z-index 1000 (au-dessus de tout contenu de page)
      ============================================ */
   .site-header {
     position: sticky;
@@ -127,7 +126,7 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--m360-border);
-    z-index: 100;
+    z-index: 1000;
   }
 
   .header-inner {
@@ -141,9 +140,6 @@
     height: 100px;
   }
 
-  /* ============================================
-     LOGO
-     ============================================ */
   .logo-link {
     display: flex;
     align-items: center;
@@ -152,9 +148,7 @@
     color: var(--m360-navy);
   }
 
-  .logo-link:hover {
-    text-decoration: none;
-  }
+  .logo-link:hover { text-decoration: none; }
 
   .logo-img {
     width: 64px;
@@ -210,7 +204,7 @@
 
   .nav-submenu {
     position: absolute;
-    top: calc(100% + var(--m360-space-4));
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
     min-width: 480px;
@@ -222,6 +216,19 @@
     display: none;
     flex-direction: column;
     gap: var(--m360-space-2);
+    /* Le sous-menu doit être au-dessus de tout */
+    z-index: 1100;
+  }
+
+  /* Pont invisible entre le bouton et le sous-menu pour éviter les "trous"
+     qui ferment le menu quand on traverse l'espace vide */
+  .nav-submenu::before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    left: 0;
+    right: 0;
+    height: 16px;
   }
 
   .nav-dropdown:hover .nav-submenu,
@@ -238,6 +245,9 @@
     text-decoration: none;
     color: var(--m360-text-body);
     transition: background-color 0.15s ease;
+    /* Garantit que les liens sont cliquables */
+    position: relative;
+    z-index: 1;
   }
 
   .submenu-item:hover {
@@ -294,7 +304,7 @@
   }
 
   /* ============================================
-     ACTIONS MOBILE — masquées sur desktop
+     ACTIONS MOBILE
      ============================================ */
   .nav-mobile-actions {
     display: none;
@@ -326,13 +336,12 @@
   }
 
   /* ============================================
-     DRAWER MOBILE — pattern .is-open (au lieu de [hidden])
+     DRAWER MOBILE — z-index 2000 (au-dessus de tout)
      ============================================ */
   .mobile-drawer {
     position: fixed;
     inset: 0;
-    z-index: 200;
-    /* Fermé par défaut */
+    z-index: 2000;
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
@@ -391,19 +400,15 @@
     cursor: pointer;
   }
 
-  /* ============================================
-     DRAWER NAV — règles explicites pour garantir l'affichage
-     ============================================ */
+  /* Drawer nav — règles explicites pour garantir l'affichage */
   .mobile-drawer-nav {
     flex: 1;
     padding: var(--m360-space-3) var(--m360-space-6);
     overflow-y: auto;
-    /* Force l'affichage en colonne, garantit que les enfants se positionnent bien */
     display: flex;
     flex-direction: column;
   }
 
-  /* Liens principaux du drawer — règle explicite */
   .mobile-drawer-nav .mobile-link {
     display: block;
     padding: var(--m360-space-4) 0;
@@ -426,7 +431,6 @@
     font-size: 14px;
   }
 
-  /* Accordéon La solution — visible et fonctionnel */
   .mobile-accordion {
     border-bottom: 1px solid var(--m360-border);
   }
@@ -441,7 +445,6 @@
     justify-content: space-between;
   }
 
-  /* Suppression du marqueur natif sur tous les navigateurs */
   .mobile-accordion summary::-webkit-details-marker { display: none; }
   .mobile-accordion summary::marker { display: none; content: ''; }
 
@@ -457,10 +460,6 @@
 
   .mobile-accordion-content {
     padding: 0 0 var(--m360-space-4) var(--m360-space-4);
-    background: var(--m360-bg-neutral);
-    margin: 0 calc(-1 * var(--m360-space-6)) 0 0;
-    padding-right: var(--m360-space-4);
-    border-radius: var(--m360-radius-md);
   }
 
   .mobile-accordion-content .mobile-sublink {
@@ -476,7 +475,6 @@
     text-decoration: none;
   }
 
-  /* CTA bas de drawer */
   .mobile-drawer-cta {
     margin: var(--m360-space-5);
     padding: var(--m360-space-4);
@@ -522,9 +520,6 @@
 </style>
 
 <script>
-  // ============================================
-  // Drawer mobile — pattern .is-open
-  // ============================================
   const burgerBtn = document.querySelector<HTMLButtonElement>('.burger-btn');
   const drawer = document.getElementById('mobile-drawer');
   const closeBtns = document.querySelectorAll('[data-close-drawer]');
@@ -546,25 +541,20 @@
   burgerBtn?.addEventListener('click', openDrawer);
   closeBtns.forEach(btn => btn.addEventListener('click', closeDrawer));
 
-  // Fermer le drawer après clic sur un lien (UX mobile attendue)
+  // Fermer le drawer après clic sur un lien
   drawer?.querySelectorAll('a[href]').forEach(link => {
     link.addEventListener('click', () => {
-      // Petit délai pour que la navigation soit perçue avant la fermeture visuelle
       setTimeout(closeDrawer, 100);
     });
   });
 
-  // Fermeture clavier
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && drawer?.classList.contains('is-open')) {
       closeDrawer();
     }
   });
 
-  // ============================================
-  // Modale "Nous contacter" — placeholder
-  // À brancher sur Pipedrive Web Forms à l'étape 4b
-  // ============================================
+  // Modale "Nous contacter" — placeholder (étape 4b)
   document.querySelectorAll('[data-open-contact-modal]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();

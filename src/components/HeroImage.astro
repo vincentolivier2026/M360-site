@@ -1,40 +1,58 @@
 ---
-// src/components/HeroVideo.astro
-// Hero immersif "vidéo immersion" — variante 1 du Hero système (DS V0.12).
-// Vidéo YouTube en background, overlay navy translucide, signature centrée, CTAs.
+// src/components/HeroImage.astro
+// Hero immersif "image immersion" — variante simplifiée du Hero système.
+// Photo en background full-bleed, overlay navy translucide, signature centrée, CTAs.
 //
-// IMPORTANT RGPD : l'iframe YouTube dépose des cookies tiers Google.
-// À l'étape 4b, ce composant sera encadré par Tarteaucitron pour respecter le consentement.
-// En attendant, l'embed utilise youtube-nocookie.com (mode privacy enhanced).
+// Pourquoi pas l'iframe YouTube : cause des bugs de pointer-events qui bloquaient
+// les clics sur la nav et le menu burger mobile. La photo statique élimine le problème
+// et règle aussi le RGPD (pas de cookies tiers).
+//
+// Usage :
+// <HeroImage
+//   image="/images/photohero.jpg"
+//   imageAlt="Atelier immersion VR Métiers 360"
+//   signature="L'expérience<br>change tout."
+//   ctaPrimary={{ label: '...', href: '/...' }}
+//   ctaSecondary={{ label: '...', href: '/...' }}
+// />
 
 import Button from './Button.astro';
 
 interface Props {
-  /** ID YouTube de la vidéo de fond (ex. "sfv1e4CXw30") */
-  youtubeId: string;
+  /** URL de l'image (chemin /images/... dans public/) */
+  image: string;
+  /** Texte alternatif de l'image — vide si l'image est purement décorative */
+  imageAlt?: string;
   /** Titre principal — peut contenir un <br> */
   signature: string;
   /** CTA primaire */
   ctaPrimary: { label: string; href: string };
   /** CTA secondaire */
   ctaSecondary: { label: string; href: string };
+  /** Position du focus de l'image (équivalent de object-position) — défaut "center" */
+  imagePosition?: string;
 }
 
-const { youtubeId, signature, ctaPrimary, ctaSecondary } = Astro.props;
-
-// youtube-nocookie.com = mode "privacy enhanced" de YouTube (RGPD friendly)
-const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`;
+const {
+  image,
+  imageAlt = '',
+  signature,
+  ctaPrimary,
+  ctaSecondary,
+  imagePosition = 'center',
+} = Astro.props;
 ---
 
 <section class="hero" aria-label="Présentation de Métiers 360">
-  <div class="hero-video-wrapper">
-    <iframe
-      src={embedUrl}
-      title="Vidéo de présentation Métiers 360"
-      allow="autoplay; encrypted-media"
-      loading="lazy"
-      aria-hidden="true"
-    ></iframe>
+  <div class="hero-image-wrapper">
+    <img
+      src={image}
+      alt={imageAlt}
+      class="hero-image"
+      style={`object-position: ${imagePosition};`}
+      loading="eager"
+      fetchpriority="high"
+    />
   </div>
 
   <div class="hero-overlay" aria-hidden="true"></div>
@@ -64,26 +82,24 @@ const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1
     color: #fff;
     overflow: hidden;
     background: var(--m360-navy);
+    /* CRITIQUE : isolation du contexte d'empilement pour que les enfants
+       restent confinés et ne débordent pas par-dessus le Header sticky */
+    isolation: isolate;
   }
 
-  .hero-video-wrapper {
+  .hero-image-wrapper {
     position: absolute;
     inset: 0;
     overflow: hidden;
     z-index: 0;
+    pointer-events: none;
   }
 
-  .hero-video-wrapper iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: 56.25vw; /* ratio 16:9 */
-    min-height: 100vh;
-    min-width: 177.77vh; /* 100 / (9/16) */
-    transform: translate(-50%, -50%);
-    border: 0;
-    pointer-events: none;
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* object-position est défini en inline via la prop imagePosition */
   }
 
   .hero-overlay {
@@ -91,10 +107,11 @@ const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(2, 31, 63, 0.25) 0%,
-      rgba(2, 31, 63, 0.55) 100%
+      rgba(2, 31, 63, 0.45) 0%,
+      rgba(2, 31, 63, 0.65) 100%
     );
     z-index: 1;
+    pointer-events: none;
   }
 
   .hero-content {
@@ -125,7 +142,7 @@ const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1
     flex-wrap: wrap;
   }
 
-  /* Responsive — pas de var() dans @media (cf. note tokens V0.9) */
+  /* Responsive */
   @media (max-width: 967px) {
     .hero {
       height: 88vh;
@@ -138,8 +155,4 @@ const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1
       padding: 0 var(--m360-space-5);
     }
   }
-
-  /* prefers-reduced-motion : couper l'autoplay vidéo serait idéal,
-     mais YouTube ne permet pas de désactiver l'autoplay via CSS.
-     On laisse la vidéo, qui est de toute façon muette et discrète. */
 </style>

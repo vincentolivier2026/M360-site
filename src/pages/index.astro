@@ -1,16 +1,11 @@
 ---
 // src/pages/index.astro
-// Home Métiers 360 — portage de Metiers360-Home-Maquette-V5b.html.
-//
-// Différences avec la maquette V5b source :
-// - Refactor complet aux tokens V0.9 (plus aucune valeur littérale)
-// - Header et Footer désormais dans BaseLayout (pas de duplication)
-// - Chiffres mis à jour selon le référentiel officiel (skill chiffres-clefs-m360)
-// - Embed YouTube en mode privacy enhanced (youtube-nocookie.com)
-// - CTAs pointent vers les pages de la solution (cf. Sitemap V3)
+// Home Métiers 360 — fix v2 : HeroImage au lieu de HeroVideo
+// L'iframe YouTube créait des bugs de pointer-events qui bloquaient la nav
+// et le drawer mobile. La photo statique élimine le problème.
 
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroVideo from '../components/HeroVideo.astro';
+import HeroImage from '../components/HeroImage.astro';
 import StatsBlock from '../components/StatsBlock.astro';
 import PositioningBlock from '../components/PositioningBlock.astro';
 
@@ -37,8 +32,9 @@ const stats = [
   title="Métiers 360"
   description="Métiers 360 — La solution de référence pour la découverte des métiers en réalité virtuelle. 300 métiers au catalogue, 2 200 structures équipées."
 >
-  <HeroVideo
-    youtubeId="sfv1e4CXw30"
+  <HeroImage
+    image="/images/photohero.jpg"
+    imageAlt="Atelier d'immersion VR Métiers 360 — deux personnes équipées de casques de réalité virtuelle"
     signature="L'expérience<br>change tout."
     ctaPrimary={{
       label: "J'accompagne vers l'emploi et la formation",
@@ -48,6 +44,7 @@ const stats = [
       label: 'Je présente mes métiers',
       href: '/visibilite-metiers',
     }}
+    imagePosition="center 30%"
   />
 
   <StatsBlock stats={stats} />
