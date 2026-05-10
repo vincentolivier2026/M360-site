@@ -1,0 +1,107 @@
+---
+// src/components/Button.astro
+// CTA réutilisable — 3 variantes : primary (bleu plein), secondary (verre dépoli sur fond sombre), ghost (transparent).
+// Usage : <Button variant="primary" href="/contact">Nous contacter</Button>
+//        <Button variant="secondary" arrow>Je présente mes métiers</Button>
+
+interface Props {
+  /** Variante visuelle */
+  variant?: 'primary' | 'secondary' | 'ghost';
+  /** Si défini, le bouton devient un lien <a> */
+  href?: string;
+  /** Si vrai, ajoute une flèche → animée à droite du libellé */
+  arrow?: boolean;
+  /** Type natif du bouton (utilisé seulement si href absent) */
+  type?: 'button' | 'submit';
+  /** Attribut data-* pour brancher des actions (modale, etc.) */
+  dataAction?: string;
+  /** Classes CSS additionnelles */
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  href,
+  arrow = false,
+  type = 'button',
+  dataAction,
+  class: className = '',
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const classes = `btn btn-${variant} ${className}`;
+---
+
+<Tag
+  class={classes}
+  href={href}
+  type={!href ? type : undefined}
+  data-action={dataAction}
+>
+  <slot />
+  {arrow && <span class="btn-arrow" aria-hidden="true">→</span>}
+</Tag>
+
+<style>
+  .btn {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: var(--m360-space-4) var(--m360-space-7);
+    border-radius: var(--m360-radius-lg);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    line-height: 1;
+  }
+
+  .btn-primary {
+    background: var(--m360-blue);
+    color: #fff;
+    box-shadow: var(--m360-shadow-blue);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--m360-shadow-blue-hover);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--m360-blue);
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .btn-ghost:hover {
+    text-decoration: underline;
+  }
+
+  .btn-arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .btn:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+</style>

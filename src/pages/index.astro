@@ -1,121 +1,61 @@
 ---
 // src/pages/index.astro
-// Accueil TEMPORAIRE — sera remplacé par la home V5b portée à l'étape 4.
-// Sert d'index pendant la phase de portage progressif des pages.
+// Home Métiers 360 — portage de Metiers360-Home-Maquette-V5b.html.
+//
+// Différences avec la maquette V5b source :
+// - Refactor complet aux tokens V0.9 (plus aucune valeur littérale)
+// - Header et Footer désormais dans BaseLayout (pas de duplication)
+// - Chiffres mis à jour selon le référentiel officiel (skill chiffres-clefs-m360)
+// - Embed YouTube en mode privacy enhanced (youtube-nocookie.com)
+// - CTAs pointent vers les pages de la solution (cf. Sitemap V3)
 
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroVideo from '../components/HeroVideo.astro';
+import StatsBlock from '../components/StatsBlock.astro';
+import PositioningBlock from '../components/PositioningBlock.astro';
+
+const stats = [
+  {
+    number: '300',
+    label: 'métiers présents au catalogue',
+    tone: 'blue' as const,
+  },
+  {
+    number: '2 200',
+    label: 'structures équipées depuis 2018',
+    tone: 'pink' as const,
+  },
+  {
+    number: '1,7M',
+    label: 'immersions réalisées',
+    tone: 'blue' as const,
+  },
+];
 ---
 
 <BaseLayout
   title="Métiers 360"
-  description="Métiers 360 — Faciliter la projection du plus grand nombre dans un futur professionnel désirable."
+  description="Métiers 360 — La solution de référence pour la découverte des métiers en réalité virtuelle. 300 métiers au catalogue, 2 200 structures équipées."
 >
-  <section class="hero-temp">
-    <div class="hero-temp-inner">
-      <p class="hero-temp-eyebrow">Site en construction · Pré-production</p>
-      <h1>Le nouveau site Métiers 360 prend forme.</h1>
-      <p class="hero-temp-lead">
-        Pages livrées à ce jour. Le portage progressif se poursuit.
-      </p>
+  <HeroVideo
+    youtubeId="sfv1e4CXw30"
+    signature="L'expérience<br>change tout."
+    ctaPrimary={{
+      label: "J'accompagne vers l'emploi et la formation",
+      href: '/accompagnement',
+    }}
+    ctaSecondary={{
+      label: 'Je présente mes métiers',
+      href: '/visibilite-metiers',
+    }}
+  />
 
-      <ul class="hero-temp-pages">
-        <li><a href="/mentions-legales">Mentions légales</a></li>
-        <li><a href="/politique-confidentialite">Politique de confidentialité</a></li>
-        <li><a href="/rse">Responsabilité sociale & environnementale</a></li>
-        <li><a href="/inclusion-accessibilite">Inclusion & accessibilité</a></li>
-      </ul>
+  <StatsBlock stats={stats} />
 
-      <p class="hero-temp-note">
-        À venir : home, landing accompagnement, landing visibilité métiers, catalogue,
-        blog, support, espace client.
-      </p>
-    </div>
-  </section>
+  <PositioningBlock>
+    <strong>Métiers 360</strong> est la solution de référence pour la découverte
+    des métiers en réalité virtuelle. Nous équipons les structures qui accompagnent
+    vers l'emploi et la formation, et nous co-produisons avec les organisations
+    qui souhaitent rendre leurs métiers visibles.
+  </PositioningBlock>
 </BaseLayout>
-
-<style>
-  .hero-temp {
-    padding: var(--m360-space-16) 0;
-    background: linear-gradient(135deg, var(--m360-blue-bg) 0%, var(--m360-pink-bg) 100%);
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-  }
-
-  .hero-temp-inner {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 0 var(--m360-space-6);
-  }
-
-  .hero-temp-eyebrow {
-    font-family: var(--font-heading);
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--m360-blue);
-    margin: 0 0 var(--m360-space-4);
-  }
-
-  .hero-temp h1 {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(36px, 5vw, 56px);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    color: var(--m360-text-title);
-    margin: 0 0 var(--m360-space-5);
-  }
-
-  .hero-temp-lead {
-    font-family: var(--font-heading);
-    font-size: 18px;
-    line-height: 1.5;
-    color: var(--m360-text-body);
-    margin: 0 0 var(--m360-space-8);
-  }
-
-  .hero-temp-pages {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--m360-space-8);
-    display: flex;
-    flex-direction: column;
-    gap: var(--m360-space-3);
-  }
-
-  .hero-temp-pages a {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--m360-space-2);
-    background: #fff;
-    padding: var(--m360-space-4) var(--m360-space-5);
-    border-radius: var(--m360-radius-xl);
-    color: var(--m360-text-title);
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 15px;
-    text-decoration: none;
-    box-shadow: var(--m360-shadow-sm);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .hero-temp-pages a::before {
-    content: '→';
-    color: var(--m360-blue);
-  }
-
-  .hero-temp-pages a:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--m360-shadow-md);
-    text-decoration: none;
-  }
-
-  .hero-temp-note {
-    font-size: 14px;
-    color: var(--m360-text-caption);
-    font-style: italic;
-    margin: 0;
-  }
-</style>

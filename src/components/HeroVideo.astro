@@ -1,0 +1,145 @@
+---
+// src/components/HeroVideo.astro
+// Hero immersif "vidéo immersion" — variante 1 du Hero système (DS V0.12).
+// Vidéo YouTube en background, overlay navy translucide, signature centrée, CTAs.
+//
+// IMPORTANT RGPD : l'iframe YouTube dépose des cookies tiers Google.
+// À l'étape 4b, ce composant sera encadré par Tarteaucitron pour respecter le consentement.
+// En attendant, l'embed utilise youtube-nocookie.com (mode privacy enhanced).
+
+import Button from './Button.astro';
+
+interface Props {
+  /** ID YouTube de la vidéo de fond (ex. "sfv1e4CXw30") */
+  youtubeId: string;
+  /** Titre principal — peut contenir un <br> */
+  signature: string;
+  /** CTA primaire */
+  ctaPrimary: { label: string; href: string };
+  /** CTA secondaire */
+  ctaSecondary: { label: string; href: string };
+}
+
+const { youtubeId, signature, ctaPrimary, ctaSecondary } = Astro.props;
+
+// youtube-nocookie.com = mode "privacy enhanced" de YouTube (RGPD friendly)
+const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`;
+---
+
+<section class="hero" aria-label="Présentation de Métiers 360">
+  <div class="hero-video-wrapper">
+    <iframe
+      src={embedUrl}
+      title="Vidéo de présentation Métiers 360"
+      allow="autoplay; encrypted-media"
+      loading="lazy"
+      aria-hidden="true"
+    ></iframe>
+  </div>
+
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-signature" set:html={signature}></h1>
+    <div class="hero-ctas">
+      <Button variant="primary" href={ctaPrimary.href} arrow>
+        {ctaPrimary.label}
+      </Button>
+      <Button variant="secondary" href={ctaSecondary.href} arrow>
+        {ctaSecondary.label}
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 640px;
+    max-height: 820px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    overflow: hidden;
+    background: var(--m360-navy);
+  }
+
+  .hero-video-wrapper {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .hero-video-wrapper iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw; /* ratio 16:9 */
+    min-height: 100vh;
+    min-width: 177.77vh; /* 100 / (9/16) */
+    transform: translate(-50%, -50%);
+    border: 0;
+    pointer-events: none;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(2, 31, 63, 0.25) 0%,
+      rgba(2, 31, 63, 0.55) 100%
+    );
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 920px;
+    padding: 0 var(--m360-space-8);
+    text-align: center;
+  }
+
+  .hero-signature {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 0 0 var(--m360-space-12);
+    text-shadow:
+      0 2px 24px rgba(2, 31, 63, 0.5),
+      0 1px 4px rgba(2, 31, 63, 0.3);
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: var(--m360-space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Responsive — pas de var() dans @media (cf. note tokens V0.9) */
+  @media (max-width: 967px) {
+    .hero {
+      height: 88vh;
+      min-height: 560px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .hero-content {
+      padding: 0 var(--m360-space-5);
+    }
+  }
+
+  /* prefers-reduced-motion : couper l'autoplay vidéo serait idéal,
+     mais YouTube ne permet pas de désactiver l'autoplay via CSS.
+     On laisse la vidéo, qui est de toute façon muette et discrète. */
+</style>

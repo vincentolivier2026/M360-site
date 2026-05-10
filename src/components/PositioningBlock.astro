@@ -1,0 +1,51 @@
+---
+// src/components/PositioningBlock.astro
+// Bloc "paragraphe de positionnement" — texte court, large, centré.
+// Mots-clés en bleu en gras pour structurer la lecture.
+// Utilisé sur la home, à propos, landings.
+//
+// Usage : <PositioningBlock>
+//   <strong>Métiers 360</strong> est la solution de référence...
+// </PositioningBlock>
+---
+
+<section class="positioning">
+  <div class="positioning-inner">
+    <p class="positioning-text">
+      <slot />
+    </p>
+  </div>
+</section>
+
+<style>
+  .positioning {
+    padding: var(--m360-space-12) var(--m360-space-8) var(--m360-space-16);
+    background: #fff;
+  }
+
+  .positioning-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .positioning-text {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.5;
+    color: var(--m360-text-title);
+    max-width: none;
+  }
+
+  .positioning-text :global(strong) {
+    font-weight: 700;
+    color: var(--m360-blue);
+  }
+
+  @media (max-width: 639px) {
+    .positioning {
+      padding: var(--m360-space-10) var(--m360-space-5) var(--m360-space-12);
+    }
+  }
+</style>
