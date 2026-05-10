@@ -1,0 +1,136 @@
+/* ================================================================
+   MÉTIERS 360 — STYLES GLOBAUX
+   ----------------------------------------------------------------
+   Reset minimal, base typographique, import des tokens.
+   À importer dans BaseLayout.astro.
+   ================================================================ */
+
+@import './tokens.css';
+
+/* ============================================
+   RESET MINIMAL
+   Inspiré de modern-css-reset (Andy Bell)
+   Volontairement minimal — Astro fait peu de
+   surprises de son côté.
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--m360-text-body);
+  background: #ffffff;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+a {
+  color: var(--m360-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   ACCESSIBILITÉ — Focus visible
+   Règle unique du DS V0.7 : outline 3px bleu
+   décalé, plus halo focus token.
+   ============================================ */
+
+:focus-visible {
+  outline: 3px solid var(--m360-blue);
+  outline-offset: 2px;
+  border-radius: var(--m360-radius-sm);
+}
+
+/* Préférence "réduire les animations" */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   TYPOGRAPHIE DE BASE — titres
+   Détails complets dans le DS V0.5/V0.12.
+   Ici, juste les bases pour que le rendu HTML
+   ne soit pas brutal avant le portage des
+   composants.
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--m360-text-title);
+}
+
+h1 { font-size: clamp(36px, 5vw, 56px); }
+h2 { font-size: clamp(28px, 4vw, 40px); }
+h3 { font-size: clamp(22px, 3vw, 28px); }
+h4 { font-size: 18px; }
+
+p {
+  max-width: 70ch;
+}
+
+/* ============================================
+   UTILITAIRES MINIMAUX
+   ============================================ */
+
+.container {
+  max-width: var(--m360-bp-desktop);
+  margin: 0 auto;
+  padding: 0 var(--m360-space-6);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

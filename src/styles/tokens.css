@@ -1,0 +1,118 @@
+/* ================================================================
+   MÉTIERS 360 — TOKENS SYSTÉMIQUES
+   Source : Design System V0.12 (section "Tokens systémiques", V0.9)
+   ----------------------------------------------------------------
+   Toutes les variables CSS du système. Un seul endroit pour tout
+   modifier ensuite. Tous préfixés --m360-* pour cohérence avec les
+   couleurs déjà existantes.
+   ================================================================ */
+
+:root {
+
+  /* ============================================
+     COULEURS — palette principale
+     Trinité chromatique navy / bleu / rose
+     héritée du logo.
+     ============================================ */
+
+  /* Couleurs de signature */
+  --m360-navy:        #021F3F;
+  --m360-blue:        #0080F4;
+  --m360-pink:        #E8B5E5;
+  --m360-pink-dark:   #C575C0;
+
+  /* Fonds dérivés (clairs, pour sections / pilules eyebrow) */
+  --m360-blue-bg:     #E6F2FE;
+  --m360-pink-bg:     #FAEEF9;
+  --m360-bg-neutral:  #F7F8FA;
+
+  /* Textes */
+  --m360-text-title:    #021F3F;  /* = navy */
+  --m360-text-body:     #2D3D52;
+  --m360-text-caption:  #6B7A8E;
+
+  /* Bordures */
+  --m360-border:        #E5E5E5;
+
+  /* Couleurs de texte sur fonds dérivés */
+  --m360-blue-text:     #0080F4;  /* = bleu vif sur fond bleu clair */
+
+  /* ============================================
+     ESPACEMENTS — échelle 4px (V0.9)
+     Indexée sur les valeurs réellement employées
+     dans le DS. Crans non employés (44, 52, 60,
+     68, 80, 88) volontairement absents.
+     ============================================ */
+  --m360-space-1:  4px;
+  --m360-space-2:  8px;
+  --m360-space-3:  12px;
+  --m360-space-4:  16px;
+  --m360-space-5:  20px;
+  --m360-space-6:  24px;
+  --m360-space-7:  28px;
+  --m360-space-8:  32px;
+  --m360-space-9:  40px;
+  --m360-space-10: 48px;
+  --m360-space-12: 56px;
+  --m360-space-14: 72px;
+  --m360-space-16: 96px;
+
+  /* ============================================
+     RADIUS — échelle xs→3xl + alias sémantiques (V0.9)
+     ============================================ */
+  --m360-radius-xs:    4px;     /* coins discrets (eyebrow secondaires) */
+  --m360-radius-sm:    6px;     /* badges, petits boutons */
+  --m360-radius-md:    8px;     /* boutons nav, inputs, items pagination */
+  --m360-radius-lg:    10px;    /* boutons primaires */
+  --m360-radius-xl:    12px;    /* cartes compactes, swatches */
+  --m360-radius-2xl:   16px;    /* cartes standard, encart financement */
+  --m360-radius-3xl:   20px;    /* cartes premium, eyebrow pills principaux */
+  --m360-radius-card:  24px;    /* cartes principales (xp, post, res, case…) */
+  --m360-radius-pill:  9999px;  /* badges, tags, focus pills */
+
+  /* ============================================
+     OMBRES — pattern "navy translucide" (V0.9)
+     ============================================ */
+  --m360-shadow-xs:         0 2px  4px  rgba(2,31,63,0.06);
+  --m360-shadow-sm:         0 4px  12px rgba(2,31,63,0.08);
+  --m360-shadow-md:         0 12px 28px rgba(2,31,63,0.10);
+  --m360-shadow-lg:         0 16px 40px rgba(2,31,63,0.12);
+  --m360-shadow-xl:         0 24px 60px rgba(2,31,63,0.18);
+
+  /* Surcouches : drawers et modals */
+  --m360-shadow-drawer:     -16px 0 48px rgba(2,31,63,0.25);
+  --m360-shadow-modal:      0 24px 60px rgba(2,31,63,0.25);
+
+  /* Boutons primaires (signature couleur) */
+  --m360-shadow-blue:       0 6px 18px rgba(0,128,244,0.35);
+  --m360-shadow-blue-hover: 0 4px 14px rgba(0,128,244,0.40);
+  --m360-shadow-pink:       0 6px 18px rgba(197,117,192,0.35);
+
+  /* Halo focus */
+  --m360-shadow-focus:      0 0 0 3px rgba(0,128,244,0.15);
+
+  /* ============================================
+     BREAKPOINTS — usage documentaire / JS / Astro (V0.9)
+     ----------------------------------------------------------------
+     Limite technique : les variables CSS ne fonctionnent pas dans
+     @media (min-width: var(...)). Ces tokens servent donc à
+     JavaScript et aux composants Astro, et comme commentaire de
+     cohérence au-dessus de chaque @media CSS qui littéralisera
+     la valeur.
+     ============================================ */
+  --m360-bp-mobile:    640px;   /* smartphones portrait */
+  --m360-bp-tablet:    968px;   /* bascule menu burger */
+  --m360-bp-desktop:   1200px;  /* largeur max contenu central */
+  --m360-bp-wide:      1440px;  /* écrans larges */
+
+  /* ============================================
+     TYPOGRAPHIES
+     ----------------------------------------------------------------
+     Familles à charger via @font-face dans global.css ou via
+     un service (Google Fonts, self-hosted). À confirmer au moment
+     du choix typo définitif.
+     ============================================ */
+  --font-display:  'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-heading:  'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-body:     system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
