@@ -400,13 +400,16 @@
     cursor: pointer;
   }
 
-  /* Drawer nav — règles explicites pour garantir l'affichage */
+  /* Drawer nav — bloc natif, les liens s'empilent comme du HTML standard */
   .mobile-drawer-nav {
-    flex: 1;
+    flex: 1 1 auto;
     padding: var(--m360-space-3) var(--m360-space-6);
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+    /* Pas de display:flex ici : les enfants <a> et <details> doivent rester
+       en flow normal pour que leur hauteur intrinsèque soit respectée.
+       En flex avec flex:1 sur le parent, les flex items peuvent être
+       compressés à 0 si flex-basis n'est pas explicite — c'était le bug. */
+    min-height: 0; /* permet au flex parent (drawer-panel) de calculer correctement */
   }
 
   .mobile-drawer-nav .mobile-link {
