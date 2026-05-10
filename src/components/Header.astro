@@ -1,0 +1,501 @@
+---
+// src/components/Header.astro
+// Header sticky du site M360.
+// Source : Sitemap V3 §8.1 + DS V0.12 (header système, hauteur 100px desktop / 64px mobile).
+// Composition desktop : Logo · Le catalogue · La solution ▾ · L'espace client · Nous contacter
+// Bascule menu mobile à 968px (cf. token --m360-bp-tablet).
+---
+
+<header class="site-header">
+  <div class="header-inner">
+
+    <a href="/" class="logo-link" aria-label="Métiers 360 — accueil">
+      <img
+        src="/logos/m360-logo.svg"
+        alt=""
+        width="64"
+        height="64"
+        class="logo-img"
+      />
+      <span class="logo-text">métiers360</span>
+    </a>
+
+    {/* Navigation desktop — masquée sous 968px */}
+    <nav class="nav-desktop" aria-label="Navigation principale">
+      <a href="/catalogue" class="nav-link">Le catalogue</a>
+
+      <div class="nav-dropdown">
+        <button
+          class="nav-link nav-dropdown-trigger"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="solution-submenu"
+        >
+          La solution
+          <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
+            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <div id="solution-submenu" class="nav-submenu" role="menu">
+          <a href="/accompagnement" class="submenu-item" role="menuitem">
+            <span class="submenu-eyebrow">Vous accompagnez des publics</span>
+            <span class="submenu-title">Accompagner vers l'emploi et la formation</span>
+            <span class="submenu-precision">Pour les écoles, CFA, OF, structures d'insertion, France Travail, collectivités.</span>
+          </a>
+          <a href="/visibilite-metiers" class="submenu-item" role="menuitem">
+            <span class="submenu-eyebrow">Vous représentez un secteur</span>
+            <span class="submenu-title">Faire découvrir ses métiers</span>
+            <span class="submenu-precision">Pour les branches, OPCO, entreprises, filières territoriales.</span>
+          </a>
+        </div>
+      </div>
+
+      <a href="/espace-client" class="nav-link">L'espace client</a>
+
+      <button class="btn-primary" data-open-contact-modal>
+        Nous contacter
+      </button>
+    </nav>
+
+    {/* Actions mobile — visibles sous 968px */}
+    <div class="nav-mobile-actions">
+      <button class="btn-primary btn-compact" data-open-contact-modal>
+        Contact
+      </button>
+      <button
+        class="burger-btn"
+        aria-label="Ouvrir le menu"
+        aria-expanded="false"
+        aria-controls="mobile-drawer"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+  </div>
+
+  {/* Drawer mobile — affiché à l'ouverture du burger */}
+  <div id="mobile-drawer" class="mobile-drawer" hidden>
+    <div class="mobile-drawer-overlay" data-close-drawer></div>
+    <div class="mobile-drawer-panel" role="dialog" aria-label="Menu de navigation">
+      <div class="mobile-drawer-header">
+        <span class="logo-text">métiers360</span>
+        <button class="drawer-close-btn" aria-label="Fermer le menu" data-close-drawer>×</button>
+      </div>
+      <nav class="mobile-drawer-nav" aria-label="Navigation principale mobile">
+        <a href="/catalogue" class="mobile-link">Le catalogue</a>
+        <details class="mobile-accordion">
+          <summary class="mobile-link mobile-accordion-trigger">La solution</summary>
+          <div class="mobile-accordion-content">
+            <a href="/accompagnement" class="mobile-sublink">Accompagner vers l'emploi et la formation</a>
+            <a href="/visibilite-metiers" class="mobile-sublink">Faire découvrir ses métiers</a>
+          </div>
+        </details>
+        <a href="/espace-client" class="mobile-link mobile-link-discreet">L'espace client</a>
+      </nav>
+      <a href="#" class="mobile-drawer-cta" data-open-contact-modal>
+        Nous contacter →
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* ============================================
+     HEADER — sticky, hauteur 100px desktop / 64px mobile
+     ============================================ */
+  .site-header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--m360-border);
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: var(--m360-bp-desktop);
+    margin: 0 auto;
+    padding: var(--m360-space-4) var(--m360-space-8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--m360-space-8);
+    height: 100px;
+  }
+
+  /* ============================================
+     LOGO
+     ============================================ */
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: var(--m360-space-3);
+    text-decoration: none;
+    color: var(--m360-navy);
+  }
+
+  .logo-link:hover {
+    text-decoration: none;
+  }
+
+  .logo-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--m360-navy);
+  }
+
+  /* ============================================
+     NAV DESKTOP
+     ============================================ */
+  .nav-desktop {
+    display: flex;
+    align-items: center;
+    gap: var(--m360-space-7);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .nav-link {
+    color: var(--m360-text-body);
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: var(--m360-space-2) 0;
+    cursor: pointer;
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-1);
+  }
+
+  .nav-link:hover {
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  /* ============================================
+     SOUS-MENU "LA SOLUTION"
+     ============================================ */
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-submenu {
+    position: absolute;
+    top: calc(100% + var(--m360-space-4));
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 480px;
+    background: #fff;
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-2xl);
+    box-shadow: var(--m360-shadow-lg);
+    padding: var(--m360-space-3);
+    display: none;
+    flex-direction: column;
+    gap: var(--m360-space-2);
+  }
+
+  .nav-dropdown:hover .nav-submenu,
+  .nav-dropdown:focus-within .nav-submenu {
+    display: flex;
+  }
+
+  .submenu-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-1);
+    padding: var(--m360-space-4);
+    border-radius: var(--m360-radius-xl);
+    text-decoration: none;
+    color: var(--m360-text-body);
+    transition: background-color 0.15s ease;
+  }
+
+  .submenu-item:hover {
+    background: var(--m360-blue-bg);
+    text-decoration: none;
+  }
+
+  .submenu-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--m360-blue);
+  }
+
+  .submenu-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--m360-text-title);
+  }
+
+  .submenu-precision {
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    line-height: 1.5;
+  }
+
+  /* ============================================
+     BOUTON PRIMAIRE (CTA)
+     ============================================ */
+  .btn-primary {
+    background: var(--m360-blue);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: var(--m360-space-4) var(--m360-space-7);
+    border-radius: var(--m360-radius-lg);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--m360-shadow-blue);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--m360-shadow-blue-hover);
+  }
+
+  .btn-primary.btn-compact {
+    padding: var(--m360-space-3) var(--m360-space-5);
+    font-size: 14px;
+  }
+
+  /* ============================================
+     ACTIONS MOBILE — masquées sur desktop
+     ============================================ */
+  .nav-mobile-actions {
+    display: none;
+    align-items: center;
+    gap: var(--m360-space-3);
+  }
+
+  .burger-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--m360-navy);
+    border-radius: var(--m360-radius-md);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .burger-btn span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+  }
+
+  /* ============================================
+     DRAWER MOBILE
+     ============================================ */
+  .mobile-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+  }
+
+  .mobile-drawer[hidden] {
+    display: none;
+  }
+
+  .mobile-drawer-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 31, 63, 0.4);
+    animation: fadeIn 0.25s ease-out;
+  }
+
+  .mobile-drawer-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 76%;
+    max-width: 420px;
+    background: #fff;
+    box-shadow: var(--m360-shadow-drawer);
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.25s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--m360-space-5) var(--m360-space-6);
+    border-bottom: 1px solid var(--m360-border);
+  }
+
+  .drawer-close-btn {
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--m360-text-title);
+    cursor: pointer;
+  }
+
+  .mobile-drawer-nav {
+    flex: 1;
+    padding: var(--m360-space-3) var(--m360-space-6);
+    overflow-y: auto;
+  }
+
+  .mobile-link {
+    display: block;
+    padding: var(--m360-space-4) 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--m360-text-title);
+    text-decoration: none;
+    border-bottom: 1px solid var(--m360-border);
+  }
+
+  .mobile-link-discreet {
+    color: var(--m360-text-caption);
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .mobile-accordion {
+    border-bottom: 1px solid var(--m360-border);
+  }
+
+  .mobile-accordion summary {
+    list-style: none;
+    cursor: pointer;
+    padding: var(--m360-space-4) 0;
+    border-bottom: none;
+  }
+
+  .mobile-accordion summary::-webkit-details-marker { display: none; }
+
+  .mobile-accordion-content {
+    padding: 0 0 var(--m360-space-4) var(--m360-space-4);
+    background: var(--m360-bg-neutral);
+  }
+
+  .mobile-sublink {
+    display: block;
+    padding: var(--m360-space-3) 0;
+    font-size: 14px;
+    color: var(--m360-text-body);
+    text-decoration: none;
+  }
+
+  .mobile-drawer-cta {
+    margin: var(--m360-space-5);
+    padding: var(--m360-space-4);
+    background: var(--m360-blue);
+    color: #fff;
+    text-align: center;
+    border-radius: var(--m360-radius-lg);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: var(--m360-shadow-blue);
+  }
+
+  /* ============================================
+     RESPONSIVE — bascule à 968px (--m360-bp-tablet)
+     Note : les @media ne supportent pas les var() CSS.
+     ============================================ */
+  @media (max-width: 967px) {
+    .header-inner {
+      height: 64px;
+      padding: var(--m360-space-3) var(--m360-space-5);
+    }
+    .logo-img {
+      width: 40px;
+      height: 40px;
+    }
+    .logo-text {
+      font-size: 18px;
+    }
+    .nav-desktop {
+      display: none;
+    }
+    .nav-mobile-actions {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  // Comportement du drawer mobile + modale contact (placeholder)
+  const burgerBtn = document.querySelector('.burger-btn') as HTMLButtonElement | null;
+  const drawer = document.getElementById('mobile-drawer');
+  const closeBtns = document.querySelectorAll('[data-close-drawer]');
+
+  function openDrawer() {
+    if (!drawer || !burgerBtn) return;
+    drawer.hidden = false;
+    burgerBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    if (!drawer || !burgerBtn) return;
+    drawer.hidden = true;
+    burgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  burgerBtn?.addEventListener('click', openDrawer);
+  closeBtns.forEach(btn => btn.addEventListener('click', closeDrawer));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer && !drawer.hidden) closeDrawer();
+  });
+
+  // Placeholder modale contact — à brancher sur Pipedrive Web Forms
+  document.querySelectorAll('[data-open-contact-modal]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // TODO : déclencher la modale Pipedrive (drawer démo, cf. DS V0.12 §06)
+      console.info('[M360] Modale contact à brancher');
+    });
+  });
+</script>
