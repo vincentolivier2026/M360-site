@@ -1,0 +1,112 @@
+---
+// src/components/CtaFinalBlock.astro
+// Bloc CTA final — gros titre centré + sous-texte + bouton.
+// Sur fond navy avec halos atmosphériques.
+// Source : Metiers360-Landing-Accompagnement-G3.html, bloc 7.
+
+import Button from './Button.astro';
+
+interface Props {
+  /** Titre H2 du CTA final */
+  title: string;
+  /** Sous-texte court */
+  text: string;
+  /** Bouton */
+  cta: { label: string; href: string };
+}
+
+const { title, text, cta } = Astro.props;
+---
+
+<section class="cta-final-section">
+  <div class="cta-final-inner">
+    <h2 class="cta-final-title">{title}</h2>
+    <p class="cta-final-text">{text}</p>
+    <div class="cta-final-button">
+      <Button variant="primary" href={cta.href} arrow>
+        {cta.label}
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-final-section {
+    position: relative;
+    padding: var(--m360-space-16) var(--m360-space-8);
+    background: linear-gradient(135deg, var(--m360-navy) 0%, #0a2a52 100%);
+    color: #fff;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  /* Halos atmosphériques */
+  .cta-final-section::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(100px);
+    background: var(--m360-blue);
+    opacity: 0.2;
+    top: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .cta-final-section::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(80px);
+    background: var(--m360-pink);
+    opacity: 0.12;
+    bottom: -100px;
+    right: -100px;
+    pointer-events: none;
+  }
+
+  .cta-final-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .cta-final-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: #fff;
+    margin: 0 0 var(--m360-space-6);
+  }
+
+  .cta-final-text {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 auto var(--m360-space-10);
+    max-width: 56ch;
+  }
+
+  .cta-final-button {
+    display: inline-block;
+  }
+
+  @media (max-width: 639px) {
+    .cta-final-section {
+      padding: var(--m360-space-12) var(--m360-space-5);
+    }
+    .cta-final-text {
+      font-size: 16px;
+    }
+  }
+</style>

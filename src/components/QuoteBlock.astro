@@ -1,0 +1,184 @@
+---
+// src/components/QuoteBlock.astro
+// Bloc témoignage — citation forte avec photo, nom, fonction.
+// Source : Metiers360-Landing-Accompagnement-G3.html, bloc 5.
+
+import EyebrowPill from './EyebrowPill.astro';
+
+interface Props {
+  eyebrow: string;
+  /** Texte de la citation */
+  quote: string;
+  /** Nom de l'auteur */
+  authorName: string;
+  /** Fonction et structure de l'auteur, ex: "Directeur · CFA de Lyon" */
+  authorRole: string;
+  /** URL de la photo de l'auteur (optionnelle) */
+  authorPhoto?: string;
+}
+
+const { eyebrow, quote, authorName, authorRole, authorPhoto } = Astro.props;
+
+// Initiales pour fallback si pas de photo
+const initials = authorName
+  .split(' ')
+  .map(w => w[0])
+  .slice(0, 2)
+  .join('')
+  .toUpperCase();
+---
+
+<section class="quote-section">
+  <div class="quote-inner">
+    <EyebrowPill tone="pink">{eyebrow}</EyebrowPill>
+
+    <blockquote class="quote-text">
+      <p>{quote}</p>
+    </blockquote>
+
+    <div class="quote-author">
+      {authorPhoto ? (
+        <div class="author-photo" style={`background-image: url('${authorPhoto}')`}></div>
+      ) : (
+        <div class="author-photo author-photo-initials" aria-hidden="true">
+          {initials}
+        </div>
+      )}
+      <div class="author-info">
+        <div class="author-name">{authorName}</div>
+        <div class="author-role">{authorRole}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .quote-section {
+    position: relative;
+    padding: var(--m360-space-16) var(--m360-space-8);
+    background: var(--m360-navy);
+    color: #fff;
+    overflow: hidden;
+  }
+
+  /* Halos atmosphériques */
+  .quote-section::before,
+  .quote-section::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .quote-section::before {
+    background: var(--m360-blue);
+    top: -100px;
+    left: -120px;
+  }
+
+  .quote-section::after {
+    background: var(--m360-pink);
+    bottom: -100px;
+    right: -120px;
+  }
+
+  .quote-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .quote-inner :global(.eyebrow) {
+    margin-bottom: var(--m360-space-8);
+    background: rgba(232, 181, 229, 0.15) !important;
+    color: var(--m360-pink) !important;
+  }
+
+  .quote-text {
+    position: relative;
+    margin: 0 0 var(--m360-space-10);
+    padding: 0;
+  }
+
+  .quote-text::before {
+    content: '“';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 120px;
+    line-height: 1;
+    color: var(--m360-pink);
+    opacity: 0.4;
+  }
+
+  .quote-text p {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(22px, 2.6vw, 32px);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: #fff;
+    margin: 0;
+    max-width: none;
+  }
+
+  .quote-author {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-4);
+  }
+
+  .author-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--m360-blue);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .author-info {
+    text-align: left;
+  }
+
+  .author-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: var(--m360-space-1);
+  }
+
+  .author-role {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (max-width: 639px) {
+    .quote-section {
+      padding: var(--m360-space-12) var(--m360-space-5);
+    }
+    .quote-text::before {
+      font-size: 80px;
+      top: -28px;
+    }
+  }
+</style>

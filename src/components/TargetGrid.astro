@@ -1,0 +1,226 @@
+---
+// src/components/TargetGrid.astro
+// Bloc "Pour qui c'est fait" — 4 cartes avec illustration SVG composée,
+// titre, paragraphe, lien "En savoir plus".
+// Source : Metiers360-Landing-Accompagnement-G3.html, bloc 4.
+
+import EyebrowPill from './EyebrowPill.astro';
+
+interface Target {
+  /** Clé d'illustration : determines which SVG composition to render */
+  iconKey: 'scolaires' | 'formation' | 'emploi' | 'collectivites';
+  /** Titre */
+  title: string;
+  /** Description */
+  text: string;
+  /** Lien "En savoir plus" (optionnel) */
+  href?: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  targets: Target[];
+}
+
+const { eyebrow, title, targets } = Astro.props;
+---
+
+<section class="target-section">
+  <div class="target-inner">
+    <header class="target-header">
+      <EyebrowPill tone="blue">{eyebrow}</EyebrowPill>
+      <h2 class="target-headline">{title}</h2>
+    </header>
+
+    <div class="target-grid">
+      {targets.map(target => (
+        <article class="target-card">
+          <div class="target-icon">
+            {target.iconKey === 'scolaires' && (
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="14" cy="42" r="10" fill="#0080F4" opacity="0.85"/>
+                <circle cx="32" cy="30" r="11" fill="#021F3F" opacity="0.9"/>
+                <circle cx="52" cy="18" r="10" fill="#0080F4" opacity="0.85"/>
+                <ellipse cx="52" cy="36" rx="11" ry="2.5" fill="#E8B5E5" opacity="0.7"/>
+              </svg>
+            )}
+            {target.iconKey === 'formation' && (
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M 14 18 Q 32 6, 50 18" stroke="#0080F4" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+                <circle cx="32" cy="38" r="22" fill="none" stroke="#0080F4" stroke-width="3" opacity="0.85"/>
+                <circle cx="32" cy="38" r="9" fill="#021F3F" opacity="0.9"/>
+              </svg>
+            )}
+            {target.iconKey === 'emploi' && (
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="22" cy="32" r="18" fill="#0080F4" opacity="0.6"/>
+                <circle cx="42" cy="32" r="18" fill="#E8B5E5" opacity="0.85"/>
+                <circle cx="32" cy="32" r="6" fill="#021F3F" opacity="0.9"/>
+              </svg>
+            )}
+            {target.iconKey === 'collectivites' && (
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="32" cy="32" r="14" fill="#021F3F" opacity="0.9"/>
+                <circle cx="10" cy="14" r="5" fill="#0080F4" opacity="0.85"/>
+                <circle cx="54" cy="12" r="4" fill="#E8B5E5" opacity="0.85"/>
+                <circle cx="56" cy="50" r="5.5" fill="#0080F4" opacity="0.85"/>
+                <circle cx="10" cy="52" r="4" fill="#E8B5E5" opacity="0.85"/>
+                <line x1="20" y1="22" x2="14" y2="18" stroke="#021F3F" stroke-width="1.5" opacity="0.3"/>
+                <line x1="44" y1="22" x2="51" y2="16" stroke="#021F3F" stroke-width="1.5" opacity="0.3"/>
+                <line x1="44" y1="42" x2="50" y2="46" stroke="#021F3F" stroke-width="1.5" opacity="0.3"/>
+                <line x1="20" y1="42" x2="14" y2="48" stroke="#021F3F" stroke-width="1.5" opacity="0.3"/>
+              </svg>
+            )}
+          </div>
+          <h3 class="target-card-title">{target.title}</h3>
+          <p class="target-card-text">{target.text}</p>
+          {target.href && (
+            <a href={target.href} class="target-link">
+              En savoir plus
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .target-section {
+    padding: var(--m360-space-16) var(--m360-space-8);
+    background: var(--m360-bg-neutral);
+  }
+
+  .target-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .target-header {
+    text-align: center;
+    margin-bottom: var(--m360-space-14);
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .target-header :global(.eyebrow) {
+    margin-bottom: var(--m360-space-5);
+  }
+
+  .target-headline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 3.5vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--m360-text-title);
+    margin: 0;
+  }
+
+  /* ============================================
+     GRILLE 2x2
+     ============================================ */
+  .target-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--m360-space-7);
+  }
+
+  .target-card {
+    background: #fff;
+    padding: var(--m360-space-9) var(--m360-space-8);
+    border-radius: var(--m360-radius-card);
+    border: 1px solid var(--m360-border);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-3);
+  }
+
+  .target-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--m360-shadow-md);
+    border-color: var(--m360-blue);
+  }
+
+  .target-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--m360-space-3);
+  }
+
+  .target-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .target-card-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.3;
+    color: var(--m360-text-title);
+    margin: 0;
+  }
+
+  .target-card-text {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--m360-text-body);
+    margin: 0;
+    flex: 1;
+    max-width: none;
+  }
+
+  .target-link {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--m360-blue);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    margin-top: var(--m360-space-3);
+    align-self: flex-start;
+  }
+
+  .target-link:hover {
+    text-decoration: underline;
+  }
+
+  .target-link span {
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+
+  .target-link:hover span {
+    transform: translateX(4px);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .target-grid {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-5);
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .target-section {
+      padding: var(--m360-space-12) var(--m360-space-5);
+    }
+    .target-card {
+      padding: var(--m360-space-7) var(--m360-space-6);
+    }
+  }
+</style>

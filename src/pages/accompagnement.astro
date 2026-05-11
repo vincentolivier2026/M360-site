@@ -1,0 +1,200 @@
+---
+// src/pages/accompagnement.astro
+// Landing "Accompagner vers l'emploi et la formation".
+// Source : Metiers360-Landing-Accompagnement-G3.html (maquette validée).
+//
+// NOTE IMPORTANTE : les textes des blocs 3 (process), 4 (pour qui), 5 (preuve),
+// et 7 (CTA final) étaient en [placeholder] dans la maquette G3.
+// → J'ai mis ici des textes provisoires plausibles que tu devras valider/réécrire.
+// → Les placeholders identifiables comme tels (par ex. nom de citation, fonction)
+//   restent visibles entre crochets.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LandingHero from '../components/LandingHero.astro';
+import PillarsBlock from '../components/PillarsBlock.astro';
+import ProcessBlock from '../components/ProcessBlock.astro';
+import TargetGrid from '../components/TargetGrid.astro';
+import QuoteBlock from '../components/QuoteBlock.astro';
+import ReassuranceGrid from '../components/ReassuranceGrid.astro';
+import CtaFinalBlock from '../components/CtaFinalBlock.astro';
+
+// ============================================
+// CONTENUS — figés depuis la maquette G3
+// ============================================
+
+const pillars = [
+  {
+    num: '01',
+    title: 'Engager celles et ceux qui décrochent ailleurs',
+    text: "La VR transforme l'orientation en expérience qu'on vit, pas en discours qu'on subit. Vos publics les plus éloignés se reconnectent à leur projet par ce qu'ils ressentent, pas par ce qu'on leur explique.",
+  },
+  {
+    num: '02',
+    title: "Libérer la parole, accélérer l'accompagnement",
+    text: "Après l'immersion, les personnes accompagnées veulent en parler. Vos équipes disposent enfin d'un déclencheur fiable pour ouvrir la discussion sur le projet professionnel — et faire le travail d'accompagnement qui compte vraiment.",
+  },
+  {
+    num: '03',
+    title: 'Une innovation qui dit à chacun : « vous comptez »',
+    text: "Proposer un casque VR à une personne en construction de projet, c'est lui adresser un message fort : votre orientation mérite ce qu'il y a de mieux. Métiers 360 fait de l'innovation un acte de considération.",
+  },
+];
+
+// PLACEHOLDER — textes du process à valider
+const steps = [
+  {
+    num: '1',
+    title: 'Préparation',
+    text: "L'animateur cadre la séance : objectifs du temps d'immersion, posture d'écoute, choix des expériences en fonction du public. Quelques minutes suffisent pour transformer l'usage du casque en démarche pédagogique.",
+  },
+  {
+    num: '2',
+    title: 'Immersion',
+    text: "Chaque participant vit le métier de l'intérieur. Six minutes en moyenne par expérience, avec un professionnel en témoin direct. La VR offre une intensité émotionnelle que ni la vidéo ni la visite ne permettent.",
+  },
+  {
+    num: '3',
+    title: 'Débrief',
+    text: "Le temps où l'expérience devient projet. Les participants partagent ce qu'ils ont ressenti, comparent, posent des questions. L'accompagnant exploite cette parole libérée pour avancer sur le projet professionnel.",
+  },
+];
+
+// PLACEHOLDER — phrases de bénéfice à valider
+const targets = [
+  {
+    iconKey: 'scolaires' as const,
+    title: 'Établissements scolaires & CFA',
+    text: "Élargir les horizons des élèves de 4e à Terminale, déclencher des vocations, sécuriser les choix d'orientation Parcoursup et apprentissage.",
+    href: '#',
+  },
+  {
+    iconKey: 'formation' as const,
+    title: 'Organismes de formation',
+    text: "Construire un projet professionnel avec des publics adultes en reconversion, faciliter le retour en formation, fluidifier les parcours.",
+    href: '#',
+  },
+  {
+    iconKey: 'emploi' as const,
+    title: "Service public de l'emploi & insertion",
+    text: "Outiller les conseillers France Travail, missions locales et structures d'insertion pour aborder l'orientation avec des publics éloignés de l'emploi.",
+    href: '#',
+  },
+  {
+    iconKey: 'collectivites' as const,
+    title: 'Collectivités territoriales',
+    text: "Déployer une politique d'orientation à l'échelle d'un territoire, équiper les structures locales, animer des forums métiers à fort impact.",
+    href: '#',
+  },
+];
+
+// PLACEHOLDER — témoignage à remplacer par un vrai client
+const testimonial = {
+  quote: "Métiers 360, c'est l'outil qui m'a permis de remettre l'orientation au centre de mes entretiens. Les jeunes parlent enfin de leur projet — et ils en parlent autrement.",
+  authorName: '[Prénom Nom]',
+  authorRole: '[Fonction] · [Structure cliente]',
+};
+
+const reassurance = [
+  {
+    iconKey: 'check' as const,
+    title: 'Conformité RGPD',
+    text: 'Données hébergées en Europe, traitements maîtrisés.',
+  },
+  {
+    iconKey: 'globe' as const,
+    title: 'Solution française et européenne',
+    text: 'Conçue, produite et opérée en France.',
+  },
+  {
+    iconKey: 'people' as const,
+    title: 'Accompagnement humain',
+    text: 'Une équipe à vos côtés tout au long du déploiement.',
+  },
+  {
+    iconKey: 'evolution' as const,
+    title: 'Catalogue en évolution continue',
+    text: 'De nouvelles expériences chaque mois.',
+  },
+];
+
+const funding = {
+  title: 'Une solution finançable dans les cadres existants',
+  text: "Métiers 360 s'inscrit dans les dispositifs de financement habituels de votre structure : <strong>PRIC, PIC, plans académiques, dotations collectivités, financements OPCO</strong>. Notre équipe vous accompagne dans le montage de votre projet.",
+};
+---
+
+<BaseLayout
+  title="Accompagner vers l'emploi et la formation"
+  description="Métiers 360 — Une solution VR pour les structures d'orientation, d'insertion et de formation. Engager, libérer la parole, faire de l'innovation un acte de considération."
+>
+  <LandingHero
+    eyebrow="Pour les structures qui accompagnent"
+    title="Donnez à vos publics ce que les brochures n'offrent pas : <strong>l'expérience d'un métier.</strong>"
+    photo="/images/photohero.jpg"
+    photoAlt="Atelier d'immersion VR Métiers 360"
+    ctaPrimary={{ label: 'Demander une démo', href: '#' }}
+    ctaSecondary={{ label: 'Voir le catalogue', href: '/catalogue' }}
+  />
+
+  <PillarsBlock
+    eyebrow="Notre proposition"
+    title="Un dispositif pensé pour ce qui compte vraiment dans l'accompagnement."
+    pillars={pillars}
+  />
+
+  <ProcessBlock
+    eyebrow="Comment ça marche"
+    title="Une séquence pédagogique pensée pour transformer l'expérience en projet."
+    steps={steps}
+  />
+
+  <TargetGrid
+    eyebrow="Pour qui c'est fait"
+    title="Une solution pensée pour chaque acteur de l'accompagnement."
+    targets={targets}
+  />
+
+  <QuoteBlock
+    eyebrow="Une solution pro pour les pro"
+    quote={testimonial.quote}
+    authorName={testimonial.authorName}
+    authorRole={testimonial.authorRole}
+  />
+
+  <ReassuranceGrid items={reassurance} funding={funding} />
+
+  <CtaFinalBlock
+    title="Et si on découvrait ensemble Métiers 360 ?"
+    text="Quinze minutes pour vous montrer comment ça change l'accompagnement de vos publics. Sans engagement, sans détour."
+    cta={{ label: 'Demander une démo', href: '#' }}
+  />
+</BaseLayout>
+
+<script>
+  // Câbler les CTA "Demander une démo" et "En savoir plus" sur la modale Contact.
+  // ContactModal écoute déjà [data-open-contact-modal], on doit donc soit le mettre
+  // au chargement initial, soit déclencher manuellement l'ouverture.
+  // Solution simple : on clique sur un bouton "Nous contacter" du header qui est
+  // déjà câblé sur la modale.
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctaButtons = document.querySelectorAll(
+      'a[href="#"]'
+    );
+    ctaButtons.forEach(link => {
+      const text = link.textContent?.trim().toLowerCase() || '';
+      if (
+        text.includes('demander une démo') ||
+        text.includes('en savoir plus')
+      ) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Simuler un clic sur le bouton Contact du header
+          const contactBtn = document.querySelector<HTMLElement>(
+            '[data-open-contact-modal]'
+          );
+          contactBtn?.click();
+        });
+      }
+    });
+  });
+</script>

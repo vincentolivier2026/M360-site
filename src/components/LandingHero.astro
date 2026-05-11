@@ -1,0 +1,231 @@
+---
+// src/components/LandingHero.astro
+// Hero spécifique aux pages landing (différent du HeroImage de la home).
+// Composition : texte à gauche, visuel composé à droite (photo cercle + halo + arc + ovale rose).
+//
+// Source : Metiers360-Landing-Accompagnement-G3.html, bloc 1.
+
+import Button from './Button.astro';
+import EyebrowPill from './EyebrowPill.astro';
+
+interface Props {
+  eyebrow: string;
+  /** Titre — supporte HTML (notamment <strong> pour la couleur bleue) */
+  title: string;
+  /** URL de la photo placée dans le cercle visuel */
+  photo: string;
+  /** Alt de la photo */
+  photoAlt?: string;
+  /** CTA principal */
+  ctaPrimary: { label: string; href: string };
+  /** Lien secondaire en texte souligné */
+  ctaSecondary?: { label: string; href: string };
+}
+
+const {
+  eyebrow,
+  title,
+  photo,
+  photoAlt = '',
+  ctaPrimary,
+  ctaSecondary,
+} = Astro.props;
+---
+
+<section class="landing-hero">
+  <div class="landing-hero-inner">
+    <div class="landing-hero-text">
+      <EyebrowPill tone="pink">{eyebrow}</EyebrowPill>
+      <h1 class="landing-hero-title" set:html={title}></h1>
+      <div class="landing-hero-ctas">
+        <Button variant="primary" href={ctaPrimary.href} arrow>
+          {ctaPrimary.label}
+        </Button>
+        {ctaSecondary && (
+          <a href={ctaSecondary.href} class="landing-hero-link">
+            {ctaSecondary.label}
+          </a>
+        )}
+      </div>
+    </div>
+
+    <div class="landing-hero-visual" aria-hidden="true">
+      <div class="visual-photo">
+        <img src={photo} alt={photoAlt} loading="eager" fetchpriority="high" />
+      </div>
+      <div class="visual-pink-shape"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ============================================
+     SECTION HERO LANDING
+     ============================================ */
+  .landing-hero {
+    position: relative;
+    padding: var(--m360-space-14) var(--m360-space-8) var(--m360-space-16);
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .landing-hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--m360-space-16);
+    align-items: center;
+  }
+
+  /* ============================================
+     TEXTE À GAUCHE
+     ============================================ */
+  .landing-hero-text {
+    position: relative;
+    z-index: 2;
+  }
+
+  .landing-hero-text :global(.eyebrow) {
+    margin-bottom: var(--m360-space-7);
+  }
+
+  .landing-hero-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-8);
+  }
+
+  .landing-hero-title :global(strong) {
+    color: var(--m360-blue);
+    font-weight: inherit;
+  }
+
+  .landing-hero-ctas {
+    display: flex;
+    gap: var(--m360-space-6);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .landing-hero-link {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--m360-text-body);
+    border-bottom: 1px solid var(--m360-border);
+    padding-bottom: var(--m360-space-1);
+    transition: color 0.2s ease, border-color 0.2s ease;
+    text-decoration: none;
+  }
+
+  .landing-hero-link:hover {
+    color: var(--m360-blue);
+    border-bottom-color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  /* ============================================
+     VISUEL À DROITE
+     Photo en cercle, halo navy, arc bleu, ovale rose
+     ============================================ */
+  .landing-hero-visual {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1 / 1.05;
+    margin: 0 auto;
+  }
+
+  /* Halo navy en arrière */
+  .landing-hero-visual::before {
+    content: '';
+    position: absolute;
+    inset: -8%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      rgba(2, 31, 63, 0.5) 0%,
+      rgba(2, 31, 63, 0.3) 40%,
+      rgba(2, 31, 63, 0.1) 60%,
+      transparent 75%
+    );
+    z-index: 0;
+    filter: blur(8px);
+  }
+
+  /* Arc bleu de mouvement */
+  .landing-hero-visual::after {
+    content: '';
+    position: absolute;
+    width: 130%;
+    height: 60px;
+    bottom: 8%;
+    left: -15%;
+    border-radius: 50%;
+    border: 6px solid var(--m360-blue);
+    border-top-color: transparent;
+    border-left-color: transparent;
+    transform: rotate(-8deg);
+    z-index: 3;
+    opacity: 0.85;
+  }
+
+  /* Photo circulaire */
+  .visual-photo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 20px 60px rgba(2, 31, 63, 0.18);
+  }
+
+  .visual-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 28% 50%;
+  }
+
+  /* Ovale rose au "sol" */
+  .visual-pink-shape {
+    position: absolute;
+    width: 46%;
+    height: 11%;
+    bottom: -2%;
+    left: 27%;
+    background: var(--m360-pink);
+    border-radius: 50%;
+    z-index: 2;
+    opacity: 0.6;
+    box-shadow: 0 4px 16px rgba(232, 181, 229, 0.25);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .landing-hero-inner {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-12);
+    }
+    .landing-hero-visual {
+      max-width: 420px;
+      order: -1;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .landing-hero {
+      padding: var(--m360-space-10) var(--m360-space-5) var(--m360-space-12);
+    }
+    .landing-hero-visual {
+      max-width: 320px;
+    }
+  }
+</style>

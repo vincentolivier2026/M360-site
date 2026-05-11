@@ -1,17 +1,19 @@
 /* ================================================================
    MÉTIERS 360 — STYLES GLOBAUX
    ----------------------------------------------------------------
-   Reset minimal, base typographique, import des tokens.
+   Reset minimal, base typographique, import des tokens, webfonts.
    À importer dans BaseLayout.astro.
    ================================================================ */
+
+/* Webfonts officielles : Montserrat (display), Karla (heading), Inter (body)
+   Self-hosting Plausible-style à mettre en place plus tard pour RGPD strict.
+   En pré-prod : on accepte le chargement Google Fonts. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Karla:wght@400;500;700&family=Montserrat:wght@700;800;900&display=swap');
 
 @import './tokens.css';
 
 /* ============================================
    RESET MINIMAL
-   Inspiré de modern-css-reset (Andy Bell)
-   Volontairement minimal — Astro fait peu de
-   surprises de son côté.
    ============================================ */
 
 *, *::before, *::after {
@@ -68,8 +70,6 @@ a:hover {
 
 /* ============================================
    ACCESSIBILITÉ — Focus visible
-   Règle unique du DS V0.7 : outline 3px bleu
-   décalé, plus halo focus token.
    ============================================ */
 
 :focus-visible {
@@ -78,7 +78,6 @@ a:hover {
   border-radius: var(--m360-radius-sm);
 }
 
-/* Préférence "réduire les animations" */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -89,11 +88,7 @@ a:hover {
 }
 
 /* ============================================
-   TYPOGRAPHIE DE BASE — titres
-   Détails complets dans le DS V0.5/V0.12.
-   Ici, juste les bases pour que le rendu HTML
-   ne soit pas brutal avant le portage des
-   composants.
+   TYPOGRAPHIE DE BASE
    ============================================ */
 
 h1, h2, h3, h4, h5, h6 {
@@ -104,8 +99,8 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--m360-text-title);
 }
 
-h1 { font-size: clamp(36px, 5vw, 56px); }
-h2 { font-size: clamp(28px, 4vw, 40px); }
+h1 { font-size: clamp(36px, 5vw, 56px); font-family: var(--font-display); }
+h2 { font-size: clamp(28px, 4vw, 40px); font-family: var(--font-display); }
 h3 { font-size: clamp(22px, 3vw, 28px); }
 h4 { font-size: 18px; }
 

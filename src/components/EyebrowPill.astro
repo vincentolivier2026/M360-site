@@ -1,0 +1,41 @@
+---
+// src/components/EyebrowPill.astro
+// Pilule "eyebrow" — petit label coloré qui surplombe les titres de section.
+// Utilisé dans hero, piliers, process, for-who, etc.
+//
+// Usage : <EyebrowPill tone="pink">Pour les structures qui accompagnent</EyebrowPill>
+
+interface Props {
+  /** Couleur de la pilule */
+  tone?: 'pink' | 'blue';
+}
+
+const { tone = 'pink' } = Astro.props;
+---
+
+<span class={`eyebrow eyebrow-${tone}`}>
+  <slot />
+</span>
+
+<style>
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: var(--m360-space-2) var(--m360-space-4);
+    border-radius: var(--m360-radius-pill);
+  }
+
+  .eyebrow-pink {
+    color: var(--m360-pink-dark);
+    background: var(--m360-pink-bg);
+  }
+
+  .eyebrow-blue {
+    color: var(--m360-blue);
+    background: var(--m360-blue-bg);
+  }
+</style>

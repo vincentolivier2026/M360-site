@@ -1,0 +1,169 @@
+---
+// src/components/ProcessBlock.astro
+// Bloc "Comment ça marche" — séquence pédagogique en 3 étapes alignées.
+// Source : Metiers360-Landing-Accompagnement-G3.html, bloc 3.
+
+import EyebrowPill from './EyebrowPill.astro';
+
+interface Step {
+  /** Numéro affiché (1, 2, 3) */
+  num: string;
+  /** Titre court de l'étape */
+  title: string;
+  /** Description */
+  text: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  steps: Step[];
+}
+
+const { eyebrow, title, steps } = Astro.props;
+---
+
+<section class="process-section">
+  <div class="process-inner">
+    <header class="process-header">
+      <EyebrowPill tone="pink">{eyebrow}</EyebrowPill>
+      <h2 class="process-title">{title}</h2>
+    </header>
+
+    <div class="process-rail">
+      {steps.map(step => (
+        <div class="step">
+          <div class="step-num">{step.num}</div>
+          <h3 class="step-title">{step.title}</h3>
+          <p class="step-text">{step.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-section {
+    padding: var(--m360-space-16) var(--m360-space-8);
+    background: #fff;
+  }
+
+  .process-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .process-header {
+    text-align: center;
+    margin-bottom: var(--m360-space-14);
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .process-header :global(.eyebrow) {
+    margin-bottom: var(--m360-space-5);
+  }
+
+  .process-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 3.5vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--m360-text-title);
+    margin: 0;
+  }
+
+  /* ============================================
+     RAIL — 3 étapes en colonne
+     ============================================ */
+  .process-rail {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--m360-space-8);
+    position: relative;
+  }
+
+  /* Trait pointillé entre les étapes */
+  .process-rail::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 16%;
+    right: 16%;
+    height: 2px;
+    background-image: linear-gradient(
+      to right,
+      var(--m360-blue) 0,
+      var(--m360-blue) 6px,
+      transparent 6px,
+      transparent 14px
+    );
+    background-size: 14px 2px;
+    background-repeat: repeat-x;
+    z-index: 0;
+  }
+
+  .step {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .step-num {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--m360-space-5);
+    background: var(--m360-blue);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 22px;
+    box-shadow: var(--m360-shadow-blue);
+    border: 4px solid #fff;
+  }
+
+  .step-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-3);
+  }
+
+  .step-text {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--m360-text-body);
+    margin: 0 auto;
+    max-width: 32ch;
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .process-rail {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-9);
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .process-rail::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .process-section {
+      padding: var(--m360-space-12) var(--m360-space-5);
+    }
+  }
+</style>
