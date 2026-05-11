@@ -1,17 +1,18 @@
 ---
 // src/components/ContactModal.astro
-// Modale "Nous contacter" — pattern conforme RGPD.
+// Modale "Nous contacter" — VERSION PRÉ-PROD PRIVÉE (sans Tarteaucitron).
 //
-// Comportement :
+// IMPORTANT : cette version charge Pipedrive directement, sans consentement.
+// À REMETTRE EN PLACE TARTEAUCITRON AVANT TOUT PASSAGE EN PRODUCTION PUBLIQUE
+// (cohérence avec la politique de confidentialité V2 qui annonce le consentement).
+//
+// Comportement actuel :
 // 1. Au chargement de la page : modale fermée, AUCUN script Pipedrive chargé
-// 2. Clic sur un bouton [data-open-contact-modal] → ouvre la modale
-// 3. Vérification du consentement Tarteaucitron pour Pipedrive :
-//    - Consenti → injection du script + affichage du formulaire
-//    - Non consenti → message explicatif + bouton pour ouvrir Tarteaucitron
-// 4. Le script Pipedrive n'est chargé qu'UNE fois par session, même si la modale
-//    est ouverte plusieurs fois.
+// 2. Clic sur un bouton [data-open-contact-modal] → ouverture de la modale
+// 3. À la première ouverture : injection du script Pipedrive dans la modale
+// 4. Le script Pipedrive n'est chargé qu'UNE fois par session
 //
-// Singleton : ce composant doit être inclus une seule fois dans BaseLayout.
+// Singleton : à inclure une seule fois dans BaseLayout.
 
 const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wXUcg8YQo4ckEuXdOhOnLUpvXo7aTOwyPa8VmPb7cgtsmckyD';
 ---
@@ -35,34 +36,13 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     </header>
 
     <div class="modal-body">
-      {/* Slot du formulaire — Pipedrive injectera le formulaire ici */}
       <div
         id="pipedrive-form-host"
         class="pipedriveWebForms"
         data-pd-webforms={PIPEDRIVE_FORM_URL}
       ></div>
 
-      {/* Message affiché si l'utilisateur n'a pas consenti aux cookies Pipedrive */}
-      <div id="pipedrive-consent-block" class="consent-block" hidden>
-        <div class="consent-icon" aria-hidden="true">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/>
-            <path d="M12 17.5a1 1 0 1 0 1 1 1 1 0 0 0-1-1zM12 6a2.5 2.5 0 0 0-2.5 2.5.5.5 0 0 0 1 0 1.5 1.5 0 0 1 3 0c0 .82-.36 1.16-1.06 1.69A2.628 2.628 0 0 0 11 12.5v1a.5.5 0 0 0 1 0v-1a1.683 1.683 0 0 1 .92-1.51c.83-.62 1.58-1.18 1.58-2.49A2.5 2.5 0 0 0 12 6z"/>
-          </svg>
-        </div>
-        <h3 class="consent-title">Formulaire bloqué par vos préférences cookies</h3>
-        <p class="consent-text">
-          Pour afficher ce formulaire de contact, vous devez autoriser le service
-          <strong>Pipedrive</strong>. Aucune donnée n'est transmise tant que vous
-          n'avez pas donné votre consentement.
-        </p>
-        <button class="consent-btn" id="open-cookies-from-modal">
-          Gérer mes préférences cookies
-        </button>
-      </div>
-
-      {/* État de chargement */}
-      <div id="pipedrive-loading" class="loading-block" hidden>
+      <div id="pipedrive-loading" class="loading-block">
         <div class="loading-spinner" aria-hidden="true"></div>
         <p>Chargement du formulaire…</p>
       </div>
@@ -72,7 +52,7 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
 
 <style>
   /* ============================================
-     MODALE — fixed plein écran, fond navy translucide
+     MODALE — fixed plein écran
      ============================================ */
   .contact-modal {
     position: fixed;
@@ -169,63 +149,12 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     overflow-y: auto;
     flex: 1 1 auto;
     min-height: 200px;
+    position: relative;
   }
 
-  /* ============================================
-     BLOC CONSENTEMENT — affiché si Pipedrive non autorisé
-     ============================================ */
-  .consent-block {
-    text-align: center;
-    padding: var(--m360-space-8) var(--m360-space-4);
-  }
-
-  .consent-icon {
-    color: var(--m360-blue);
-    margin-bottom: var(--m360-space-5);
-    display: flex;
-    justify-content: center;
-  }
-
-  .consent-title {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 19px;
-    color: var(--m360-text-title);
-    margin: 0 0 var(--m360-space-4);
-  }
-
-  .consent-text {
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--m360-text-body);
-    margin: 0 0 var(--m360-space-6);
-    max-width: 440px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .consent-text strong {
-    color: var(--m360-text-title);
-    font-weight: 700;
-  }
-
-  .consent-btn {
-    background: var(--m360-blue);
-    color: #fff;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 15px;
-    padding: var(--m360-space-4) var(--m360-space-7);
-    border-radius: var(--m360-radius-lg);
-    border: none;
-    cursor: pointer;
-    box-shadow: var(--m360-shadow-blue);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .consent-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--m360-shadow-blue-hover);
+  /* Le formulaire Pipedrive est masqué tant que le script n'est pas chargé */
+  .pipedriveWebForms:empty {
+    min-height: 0;
   }
 
   /* ============================================
@@ -235,6 +164,10 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     text-align: center;
     padding: var(--m360-space-12) var(--m360-space-4);
     color: var(--m360-text-caption);
+  }
+
+  .loading-block[hidden] {
+    display: none;
   }
 
   .loading-spinner {
@@ -276,83 +209,57 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
 
 <script>
   // ============================================================
-  // ContactModal — gestion d'ouverture/fermeture + lazy loading Pipedrive
+  // ContactModal — version simplifiée (sans Tarteaucitron)
   // ============================================================
 
   const modal = document.getElementById('contact-modal');
   const formHost = document.getElementById('pipedrive-form-host');
-  const consentBlock = document.getElementById('pipedrive-consent-block');
   const loadingBlock = document.getElementById('pipedrive-loading');
-  const openCookiesBtn = document.getElementById('open-cookies-from-modal');
 
-  // État : avons-nous déjà injecté le script Pipedrive ?
   let pipedriveLoaded = false;
 
   /**
-   * Vérifie le consentement utilisateur pour Pipedrive via Tarteaucitron.
-   * Retourne true si consenti, false sinon.
-   */
-  function isPipedriveConsented(): boolean {
-    // Tarteaucitron expose son état via window.tarteaucitron.state
-    const tac = (window as any).tarteaucitron;
-    if (!tac || !tac.state) return false;
-    return tac.state['pipedrive'] === true;
-  }
-
-  /**
-   * Injecte le script Pipedrive dans la modale.
-   * Une seule fois par session.
+   * Injecte le script Pipedrive — une seule fois par session.
    */
   function loadPipedriveScript() {
     if (pipedriveLoaded) return;
     if (!formHost) return;
 
     pipedriveLoaded = true;
-    if (loadingBlock) loadingBlock.hidden = false;
 
     const script = document.createElement('script');
     script.src = 'https://webforms.pipedrive.com/f/loader';
     script.async = true;
     script.onload = () => {
-      if (loadingBlock) loadingBlock.hidden = true;
+      // Le formulaire injecte son DOM dans formHost, on peut cacher le spinner
+      // mais on laisse 500ms à Pipedrive pour terminer l'injection
+      setTimeout(() => {
+        if (loadingBlock) loadingBlock.hidden = true;
+      }, 500);
     };
     script.onerror = () => {
       if (loadingBlock) {
-        loadingBlock.innerHTML = '<p style="color:var(--m360-text-caption)">Erreur de chargement du formulaire. Réessayez ou contactez-nous à <a href="mailto:vincent@metiers360.com">vincent@metiers360.com</a></p>';
+        loadingBlock.innerHTML = '<p style="color:var(--m360-text-caption)">Erreur de chargement du formulaire. Réessayez ou contactez-nous à <a href="mailto:vincent@metiers360.com" style="color:var(--m360-blue)">vincent@metiers360.com</a></p>';
       }
       pipedriveLoaded = false;
     };
 
-    // On injecte le script juste après le host pour que Pipedrive trouve le sélecteur
     formHost.appendChild(script);
   }
 
   /**
-   * Met à jour l'affichage de la modale en fonction du consentement.
-   */
-  function updateModalState() {
-    if (!formHost || !consentBlock) return;
-
-    if (isPipedriveConsented()) {
-      consentBlock.hidden = true;
-      formHost.style.display = 'block';
-      loadPipedriveScript();
-    } else {
-      consentBlock.hidden = false;
-      formHost.style.display = 'none';
-      if (loadingBlock) loadingBlock.hidden = true;
-    }
-  }
-
-  /**
-   * Ouvre la modale.
+   * Ouvre la modale et charge le formulaire si pas déjà fait.
    */
   function openContactModal() {
     if (!modal) return;
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    updateModalState();
+
+    // Charger le formulaire Pipedrive si pas déjà chargé
+    if (!pipedriveLoaded) {
+      loadPipedriveScript();
+    }
   }
 
   /**
@@ -369,7 +276,7 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
   // Branchement des événements
   // ============================================================
 
-  // Boutons d'ouverture — TOUS les [data-open-contact-modal] de la page
+  // Tous les boutons [data-open-contact-modal] de la page
   document.querySelectorAll('[data-open-contact-modal]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -382,31 +289,10 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     btn.addEventListener('click', closeContactModal);
   });
 
-  // Bouton "Gérer mes préférences cookies" dans le bloc consentement
-  openCookiesBtn?.addEventListener('click', () => {
-    closeContactModal();
-    // Ouvre le panneau Tarteaucitron
-    const tac = (window as any).tarteaucitron;
-    if (tac && tac.userInterface && tac.userInterface.openPanel) {
-      tac.userInterface.openPanel();
-    }
-  });
-
-  // Fermeture clavier (Escape)
+  // Fermeture clavier
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal?.classList.contains('is-open')) {
       closeContactModal();
-    }
-  });
-
-  // ============================================================
-  // Réaction au changement de consentement Tarteaucitron
-  // Si l'utilisateur consent à Pipedrive ALORS QUE la modale est ouverte,
-  // on charge automatiquement le formulaire.
-  // ============================================================
-  document.addEventListener('tac.before_responses', () => {
-    if (modal?.classList.contains('is-open')) {
-      updateModalState();
     }
   });
 </script>
