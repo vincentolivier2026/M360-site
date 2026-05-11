@@ -556,11 +556,7 @@
     }
   });
 
-  // Modale "Nous contacter" — placeholder (étape 4b)
-  document.querySelectorAll('[data-open-contact-modal]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.info('[M360] Modale contact à brancher (étape 4b)');
-    });
-  });
+  // La gestion des boutons [data-open-contact-modal] est désormais
+  // assurée par ContactModal.astro (inclus dans BaseLayout).
+  // Aucun handler ici pour éviter de dupliquer.
 </script>

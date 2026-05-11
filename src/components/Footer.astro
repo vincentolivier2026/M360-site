@@ -78,6 +78,11 @@
       <li><a href="/rse">RSE</a></li>
       <li><a href="/inclusion-accessibilite">Inclusion & accessibilité</a></li>
       <li><a href="/plan-du-site">Plan du site</a></li>
+      <li>
+        <button type="button" class="footer-cookies-btn" data-open-cookies>
+          Gérer mes cookies
+        </button>
+      </li>
     </ul>
   </div>
 </footer>
@@ -301,4 +306,35 @@
       gap: var(--m360-space-4);
     }
   }
+
+  /* Bouton "Gérer mes cookies" dans le sous-footer
+     Style aligné sur les autres liens légaux (12px, 50% blanc) */
+  .footer-cookies-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .footer-cookies-btn:hover {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: underline;
+  }
 </style>
+
+<script>
+  // Câblage du bouton "Gérer mes cookies" → rouvre le panneau Tarteaucitron
+  document.querySelectorAll('[data-open-cookies]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tac = (window as any).tarteaucitron;
+      if (tac && tac.userInterface && tac.userInterface.openPanel) {
+        tac.userInterface.openPanel();
+      }
+    });
+  });
+</script>

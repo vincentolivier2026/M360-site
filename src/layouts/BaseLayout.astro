@@ -1,11 +1,15 @@
 ---
 // src/layouts/BaseLayout.astro
-// Squelette HTML commun à toutes les pages du site M360.
-// Importe les styles globaux + tokens, intègre Header et Footer.
+// Squelette HTML commun + intégration globale :
+// - Plausible Analytics (chargé inconditionnellement, exempté CNIL)
+// - Tarteaucitron (bandeau cookies)
+// - ContactModal (modale Pipedrive avec lazy loading après consentement)
 
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ContactModal from '../components/ContactModal.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 
 interface Props {
   title: string;
@@ -39,11 +43,25 @@ const fullTitle = title === 'Métiers 360'
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    {/* Open Graph minimal — sera enrichi plus tard */}
+    {/* Open Graph minimal */}
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
+
+    {/* ====================================================
+        PLAUSIBLE ANALYTICS — exempté de consentement CNIL
+        Chargé inconditionnellement dans le <head>.
+        Pas de cookie, pas de donnée identifiable.
+        ==================================================== */}
+    <script is:inline async src="https://plausible.io/js/pa-feyr7mM8efEpMVeo9PGw0.js"></script>
+    <script is:inline>
+      window.plausible = window.plausible || function() {
+        (plausible.q = plausible.q || []).push(arguments);
+      };
+      plausible.init = plausible.init || function(i) { plausible.o = i || {}; };
+      plausible.init();
+    </script>
   </head>
 
   <body>
@@ -56,6 +74,12 @@ const fullTitle = title === 'Métiers 360'
     </main>
 
     <Footer />
+
+    {/* Modale de contact — singleton, déclenchée par tout [data-open-contact-modal] */}
+    <ContactModal />
+
+    {/* Bandeau cookies Tarteaucitron — chargé en dernier */}
+    <CookieBanner />
   </body>
 </html>
 
@@ -68,7 +92,7 @@ const fullTitle = title === 'Métiers 360'
     background: var(--m360-navy);
     color: #fff;
     padding: var(--m360-space-3) var(--m360-space-5);
-    z-index: 999;
+    z-index: 9999;
     text-decoration: none;
     border-radius: 0 0 var(--m360-radius-md) 0;
   }

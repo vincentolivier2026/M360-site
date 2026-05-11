@@ -1,0 +1,230 @@
+---
+// src/components/CookieBanner.astro
+// Wrapper de configuration Tarteaucitron — bandeau cookies conforme CNIL.
+//
+// Services déclarés :
+// - Pipedrive : consentement REQUIS (formulaires de contact, scripts tiers)
+// - Plausible : exempté de consentement (chargé inconditionnellement dans BaseLayout)
+//
+// Tarteaucitron lui-même est servi depuis /tarteaucitron/ (téléchargé dans public/).
+// Personnalisation visuelle via CSS pour matcher l'identité navy M360.
+//
+// Singleton : ce composant doit être inclus une seule fois dans BaseLayout.
+---
+
+<script is:inline src="/tarteaucitron/tarteaucitron.js"></script>
+
+<script is:inline>
+  // ============================================================
+  // Configuration Tarteaucitron — au chargement de la page
+  // ============================================================
+  tarteaucitron.init({
+    "privacyUrl": "/politique-confidentialite",
+    "bodyPosition": "bottom",
+    "hashtag": "#tarteaucitron",
+    "cookieName": "tarteaucitron",
+    "orientation": "bottom",
+    "groupServices": false,
+    "showDetailsOnClick": true,
+    "serviceDefaultState": "wait",
+    "showAlertSmall": true,
+    "cookieslist": false,
+    "closePopup": false,
+    "showIcon": true,
+    "iconPosition": "BottomLeft",
+    "adblocker": false,
+    "DenyAllCta": true,
+    "AcceptAllCta": true,
+    "highPrivacy": true,
+    "handleBrowserDNTRequest": false,
+    "removeCredit": false,
+    "moreInfoLink": true,
+    "useExternalCss": false,
+    "useExternalJs": false,
+    "readmoreLink": "/politique-confidentialite",
+    "mandatory": true,
+    "mandatoryCta": true
+  });
+
+  // ============================================================
+  // Déclaration du service Pipedrive (custom)
+  // Tarteaucitron ne propose pas Pipedrive en standard,
+  // on le déclare en service custom.
+  // ============================================================
+  tarteaucitron.services.pipedrive = {
+    "key": "pipedrive",
+    "type": "support",
+    "name": "Pipedrive (formulaires)",
+    "uri": "https://www.pipedrive.com/fr/privacy",
+    "needConsent": true,
+    "cookies": [],
+    "js": function () {
+      // Le script Pipedrive est chargé dynamiquement par ContactModal
+      // au moment où l'utilisateur ouvre la modale ET a consenti.
+      // Rien à faire ici : on laisse ContactModal gérer l'injection
+      // pour ne charger qu'à la demande.
+    },
+    "fallback": function () {
+      // Idem : le fallback est géré par ContactModal (bloc consent-block)
+    }
+  };
+
+  // On enregistre le service auprès de Tarteaucitron
+  (tarteaucitron.job = tarteaucitron.job || []).push('pipedrive');
+</script>
+
+<style is:global>
+  /* ============================================
+     Personnalisation Tarteaucitron — identité M360
+     Override des styles par défaut.
+     is:global nécessaire car Tarteaucitron injecte
+     ses propres balises avec des IDs spécifiques.
+     ============================================ */
+
+  /* Bandeau principal (alerte cookies) */
+  #tarteaucitronAlertBig {
+    background: var(--m360-navy) !important;
+    color: #fff !important;
+    border-radius: var(--m360-radius-2xl) !important;
+    box-shadow: var(--m360-shadow-lg) !important;
+    padding: var(--m360-space-5) var(--m360-space-7) !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    max-width: 640px !important;
+    margin: var(--m360-space-5) !important;
+  }
+
+  #tarteaucitronAlertBig strong {
+    color: #fff !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+  }
+
+  #tarteaucitronAlertBig a {
+    color: #45ABFF !important;
+    text-decoration: underline !important;
+  }
+
+  /* Boutons du bandeau */
+  #tarteaucitronAlertBig button,
+  #tarteaucitronAlertBig .tarteaucitronCTAButton,
+  #tarteaucitronCloseAlert,
+  #tarteaucitronPersonalize,
+  #tarteaucitronAllAllowed,
+  #tarteaucitronAllDenied {
+    background: var(--m360-blue) !important;
+    color: #fff !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    padding: var(--m360-space-3) var(--m360-space-5) !important;
+    border-radius: var(--m360-radius-lg) !important;
+    border: none !important;
+    box-shadow: var(--m360-shadow-blue) !important;
+    cursor: pointer !important;
+    transition: transform 0.15s ease !important;
+  }
+
+  #tarteaucitronAlertBig button:hover,
+  #tarteaucitronCloseAlert:hover,
+  #tarteaucitronAllAllowed:hover {
+    transform: translateY(-1px) !important;
+  }
+
+  /* Bouton "Personnaliser" en style outline */
+  #tarteaucitronPersonalize,
+  #tarteaucitronCloseAlert.tarteaucitronCTAButton {
+    background: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    box-shadow: none !important;
+  }
+
+  /* Bouton refuser tout */
+  #tarteaucitronAllDenied {
+    background: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    box-shadow: none !important;
+  }
+
+  /* Icône flottante en bas à gauche */
+  #tarteaucitronRoot #tarteaucitronAlertSmall {
+    background: var(--m360-navy) !important;
+    color: #fff !important;
+    border-radius: var(--m360-radius-pill) !important;
+    box-shadow: var(--m360-shadow-md) !important;
+    padding: var(--m360-space-3) var(--m360-space-4) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+  }
+
+  /* Panneau de gestion détaillé */
+  #tarteaucitron {
+    background: #fff !important;
+    border-radius: var(--m360-radius-card) !important;
+    box-shadow: var(--m360-shadow-xl) !important;
+    font-family: var(--font-body) !important;
+  }
+
+  #tarteaucitron .tarteaucitronH1,
+  #tarteaucitron h1,
+  #tarteaucitron h2 {
+    font-family: var(--font-display) !important;
+    font-weight: 800 !important;
+    color: var(--m360-text-title) !important;
+  }
+
+  #tarteaucitron .tarteaucitronH2 {
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    color: var(--m360-text-title) !important;
+  }
+
+  #tarteaucitron .tarteaucitronTitle button {
+    color: var(--m360-text-title) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+  }
+
+  /* Boutons "Autoriser" / "Interdire" dans le panneau */
+  #tarteaucitron .tarteaucitronAllow,
+  #tarteaucitron .tarteaucitronDeny {
+    border-radius: var(--m360-radius-md) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    padding: var(--m360-space-2) var(--m360-space-4) !important;
+  }
+
+  #tarteaucitron .tarteaucitronAllow {
+    background: var(--m360-blue) !important;
+    color: #fff !important;
+  }
+
+  #tarteaucitron .tarteaucitronDeny {
+    background: var(--m360-bg-neutral) !important;
+    color: var(--m360-text-body) !important;
+    border: 1px solid var(--m360-border) !important;
+  }
+
+  /* État autorisé : ligne verte → bleu navy M360 */
+  #tarteaucitron .tarteaucitronIsAllowed .tarteaucitronAllow {
+    background: var(--m360-navy) !important;
+  }
+
+  /* État refusé : ligne rouge → rose discret M360 */
+  #tarteaucitron .tarteaucitronIsDenied .tarteaucitronDeny {
+    background: var(--m360-pink-dark) !important;
+    color: #fff !important;
+  }
+
+  /* Responsive — bandeau plein largeur sur mobile */
+  @media (max-width: 639px) {
+    #tarteaucitronAlertBig {
+      margin: var(--m360-space-3) !important;
+      padding: var(--m360-space-4) !important;
+      font-size: 13px !important;
+    }
+  }
+</style>
