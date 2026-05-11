@@ -172,11 +172,35 @@
 </script>
 
 <style is:global>
-  /* Masquer complètement le bandeau natif Tarteaucitron */
+  /* Neutraliser le root Tarteaucitron — annule le position:fixed bottom:0 injecté en inline */
+  #tarteaucitronRoot {
+    position: static !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Masquer tous les éléments du bandeau natif — toutes variantes */
   #tarteaucitronAlertBig,
   #tarteaucitronAlertSmall,
-  #tarteaucitronRoot > #tarteaucitronAlertBig {
+  #tarteaucitronAlertBigTop,
+  #tarteaucitronAlertBigBottom,
+  #tarteaucitronDisclaimerAlert,
+  #tarteaucitronAlertBig *:not(#tarteaucitron):not(#tarteaucitron *) {
     display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* S'assurer que le panneau détaillé reste fonctionnel quand ouvert */
+  #tarteaucitronRoot #tarteaucitron {
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
   }
 
   /* Panneau de gestion détaillé — styles M360 */
