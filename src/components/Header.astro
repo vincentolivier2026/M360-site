@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <a href="/espace-client" class="nav-link">L'espace client</a>
+      <a href="/espace-client" class="btn-outline">L'espace client</a>
 
       <button class="btn-primary" data-open-contact-modal>
         Nous contacter
@@ -301,6 +301,33 @@
   .btn-primary.btn-compact {
     padding: var(--m360-space-3) var(--m360-space-5);
     font-size: 14px;
+  }
+
+  /* ============================================
+     BOUTON SECONDAIRE OUTLINE — Espace client desktop
+     Différencie l'accès utilitaire client du CTA commercial.
+     ============================================ */
+  .btn-outline {
+    background: transparent;
+    color: var(--m360-blue);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: calc(var(--m360-space-4) - 1.5px) calc(var(--m360-space-7) - 1.5px);
+    border-radius: var(--m360-radius-lg);
+    border: 1.5px solid var(--m360-blue);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    line-height: 1;
+  }
+
+  .btn-outline:hover {
+    background: var(--m360-blue-bg);
+    text-decoration: none;
+    transform: translateY(-1px);
   }
 
   /* ============================================
