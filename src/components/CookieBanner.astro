@@ -172,35 +172,32 @@
 </script>
 
 <style is:global>
-  /* Neutraliser le root Tarteaucitron — annule le position:fixed bottom:0 injecté en inline */
+  /* Root : position fixed maintenue (le panneau en dépend), mais hauteur nulle
+     pour ne pas bloquer la page. pointer-events:none sauf pour le panneau. */
   #tarteaucitronRoot {
-    position: static !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     bottom: auto !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    width: 0 !important;
+    width: 100% !important;
     height: 0 !important;
     overflow: visible !important;
+    pointer-events: none !important;
+    z-index: 9000 !important;
   }
 
-  /* Masquer tous les éléments du bandeau natif — toutes variantes */
+  /* Panneau détaillé : pointer-events restaurés, Tarteaucitron gère sa visibilité */
+  #tarteaucitronRoot #tarteaucitron {
+    pointer-events: auto !important;
+  }
+
+  /* Bandeau natif et petite icône : masqués définitivement */
   #tarteaucitronAlertBig,
-  #tarteaucitronAlertSmall,
-  #tarteaucitronAlertBigTop,
-  #tarteaucitronAlertBigBottom,
-  #tarteaucitronDisclaimerAlert,
-  #tarteaucitronAlertBig *:not(#tarteaucitron):not(#tarteaucitron *) {
+  #tarteaucitronAlertSmall {
     display: none !important;
     visibility: hidden !important;
     pointer-events: none !important;
-  }
-
-  /* S'assurer que le panneau détaillé reste fonctionnel quand ouvert */
-  #tarteaucitronRoot #tarteaucitron {
-    display: block !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
   }
 
   /* Panneau de gestion détaillé — styles M360 */
