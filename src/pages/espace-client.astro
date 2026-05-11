@@ -22,7 +22,7 @@ import AccessCard from '../components/AccessCard.astro';
 
 // Centralisation des URLs pour un seul endroit à modifier plus tard
 const URLS = {
-  backOffice: '#',           // TODO : URL réelle back-office
+  backOffice: 'https://backoffice.metiers360.com/',
   guidePremierPas: '#',      // TODO : URL Notion/Drive
   inscriptionFormation: '#', // TODO : URL inscription formation débutante
   kitCommunication: '#',     // TODO : URL kit de communication
@@ -35,29 +35,40 @@ const URLS = {
 >
 
   {/* ============================================
-       HERO COURT — Accueil + CTA back-office
+       HERO DEUX COLONNES — Texte gauche + photo back-office droite
        ============================================ */}
   <section class="ec-hero">
     <div class="ec-hero-inner">
-      <p class="ec-hero-eyebrow">Espace client</p>
-      <h1 class="ec-hero-title">
-        Bienvenue dans votre espace <strong>Métiers&nbsp;360</strong>.
-      </h1>
-      <p class="ec-hero-lead">
-        Accédez à votre back-office, aux ressources pour vos animations
-        et à l'ensemble du support technique.
-      </p>
+      <div class="ec-hero-text">
+        <p class="ec-hero-eyebrow">Espace client</p>
+        <h1 class="ec-hero-title">
+          Bienvenue dans votre espace <strong>Métiers&nbsp;360</strong>.
+        </h1>
+        <p class="ec-hero-lead">
+          Accédez à votre back-office, aux ressources pour vos animations
+          et à l'ensemble du support technique.
+        </p>
 
-      <a
-        href={URLS.backOffice}
-        class="ec-cta-primary"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Accéder au back-office
-        <span class="ec-cta-arrow" aria-hidden="true">↗</span>
-      </a>
-      <p class="ec-cta-note">Ouverture dans un nouvel onglet · Identifiants requis</p>
+        <a
+          href={URLS.backOffice}
+          class="ec-cta-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Accéder au back-office
+          <span class="ec-cta-arrow" aria-hidden="true">↗</span>
+        </a>
+        <p class="ec-cta-note">Ouverture dans un nouvel onglet · Identifiants requis</p>
+      </div>
+
+      <div class="ec-hero-visual" aria-hidden="true">
+        <img
+          src="/images/backoffice.jpg"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
     </div>
   </section>
 
@@ -166,17 +177,25 @@ const URLS = {
 
 <style>
   /* ============================================
-     HERO ESPACE CLIENT
+     HERO ESPACE CLIENT — 2 colonnes texte + photo
      ============================================ */
   .ec-hero {
     background: linear-gradient(180deg, var(--m360-blue-bg) 0%, #fff 100%);
-    padding: var(--m360-space-14) var(--m360-space-8) var(--m360-space-14);
+    padding: var(--m360-space-14) var(--m360-space-8);
+    overflow: hidden;
   }
 
   .ec-hero-inner {
-    max-width: 800px;
+    max-width: 1280px;
     margin: 0 auto;
-    text-align: center;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--m360-space-12);
+    align-items: center;
+  }
+
+  .ec-hero-text {
+    text-align: left;
   }
 
   .ec-hero-eyebrow {
@@ -192,7 +211,7 @@ const URLS = {
   .ec-hero-title {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(36px, 5vw, 56px);
+    font-size: clamp(36px, 4.5vw, 52px);
     line-height: 1.1;
     letter-spacing: -0.025em;
     color: var(--m360-text-title);
@@ -209,8 +228,8 @@ const URLS = {
     font-size: 18px;
     line-height: 1.5;
     color: var(--m360-text-body);
-    margin: 0 auto var(--m360-space-9);
-    max-width: 56ch;
+    margin: 0 0 var(--m360-space-9);
+    max-width: 48ch;
   }
 
   .ec-cta-primary {
@@ -248,6 +267,21 @@ const URLS = {
     font-size: 13px;
     color: var(--m360-text-caption);
     margin: var(--m360-space-4) 0 0;
+  }
+
+  /* Colonne photo back-office */
+  .ec-hero-visual {
+    border-radius: var(--m360-radius-card);
+    overflow: hidden;
+    box-shadow: var(--m360-shadow-lg);
+    aspect-ratio: 3 / 2;
+  }
+
+  .ec-hero-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 
   /* ============================================
@@ -434,6 +468,19 @@ const URLS = {
   /* ============================================
      RESPONSIVE
      ============================================ */
+  @media (max-width: 967px) {
+    .ec-hero-inner {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-10);
+    }
+    .ec-hero-visual {
+      max-width: 560px;
+      margin: 0 auto;
+      /* Pas d'order:-1 ici : on garde le texte AVANT la photo sur mobile.
+         Pattern (b) validé avec Vincent : titre prioritaire au-dessus du fold. */
+    }
+  }
+
   @media (max-width: 1099px) {
     .ec-cards-grid {
       grid-template-columns: repeat(2, 1fr);
