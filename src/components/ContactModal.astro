@@ -1,18 +1,17 @@
 ---
 // src/components/ContactModal.astro
-// Modale "Nous contacter" — VERSION PRÉ-PROD PRIVÉE (sans Tarteaucitron).
+// Modale "Nous contacter" — V2 fix : création dynamique de la div Pipedrive.
 //
-// IMPORTANT : cette version charge Pipedrive directement, sans consentement.
-// À REMETTRE EN PLACE TARTEAUCITRON AVANT TOUT PASSAGE EN PRODUCTION PUBLIQUE
-// (cohérence avec la politique de confidentialité V2 qui annonce le consentement).
+// Pattern :
+// 1. Au chargement de la page : modale fermée, AUCUN <div class="pipedriveWebForms"> dans le DOM
+// 2. Clic "Nous contacter" → ouverture de la modale
+// 3. À la première ouverture :
+//    - Création dynamique de <div class="pipedriveWebForms" data-pd-webforms="...">
+//    - Injection du <script> Pipedrive APRÈS la div
+//    - Pipedrive scanne, trouve la div fraîchement créée, injecte le formulaire
 //
-// Comportement actuel :
-// 1. Au chargement de la page : modale fermée, AUCUN script Pipedrive chargé
-// 2. Clic sur un bouton [data-open-contact-modal] → ouverture de la modale
-// 3. À la première ouverture : injection du script Pipedrive dans la modale
-// 4. Le script Pipedrive n'est chargé qu'UNE fois par session
-//
-// Singleton : à inclure une seule fois dans BaseLayout.
+// Cette approche évite le problème où Pipedrive ne trouve pas une div cachée
+// au chargement initial.
 
 const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wXUcg8YQo4ckEuXdOhOnLUpvXo7aTOwyPa8VmPb7cgtsmckyD';
 ---
@@ -36,24 +35,29 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     </header>
 
     <div class="modal-body">
-      <div
-        id="pipedrive-form-host"
-        class="pipedriveWebForms"
-        data-pd-webforms={PIPEDRIVE_FORM_URL}
-      ></div>
+      {/* Container vide — la div pipedriveWebForms sera injectée ici par JS
+          à la première ouverture de la modale */}
+      <div id="pipedrive-container"></div>
 
       <div id="pipedrive-loading" class="loading-block">
         <div class="loading-spinner" aria-hidden="true"></div>
         <p>Chargement du formulaire…</p>
+      </div>
+
+      {/* Fallback affiché si le formulaire n'a pas chargé après 8 secondes */}
+      <div id="pipedrive-fallback" class="fallback-block" hidden>
+        <p>
+          Le formulaire de contact ne s'est pas chargé. Vérifiez que votre
+          bloqueur de publicités n'est pas actif, ou contactez-nous directement
+          par e-mail à
+          <a href="mailto:vincent@metiers360.com">vincent@metiers360.com</a>.
+        </p>
       </div>
     </div>
   </div>
 </div>
 
 <style>
-  /* ============================================
-     MODALE — fixed plein écran
-     ============================================ */
   .contact-modal {
     position: fixed;
     inset: 0;
@@ -100,9 +104,6 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     transform: translateY(0);
   }
 
-  /* ============================================
-     HEADER DE MODALE
-     ============================================ */
   .modal-header {
     display: flex;
     align-items: center;
@@ -141,9 +142,6 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     background: var(--m360-border);
   }
 
-  /* ============================================
-     CORPS DE MODALE
-     ============================================ */
   .modal-body {
     padding: var(--m360-space-6) var(--m360-space-8) var(--m360-space-8);
     overflow-y: auto;
@@ -152,14 +150,6 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     position: relative;
   }
 
-  /* Le formulaire Pipedrive est masqué tant que le script n'est pas chargé */
-  .pipedriveWebForms:empty {
-    min-height: 0;
-  }
-
-  /* ============================================
-     ÉTAT DE CHARGEMENT
-     ============================================ */
   .loading-block {
     text-align: center;
     padding: var(--m360-space-12) var(--m360-space-4);
@@ -184,9 +174,23 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     to { transform: rotate(360deg); }
   }
 
-  /* ============================================
-     RESPONSIVE
-     ============================================ */
+  .fallback-block {
+    padding: var(--m360-space-8) var(--m360-space-4);
+    text-align: center;
+    color: var(--m360-text-body);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .fallback-block[hidden] {
+    display: none;
+  }
+
+  .fallback-block a {
+    color: var(--m360-blue);
+    font-weight: 700;
+  }
+
   @media (max-width: 639px) {
     .modal-panel {
       width: 100%;
@@ -207,64 +211,90 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
   }
 </style>
 
-<script>
+<script define:vars={{ PIPEDRIVE_FORM_URL }}>
   // ============================================================
-  // ContactModal — version simplifiée (sans Tarteaucitron)
+  // ContactModal — V2 fix : injection dynamique de la div + script
   // ============================================================
 
   const modal = document.getElementById('contact-modal');
-  const formHost = document.getElementById('pipedrive-form-host');
+  const container = document.getElementById('pipedrive-container');
   const loadingBlock = document.getElementById('pipedrive-loading');
+  const fallbackBlock = document.getElementById('pipedrive-fallback');
 
-  let pipedriveLoaded = false;
+  let pipedriveInjected = false;
+  let loadTimeoutId = null;
 
   /**
-   * Injecte le script Pipedrive — une seule fois par session.
+   * Injecte la div pipedriveWebForms ET le script loader.
+   * Pipedrive trouvera la div fraîchement créée et injectera le formulaire dedans.
    */
-  function loadPipedriveScript() {
-    if (pipedriveLoaded) return;
-    if (!formHost) return;
+  function injectPipedrive() {
+    if (pipedriveInjected) return;
+    if (!container) return;
 
-    pipedriveLoaded = true;
+    pipedriveInjected = true;
+    console.info('[M360] Injection du formulaire Pipedrive…');
 
+    // 1) Création de la div cible
+    const pdDiv = document.createElement('div');
+    pdDiv.className = 'pipedriveWebForms';
+    pdDiv.setAttribute('data-pd-webforms', PIPEDRIVE_FORM_URL);
+
+    // 2) Création du script
     const script = document.createElement('script');
     script.src = 'https://webforms.pipedrive.com/f/loader';
     script.async = true;
+
     script.onload = () => {
-      // Le formulaire injecte son DOM dans formHost, on peut cacher le spinner
-      // mais on laisse 500ms à Pipedrive pour terminer l'injection
+      console.info('[M360] Script Pipedrive chargé.');
+      // Le formulaire peut prendre encore 1-2s pour s'afficher après le script
       setTimeout(() => {
         if (loadingBlock) loadingBlock.hidden = true;
-      }, 500);
-    };
-    script.onerror = () => {
-      if (loadingBlock) {
-        loadingBlock.innerHTML = '<p style="color:var(--m360-text-caption)">Erreur de chargement du formulaire. Réessayez ou contactez-nous à <a href="mailto:vincent@metiers360.com" style="color:var(--m360-blue)">vincent@metiers360.com</a></p>';
-      }
-      pipedriveLoaded = false;
+      }, 1500);
     };
 
-    formHost.appendChild(script);
+    script.onerror = (e) => {
+      console.error('[M360] Erreur de chargement du script Pipedrive :', e);
+      showFallback();
+    };
+
+    // 3) Ordre d'insertion : div d'abord, script après — comme dans le snippet officiel
+    container.appendChild(pdDiv);
+    container.appendChild(script);
+
+    // 4) Timeout de sécurité : si après 8 secondes le formulaire n'est pas visible, on bascule en fallback
+    loadTimeoutId = window.setTimeout(() => {
+      const hasFormContent = pdDiv && pdDiv.children.length > 0;
+      if (!hasFormContent) {
+        console.warn('[M360] Formulaire Pipedrive non visible après 8s — fallback.');
+        showFallback();
+      }
+    }, 8000);
   }
 
-  /**
-   * Ouvre la modale et charge le formulaire si pas déjà fait.
-   */
+  function showFallback() {
+    if (loadingBlock) loadingBlock.hidden = true;
+    if (fallbackBlock) fallbackBlock.hidden = false;
+    if (loadTimeoutId) {
+      clearTimeout(loadTimeoutId);
+      loadTimeoutId = null;
+    }
+  }
+
   function openContactModal() {
     if (!modal) return;
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    // Charger le formulaire Pipedrive si pas déjà chargé
-    if (!pipedriveLoaded) {
-      loadPipedriveScript();
+    // Charger le formulaire à la première ouverture
+    if (!pipedriveInjected) {
+      // Petit délai pour laisser la modale finir son animation d'ouverture
+      // (Pipedrive a besoin que la div cible soit dans le DOM visible)
+      setTimeout(injectPipedrive, 100);
     }
   }
 
-  /**
-   * Ferme la modale.
-   */
   function closeContactModal() {
     if (!modal) return;
     modal.classList.remove('is-open');
@@ -272,11 +302,7 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     document.body.style.overflow = '';
   }
 
-  // ============================================================
   // Branchement des événements
-  // ============================================================
-
-  // Tous les boutons [data-open-contact-modal] de la page
   document.querySelectorAll('[data-open-contact-modal]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -284,12 +310,10 @@ const PIPEDRIVE_FORM_URL = 'https://webforms.pipedrive.com/f/72vZZGeahXoRGtph1wX
     });
   });
 
-  // Boutons de fermeture (overlay + croix)
   modal?.querySelectorAll('[data-close-modal]').forEach(btn => {
     btn.addEventListener('click', closeContactModal);
   });
 
-  // Fermeture clavier
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal?.classList.contains('is-open')) {
       closeContactModal();
