@@ -1,0 +1,468 @@
+---
+// src/pages/espace-client.astro
+// Page hub Espace client — version simplifiée du Sitemap V3.
+//
+// Composition :
+// 1. Hero court avec CTA principal "Accéder au back-office" (lien externe)
+// 2. 4 cartes d'accès rapide (3 externes + 1 interne support)
+// 3. Placeholder visuel "Actualités produit à venir" (mécanisme Sanity à recalibrer)
+// 4. Bloc final "Besoin d'aide ?" avec lien vers /support
+//
+// Note : page volontairement INDEXABLE pour capter la requête branded
+// "espace client metiers360" sur Google.
+//
+// TODO — URLs externes à remplacer quand finalisées :
+// - Back-office authentifié
+// - Guide premier pas
+// - Inscription formation débutante
+// - Kit de communication
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AccessCard from '../components/AccessCard.astro';
+
+// Centralisation des URLs pour un seul endroit à modifier plus tard
+const URLS = {
+  backOffice: '#',           // TODO : URL réelle back-office
+  guidePremierPas: '#',      // TODO : URL Notion/Drive
+  inscriptionFormation: '#', // TODO : URL inscription formation débutante
+  kitCommunication: '#',     // TODO : URL kit de communication
+};
+---
+
+<BaseLayout
+  title="Espace client"
+  description="Métiers 360 — Espace client. Accédez au back-office, aux ressources d'animation et au support technique."
+>
+
+  {/* ============================================
+       HERO COURT — Accueil + CTA back-office
+       ============================================ */}
+  <section class="ec-hero">
+    <div class="ec-hero-inner">
+      <p class="ec-hero-eyebrow">Espace client</p>
+      <h1 class="ec-hero-title">
+        Bienvenue dans votre espace <strong>Métiers&nbsp;360</strong>.
+      </h1>
+      <p class="ec-hero-lead">
+        Accédez à votre back-office, aux ressources pour vos animations
+        et à l'ensemble du support technique.
+      </p>
+
+      <a
+        href={URLS.backOffice}
+        class="ec-cta-primary"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Accéder au back-office
+        <span class="ec-cta-arrow" aria-hidden="true">↗</span>
+      </a>
+      <p class="ec-cta-note">Ouverture dans un nouvel onglet · Identifiants requis</p>
+    </div>
+  </section>
+
+  {/* ============================================
+       4 CARTES D'ACCÈS RAPIDE
+       ============================================ */}
+  <section class="ec-cards-section">
+    <div class="ec-cards-inner">
+      <h2 class="ec-cards-title">Vos accès rapides</h2>
+
+      <div class="ec-cards-grid">
+        <AccessCard
+          href={URLS.guidePremierPas}
+          icon="🚀"
+          title="Guide premier pas"
+          desc="Démarrer avec Métiers 360 — installation des casques, premières animations, retours d'expérience."
+          arrow="Consulter"
+          tone="blue"
+          external={true}
+          fresh="Essentiel"
+        />
+
+        <AccessCard
+          href={URLS.inscriptionFormation}
+          icon="🎓"
+          title="Formation débutante"
+          desc="Inscrivez vos équipes à notre formation d'introduction à l'animation Métiers 360."
+          arrow="S'inscrire"
+          tone="pink"
+          external={true}
+        />
+
+        <AccessCard
+          href={URLS.kitCommunication}
+          icon="📣"
+          title="Kit de communication"
+          desc="Affiches, visuels, textes prêts à l'emploi pour faire connaître Métiers 360 à vos publics."
+          arrow="Télécharger"
+          tone="blue"
+          external={true}
+        />
+
+        <AccessCard
+          href="/support"
+          icon="?"
+          title="Support technique"
+          desc="FAQ, guides de dépannage et formulaire pour contacter notre équipe support."
+          arrow="Obtenir de l'aide"
+          tone="pink"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================
+       FIL D'ACTUALITÉS PRODUIT — Placeholder visuel
+       Le mécanisme Sanity est à recalibrer (publicCible supprimé).
+       En attendant, on affiche la structure cible avec un état "vide".
+       ============================================ */}
+  <section class="ec-news-section">
+    <div class="ec-news-inner">
+      <header class="ec-news-header">
+        <h2 class="ec-news-title">Actualités produit</h2>
+        <a href="/blog" class="ec-news-link">Voir tout le blog →</a>
+      </header>
+
+      <div class="ec-news-placeholder">
+        <div class="placeholder-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="48" height="48">
+            <circle cx="32" cy="32" r="22" fill="none" stroke="#0080F4" stroke-width="2" opacity="0.4" stroke-dasharray="4 4"/>
+            <path d="M22 32 L30 40 L42 26" stroke="#021F3F" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+          </svg>
+        </div>
+        <p class="placeholder-title">Les actualités produit s'afficheront ici</p>
+        <p class="placeholder-text">
+          Évolutions du catalogue, nouvelles ressources, retours d'expérience —
+          tout ce qui vous aide à tirer le meilleur de Métiers 360 sera publié
+          ici dès l'activation du fil éditorial.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================
+       BLOC "BESOIN D'AIDE ?" — lien support
+       ============================================ */}
+  <section class="ec-help-section">
+    <div class="ec-help-inner">
+      <h2 class="ec-help-title">Besoin d'aide ?</h2>
+      <p class="ec-help-text">
+        Notre équipe support répond à vos questions techniques et pédagogiques.
+        Consultez la base de connaissances ou contactez-nous directement.
+      </p>
+      <div class="ec-help-actions">
+        <a href="/support" class="ec-help-link">
+          Aller à la page support <span aria-hidden="true">→</span>
+        </a>
+        <button class="ec-help-contact" data-open-contact-modal>
+          Nous contacter
+        </button>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ============================================
+     HERO ESPACE CLIENT
+     ============================================ */
+  .ec-hero {
+    background: linear-gradient(180deg, var(--m360-blue-bg) 0%, #fff 100%);
+    padding: var(--m360-space-14) var(--m360-space-8) var(--m360-space-14);
+  }
+
+  .ec-hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .ec-hero-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--m360-blue);
+    margin: 0 0 var(--m360-space-5);
+  }
+
+  .ec-hero-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-5);
+  }
+
+  .ec-hero-title strong {
+    color: var(--m360-blue);
+    font-weight: inherit;
+  }
+
+  .ec-hero-lead {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--m360-text-body);
+    margin: 0 auto var(--m360-space-9);
+    max-width: 56ch;
+  }
+
+  .ec-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-3);
+    background: var(--m360-blue);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    padding: var(--m360-space-5) var(--m360-space-9);
+    border-radius: var(--m360-radius-lg);
+    text-decoration: none;
+    box-shadow: var(--m360-shadow-blue);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .ec-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--m360-shadow-blue-hover);
+    text-decoration: none;
+  }
+
+  .ec-cta-arrow {
+    font-size: 18px;
+    transition: transform 0.2s ease;
+  }
+
+  .ec-cta-primary:hover .ec-cta-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .ec-cta-note {
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    margin: var(--m360-space-4) 0 0;
+  }
+
+  /* ============================================
+     SECTION CARTES D'ACCÈS
+     ============================================ */
+  .ec-cards-section {
+    padding: var(--m360-space-12) var(--m360-space-8);
+    background: #fff;
+  }
+
+  .ec-cards-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ec-cards-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(24px, 3vw, 32px);
+    color: var(--m360-text-title);
+    text-align: center;
+    margin: 0 0 var(--m360-space-10);
+    letter-spacing: -0.02em;
+  }
+
+  .ec-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--m360-space-6);
+  }
+
+  /* ============================================
+     SECTION FIL D'ACTUS — placeholder
+     ============================================ */
+  .ec-news-section {
+    padding: var(--m360-space-12) var(--m360-space-8);
+    background: var(--m360-bg-neutral);
+  }
+
+  .ec-news-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .ec-news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--m360-space-4);
+    margin-bottom: var(--m360-space-8);
+  }
+
+  .ec-news-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(24px, 3vw, 32px);
+    color: var(--m360-text-title);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .ec-news-link {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  .ec-news-link:hover {
+    text-decoration: underline;
+  }
+
+  .ec-news-placeholder {
+    background: #fff;
+    border: 2px dashed var(--m360-border);
+    border-radius: var(--m360-radius-card);
+    padding: var(--m360-space-12) var(--m360-space-8);
+    text-align: center;
+  }
+
+  .placeholder-icon {
+    margin: 0 auto var(--m360-space-5);
+    display: flex;
+    justify-content: center;
+    opacity: 0.6;
+  }
+
+  .placeholder-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-3);
+  }
+
+  .placeholder-text {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--m360-text-caption);
+    margin: 0 auto;
+    max-width: 52ch;
+  }
+
+  /* ============================================
+     SECTION "BESOIN D'AIDE ?"
+     ============================================ */
+  .ec-help-section {
+    padding: var(--m360-space-12) var(--m360-space-8) var(--m360-space-14);
+    background: #fff;
+  }
+
+  .ec-help-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    padding: var(--m360-space-12) var(--m360-space-8);
+    background: var(--m360-blue-bg);
+    border-radius: var(--m360-radius-card);
+  }
+
+  .ec-help-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(24px, 3vw, 32px);
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-4);
+    letter-spacing: -0.02em;
+  }
+
+  .ec-help-text {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--m360-text-body);
+    margin: 0 auto var(--m360-space-7);
+    max-width: 50ch;
+  }
+
+  .ec-help-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-6);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ec-help-link {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--m360-blue);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+  }
+
+  .ec-help-link:hover {
+    text-decoration: underline;
+  }
+
+  .ec-help-contact {
+    background: var(--m360-blue);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: var(--m360-space-4) var(--m360-space-7);
+    border-radius: var(--m360-radius-lg);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--m360-shadow-blue);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .ec-help-contact:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--m360-shadow-blue-hover);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 1099px) {
+    .ec-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .ec-hero {
+      padding: var(--m360-space-12) var(--m360-space-5) var(--m360-space-10);
+    }
+    .ec-cards-section,
+    .ec-news-section,
+    .ec-help-section {
+      padding-left: var(--m360-space-5);
+      padding-right: var(--m360-space-5);
+    }
+    .ec-cards-grid {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-4);
+    }
+    .ec-news-placeholder {
+      padding: var(--m360-space-9) var(--m360-space-5);
+    }
+    .ec-help-inner {
+      padding: var(--m360-space-9) var(--m360-space-5);
+    }
+    .ec-help-actions {
+      flex-direction: column;
+      gap: var(--m360-space-4);
+    }
+  }
+</style>
