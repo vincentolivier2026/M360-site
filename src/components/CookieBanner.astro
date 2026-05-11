@@ -1,23 +1,21 @@
 ---
 // src/components/CookieBanner.astro
-// Wrapper de configuration Tarteaucitron — bandeau cookies conforme CNIL.
+// Gestion des cookies conforme CNIL.
+//
+// Stratégie :
+// - Tarteaucitron gère le consentement en arrière-plan (cookie "tarteaucitron")
+// - Son bandeau natif est masqué
+// - Une modale centrée M360 le remplace à la première visite
+// - Un bouton flottant (bas gauche) permet de rouvrir les préférences
 //
 // Services déclarés :
-// - Pipedrive : consentement REQUIS (formulaires de contact, scripts tiers)
-// - Plausible : exempté de consentement (chargé inconditionnellement dans BaseLayout)
-//
-// Tarteaucitron lui-même est servi depuis /tarteaucitron/ (téléchargé dans public/).
-// Personnalisation visuelle via CSS pour matcher l'identité navy M360.
-//
-// Singleton : ce composant doit être inclus une seule fois dans BaseLayout.
+// - Pipedrive : consentement REQUIS
+// - Plausible : exempté (chargé inconditionnellement dans BaseLayout)
 ---
 
 <script is:inline src="/tarteaucitron/tarteaucitron.js"></script>
 
 <script is:inline>
-  // ============================================================
-  // Configuration Tarteaucitron — au chargement de la page
-  // ============================================================
   tarteaucitron.init({
     "privacyUrl": "/politique-confidentialite",
     "bodyPosition": "bottom",
@@ -27,11 +25,10 @@
     "groupServices": false,
     "showDetailsOnClick": true,
     "serviceDefaultState": "wait",
-    "showAlertSmall": true,
+    "showAlertSmall": false,
     "cookieslist": false,
     "closePopup": false,
-    "showIcon": true,
-    "iconPosition": "BottomLeft",
+    "showIcon": false,
     "adblocker": false,
     "DenyAllCta": true,
     "AcceptAllCta": true,
@@ -46,11 +43,6 @@
     "mandatoryCta": true
   });
 
-  // ============================================================
-  // Déclaration du service Pipedrive (custom)
-  // Tarteaucitron ne propose pas Pipedrive en standard,
-  // on le déclare en service custom.
-  // ============================================================
   tarteaucitron.services.pipedrive = {
     "key": "pipedrive",
     "type": "support",
@@ -58,145 +50,136 @@
     "uri": "https://www.pipedrive.com/fr/privacy",
     "needConsent": true,
     "cookies": [],
-    "js": function () {
-      // Le script Pipedrive est chargé dynamiquement par ContactModal
-      // au moment où l'utilisateur ouvre la modale ET a consenti.
-      // Rien à faire ici : on laisse ContactModal gérer l'injection
-      // pour ne charger qu'à la demande.
-    },
-    "fallback": function () {
-      // Idem : le fallback est géré par ContactModal (bloc consent-block)
-    }
+    "js": function () {},
+    "fallback": function () {}
   };
 
-  // On enregistre le service auprès de Tarteaucitron
   (tarteaucitron.job = tarteaucitron.job || []).push('pipedrive');
 </script>
 
+<!-- Modale de consentement M360 -->
+<div id="cookie-modal" class="cookie-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cookie-modal-title">
+  <div class="cookie-modal-overlay"></div>
+  <div class="cookie-modal-panel">
+
+    <div class="cookie-modal-icon" aria-hidden="true">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="19" stroke="var(--m360-blue)" stroke-width="2"/>
+        <circle cx="14" cy="16" r="2.5" fill="var(--m360-navy)"/>
+        <circle cx="24" cy="12" r="2" fill="var(--m360-pink-dark)"/>
+        <circle cx="27" cy="22" r="2.5" fill="var(--m360-navy)"/>
+        <circle cx="17" cy="26" r="2" fill="var(--m360-pink-dark)"/>
+        <circle cx="22" cy="28" r="1.5" fill="var(--m360-navy)"/>
+      </svg>
+    </div>
+
+    <h2 id="cookie-modal-title" class="cookie-modal-title">Vos préférences cookies</h2>
+    <p class="cookie-modal-text">
+      Ce site utilise des cookies pour vous proposer un formulaire de contact (Pipedrive).
+      Plausible Analytics est utilisé sans cookie et ne nécessite pas de consentement.
+    </p>
+    <a href="/politique-confidentialite" class="cookie-modal-link">Politique de confidentialité →</a>
+
+    <div class="cookie-modal-actions">
+      <button id="cookie-accept-all" class="cookie-btn cookie-btn-primary">Tout accepter</button>
+      <button id="cookie-deny-all" class="cookie-btn cookie-btn-outline">Tout refuser</button>
+      <button id="cookie-customize" class="cookie-btn cookie-btn-ghost">Personnaliser</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bouton flottant pour rouvrir les préférences après choix -->
+<button id="cookie-reopen-btn" class="cookie-reopen-btn" aria-label="Gérer mes cookies" hidden>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+  </svg>
+  Cookies
+</button>
+
+<script>
+  // ============================================================
+  // Modale cookies M360 — logique d'affichage et d'actions
+  // ============================================================
+
+  const modal = document.getElementById('cookie-modal');
+  const reopenBtn = document.getElementById('cookie-reopen-btn');
+
+  /** Vérifie si l'utilisateur a déjà fait un choix (cookie tarteaucitron présent) */
+  function hasConsented(): boolean {
+    return document.cookie.split(';').some(c => c.trim().startsWith('tarteaucitron='));
+  }
+
+  function openModal() {
+    if (!modal) return;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    // Afficher le bouton flottant après le premier choix
+    if (reopenBtn) reopenBtn.hidden = false;
+  }
+
+  // Afficher la modale uniquement si pas encore de choix
+  if (!hasConsented()) {
+    // Léger délai pour que la page soit visible avant la modale
+    setTimeout(openModal, 600);
+  } else {
+    if (reopenBtn) reopenBtn.hidden = false;
+  }
+
+  // Tout accepter
+  document.getElementById('cookie-accept-all')?.addEventListener('click', () => {
+    const tac = (window as any).tarteaucitron;
+    if (tac?.userInterface?.respondAll) tac.userInterface.respondAll(true);
+    closeModal();
+  });
+
+  // Tout refuser
+  document.getElementById('cookie-deny-all')?.addEventListener('click', () => {
+    const tac = (window as any).tarteaucitron;
+    if (tac?.userInterface?.respondAll) tac.userInterface.respondAll(false);
+    closeModal();
+  });
+
+  // Personnaliser → ouvre le panneau Tarteaucitron
+  document.getElementById('cookie-customize')?.addEventListener('click', () => {
+    closeModal();
+    const tac = (window as any).tarteaucitron;
+    setTimeout(() => {
+      if (tac?.userInterface?.openPanel) tac.userInterface.openPanel();
+    }, 300);
+  });
+
+  // Bouton flottant → rouvre le panneau Tarteaucitron
+  reopenBtn?.addEventListener('click', () => {
+    const tac = (window as any).tarteaucitron;
+    if (tac?.userInterface?.openPanel) tac.userInterface.openPanel();
+  });
+
+  // Expose une fonction globale pour le lien "Gérer mes cookies" du footer
+  (window as any).openCookiePanel = () => {
+    const tac = (window as any).tarteaucitron;
+    if (tac?.userInterface?.openPanel) tac.userInterface.openPanel();
+  };
+</script>
+
 <style is:global>
-  /* ============================================
-     Personnalisation Tarteaucitron — identité M360
-     ============================================ */
-
-  /* Conteneur racine — barre plein-largeur en bas */
-  #tarteaucitronRoot {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 9000 !important;
+  /* Masquer complètement le bandeau natif Tarteaucitron */
+  #tarteaucitronAlertBig,
+  #tarteaucitronAlertSmall,
+  #tarteaucitronRoot > #tarteaucitronAlertBig {
+    display: none !important;
   }
 
-  /* Titre sr-only injecté par Tarteaucitron pour l'a11y — masquer visuellement */
-  #dialogTitle,
-  #tarteaucitronAlertBig .tarteaucitronH1.sr-only,
-  #tarteaucitronAlertBig [class*="sr-only"] {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0,0,0,0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
-
-  /* Bandeau principal — plein-largeur, fond navy */
-  #tarteaucitronAlertBig {
-    background: var(--m360-navy) !important;
-    color: #fff !important;
-    border-radius: 0 !important;
-    box-shadow: 0 -4px 24px rgba(2,31,63,0.18) !important;
-    padding: var(--m360-space-5) var(--m360-space-8) !important;
-    font-family: var(--font-body) !important;
-    font-size: 14px !important;
-    line-height: 1.6 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    flex-wrap: wrap !important;
-    gap: var(--m360-space-4) !important;
-    box-sizing: border-box !important;
-  }
-
-  #tarteaucitronAlertBig strong {
-    color: #fff !important;
-    font-family: var(--font-heading) !important;
-    font-weight: 700 !important;
-  }
-
-  #tarteaucitronAlertBig a {
-    color: #45ABFF !important;
-    text-decoration: underline !important;
-  }
-
-  /* Conteneur des boutons du bandeau */
-  #tarteaucitronAlertBig #tarteaucitronAlertBigBottom {
-    display: flex !important;
-    gap: var(--m360-space-3) !important;
-    flex-wrap: wrap !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* Boutons du bandeau */
-  #tarteaucitronAlertBig button,
-  #tarteaucitronAlertBig .tarteaucitronCTAButton,
-  #tarteaucitronCloseAlert,
-  #tarteaucitronPersonalize,
-  #tarteaucitronAllAllowed,
-  #tarteaucitronAllDenied {
-    background: var(--m360-blue) !important;
-    color: #fff !important;
-    font-family: var(--font-heading) !important;
-    font-weight: 700 !important;
-    font-size: 14px !important;
-    padding: var(--m360-space-3) var(--m360-space-5) !important;
-    border-radius: var(--m360-radius-lg) !important;
-    border: none !important;
-    box-shadow: var(--m360-shadow-blue) !important;
-    cursor: pointer !important;
-    transition: transform 0.15s ease !important;
-    white-space: nowrap !important;
-  }
-
-  #tarteaucitronAlertBig button:hover,
-  #tarteaucitronCloseAlert:hover,
-  #tarteaucitronAllAllowed:hover {
-    transform: translateY(-1px) !important;
-  }
-
-  /* Bouton "Personnaliser" et "Politique de confidentialité" en outline */
-  #tarteaucitronPersonalize,
-  #tarteaucitronCloseAlert.tarteaucitronCTAButton {
-    background: rgba(255,255,255,0.1) !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
-    box-shadow: none !important;
-  }
-
-  /* Bouton "Tout refuser" en outline */
-  #tarteaucitronAllDenied {
-    background: rgba(255,255,255,0.1) !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
-    box-shadow: none !important;
-  }
-
-  /* Icône flottante en bas à gauche */
-  #tarteaucitronRoot #tarteaucitronAlertSmall {
-    background: var(--m360-navy) !important;
-    color: #fff !important;
-    border-radius: var(--m360-radius-pill) !important;
-    box-shadow: var(--m360-shadow-md) !important;
-    padding: var(--m360-space-3) var(--m360-space-4) !important;
-    font-family: var(--font-heading) !important;
-    font-weight: 700 !important;
-    font-size: 13px !important;
-  }
-
-  /* Panneau de gestion détaillé */
+  /* Panneau de gestion détaillé — styles M360 */
   #tarteaucitron {
     background: #fff !important;
     border-radius: var(--m360-radius-card) !important;
@@ -224,7 +207,6 @@
     font-weight: 700 !important;
   }
 
-  /* Boutons "Autoriser" / "Interdire" dans le panneau */
   #tarteaucitron .tarteaucitronAllow,
   #tarteaucitron .tarteaucitronDeny {
     border-radius: var(--m360-radius-md) !important;
@@ -253,18 +235,180 @@
     background: var(--m360-pink-dark) !important;
     color: #fff !important;
   }
+</style>
 
-  /* Responsive mobile */
+<style>
+  /* ============================================
+     MODALE COOKIES M360
+     ============================================ */
+  .cookie-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  }
+
+  .cookie-modal.is-open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.3s ease, visibility 0s linear 0s;
+  }
+
+  .cookie-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 31, 63, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .cookie-modal-panel {
+    position: relative;
+    width: 92%;
+    max-width: 480px;
+    background: #fff;
+    border-radius: var(--m360-radius-card);
+    box-shadow: var(--m360-shadow-modal);
+    padding: var(--m360-space-10) var(--m360-space-8);
+    text-align: center;
+    transform: translateY(16px) scale(0.98);
+    transition: transform 0.3s ease-out;
+  }
+
+  .cookie-modal.is-open .cookie-modal-panel {
+    transform: translateY(0) scale(1);
+  }
+
+  .cookie-modal-icon {
+    margin-bottom: var(--m360-space-5);
+    display: flex;
+    justify-content: center;
+  }
+
+  .cookie-modal-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(22px, 3vw, 28px);
+    letter-spacing: -0.02em;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-4);
+  }
+
+  .cookie-modal-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--m360-text-body);
+    margin: 0 0 var(--m360-space-3);
+    max-width: none;
+  }
+
+  .cookie-modal-link {
+    font-size: 13px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--m360-blue);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: var(--m360-space-8);
+  }
+
+  .cookie-modal-link:hover {
+    text-decoration: underline;
+  }
+
+  .cookie-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-3);
+  }
+
+  /* Boutons */
+  .cookie-btn {
+    width: 100%;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: var(--m360-space-4) var(--m360-space-6);
+    border-radius: var(--m360-radius-lg);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    line-height: 1;
+  }
+
+  .cookie-btn-primary {
+    background: var(--m360-blue);
+    color: #fff;
+    box-shadow: var(--m360-shadow-blue);
+  }
+
+  .cookie-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--m360-shadow-blue-hover);
+  }
+
+  .cookie-btn-outline {
+    background: transparent;
+    color: var(--m360-text-body);
+    border: 1.5px solid var(--m360-border);
+  }
+
+  .cookie-btn-outline:hover {
+    background: var(--m360-bg-neutral);
+  }
+
+  .cookie-btn-ghost {
+    background: transparent;
+    color: var(--m360-text-caption);
+    font-size: 13px;
+    font-weight: 500;
+    padding: var(--m360-space-2) 0;
+  }
+
+  .cookie-btn-ghost:hover {
+    color: var(--m360-text-body);
+    text-decoration: underline;
+  }
+
+  /* Bouton flottant de réouverture */
+  .cookie-reopen-btn {
+    position: fixed;
+    bottom: var(--m360-space-5);
+    left: var(--m360-space-5);
+    z-index: 7000;
+    display: flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    background: var(--m360-navy);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 12px;
+    padding: var(--m360-space-2) var(--m360-space-4);
+    border-radius: var(--m360-radius-pill);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--m360-shadow-md);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .cookie-reopen-btn:hover {
+    background: var(--m360-blue);
+    color: #fff;
+  }
+
+  /* Responsive */
   @media (max-width: 639px) {
-    #tarteaucitronAlertBig {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      padding: var(--m360-space-4) var(--m360-space-5) !important;
-      font-size: 13px !important;
-    }
-
-    #tarteaucitronAlertBig #tarteaucitronAlertBigBottom {
-      width: 100% !important;
+    .cookie-modal-panel {
+      padding: var(--m360-space-8) var(--m360-space-5);
+      border-radius: var(--m360-radius-2xl);
     }
   }
 </style>
