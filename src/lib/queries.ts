@@ -15,6 +15,7 @@ export async function getAllExperiences(): Promise<ExperienceListItem[]> {
       "slug": slug.current,
       sousTitre,
       descriptionCourte,
+      descriptionLongue,
       codeAcces,
       dateSortie,
       "vignetteUrl": vignette.asset->url,

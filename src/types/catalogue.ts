@@ -47,6 +47,7 @@ export interface ExperienceListItem {
   slug: string;
   sousTitre?: string;
   descriptionCourte?: string;
+  descriptionLongue?: string;
   codeAcces: string;
   dateSortie: string;
   vignetteUrl?: string;

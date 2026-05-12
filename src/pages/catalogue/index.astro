@@ -1,77 +1,31 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ExperienceCard from '../../components/ExperienceCard.astro';
-import { getAllExperiences, getAllThematiques } from '../../lib/queries';
+import { getAllExperiences } from '../../lib/queries';
 
-const [experiences, thematiques] = await Promise.all([
-  getAllExperiences(),
-  getAllThematiques(),
-]);
-
-const total = experiences.length;
+const experiences = await getAllExperiences();
 ---
 
 <BaseLayout
   title="Le catalogue"
   description="Découvrez nos expériences immersives en réalité virtuelle — plus de 160 métiers à explorer, pour tous les publics."
 >
-  <!-- HERO -->
-  <section class="catalogue-hero">
+  <!-- BARRE DE RECHERCHE -->
+  <section class="catalogue-search-section" aria-label="Recherche">
     <div class="container">
-      <p class="hero-eyebrow">{total} expériences immersives</p>
-      <h1 class="hero-title">Explorer le catalogue</h1>
-      <p class="hero-description">
-        Découvrez les métiers de l'intérieur — une immersion en réalité virtuelle
-        de 6&nbsp;minutes qui change le regard sur l'orientation professionnelle.
-      </p>
-    </div>
-  </section>
-
-  <!-- FILTRES -->
-  <section class="catalogue-filters-section" aria-label="Filtres">
-    <div class="container">
-      <div class="filters-bar">
-
-        <!-- Thématiques -->
-        <div class="filter-group" role="group" aria-label="Filtrer par thématique">
-          <button
-            class="filter-pill is-active"
-            data-thematique=""
-            aria-pressed="true"
-          >
-            Toutes
-          </button>
-          {thematiques.map(t => (
-            <button
-              class="filter-pill"
-              data-thematique={t.slug}
-              aria-pressed="false"
-            >
-              {t.titre}
-            </button>
-          ))}
-        </div>
-
-        <!-- Recherche métier -->
-        <div class="filter-search-wrapper">
-          <svg class="filter-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <input
-            id="metier-search"
-            type="search"
-            placeholder="Filtrer par métier…"
-            autocomplete="off"
-            aria-label="Rechercher un métier"
-          />
-        </div>
+      <div class="search-wrapper">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M13 13l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="catalogue-search"
+          type="search"
+          placeholder="Rechercher une expérience, un métier, une thématique…"
+          autocomplete="off"
+          aria-label="Rechercher dans le catalogue"
+        />
       </div>
-
-      <!-- Compteur de résultats -->
-      <p class="catalogue-count" aria-live="polite" aria-atomic="true">
-        <span id="results-count">{total}</span> expérience{total > 1 ? 's' : ''}
-      </p>
     </div>
   </section>
 
@@ -82,8 +36,14 @@ const total = experiences.length;
         {experiences.map(xp => (
           <li
             class="catalogue-grid-item"
-            data-thematiques={(xp.thematiques ?? []).map(t => t.slug).join(',')}
-            data-metiers-text={(xp.metiers ?? []).map(m => m.libelle).join(' ').toLowerCase()}
+            data-search={[
+              xp.titre,
+              xp.sousTitre,
+              xp.descriptionCourte,
+              xp.descriptionLongue,
+              ...(xp.thematiques ?? []).map(t => t.titre),
+              ...(xp.metiers ?? []).map(m => m.libelle),
+            ].filter(Boolean).join(' ').toLowerCase()}
           >
             <ExperienceCard experience={xp} />
           </li>
@@ -91,8 +51,8 @@ const total = experiences.length;
       </ul>
 
       <p class="catalogue-empty" id="catalogue-empty" hidden>
-        Aucune expérience ne correspond à ces filtres.
-        <button class="reset-link" id="reset-filters">Réinitialiser les filtres</button>
+        Aucune expérience ne correspond à cette recherche.
+        <button class="reset-btn" id="reset-search">Réinitialiser</button>
       </p>
     </div>
   </section>
@@ -100,141 +60,67 @@ const total = experiences.length;
 
 <style>
   /* ============================================
-     HERO
+     RECHERCHE — sticky sous le header
      ============================================ */
-  .catalogue-hero {
-    background: var(--m360-bg-neutral);
-    border-bottom: 1px solid var(--m360-border);
-    padding: var(--m360-space-14) 0 var(--m360-space-10);
-  }
-
-  .hero-eyebrow {
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--m360-blue);
-    margin-bottom: var(--m360-space-3);
-  }
-
-  .hero-title {
-    font-size: clamp(32px, 5vw, 52px);
-    font-family: var(--font-display);
-    font-weight: 800;
-    color: var(--m360-text-title);
-    margin-bottom: var(--m360-space-5);
-  }
-
-  .hero-description {
-    font-size: 17px;
-    color: var(--m360-text-body);
-    max-width: 56ch;
-    line-height: 1.65;
-  }
-
-  /* ============================================
-     FILTRES
-     ============================================ */
-  .catalogue-filters-section {
-    padding: var(--m360-space-8) 0 0;
+  .catalogue-search-section {
     position: sticky;
-    top: 100px; /* hauteur du header desktop */
+    top: 100px;
+    z-index: 10;
     background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    z-index: 10;
     border-bottom: 1px solid var(--m360-border);
+    padding: var(--m360-space-5) 0;
   }
 
-  .filters-bar {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--m360-space-6);
-    flex-wrap: wrap;
-    padding-bottom: var(--m360-space-5);
-  }
-
-  .filter-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--m360-space-2);
-    flex: 1;
-  }
-
-  .filter-pill {
-    background: var(--m360-bg-neutral);
-    color: var(--m360-text-body);
-    border: 1.5px solid var(--m360-border);
-    border-radius: var(--m360-radius-pill);
-    padding: var(--m360-space-2) var(--m360-space-5);
-    font-family: var(--font-heading);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    white-space: nowrap;
-  }
-
-  .filter-pill:hover,
-  .filter-pill.is-active {
-    background: var(--m360-blue);
-    color: #fff;
-    border-color: var(--m360-blue);
-  }
-
-  .filter-search-wrapper {
+  .search-wrapper {
     position: relative;
-    flex-shrink: 0;
-    width: 260px;
+    max-width: 680px;
+    margin: 0 auto;
   }
 
-  .filter-search-icon {
+  .search-icon {
     position: absolute;
-    left: var(--m360-space-4);
+    left: var(--m360-space-5);
     top: 50%;
     transform: translateY(-50%);
     color: var(--m360-text-caption);
     pointer-events: none;
   }
 
-  #metier-search {
+  #catalogue-search {
     width: 100%;
-    padding: var(--m360-space-3) var(--m360-space-4) var(--m360-space-3) var(--m360-space-9);
+    padding: var(--m360-space-4) var(--m360-space-5) var(--m360-space-4) var(--m360-space-10);
     border: 1.5px solid var(--m360-border);
     border-radius: var(--m360-radius-pill);
-    font-size: 14px;
+    font-size: 15px;
     background: var(--m360-bg-neutral);
     color: var(--m360-text-body);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
-  #metier-search:focus {
+  #catalogue-search:focus {
     outline: none;
     border-color: var(--m360-blue);
     box-shadow: var(--m360-shadow-focus);
+    background: #fff;
   }
 
-  #metier-search::placeholder {
+  #catalogue-search::placeholder {
     color: var(--m360-text-caption);
-  }
-
-  .catalogue-count {
-    font-size: 13px;
-    color: var(--m360-text-caption);
-    padding-bottom: var(--m360-space-4);
   }
 
   /* ============================================
-     GRILLE
+     GRILLE — 4 colonnes
      ============================================ */
   .catalogue-grid-section {
-    padding: var(--m360-space-10) 0 var(--m360-space-16);
+    padding: var(--m360-space-9) 0 var(--m360-space-16);
   }
 
   .catalogue-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--m360-space-6);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--m360-space-5);
     list-style: none;
     padding: 0;
     margin: 0;
@@ -243,12 +129,20 @@ const total = experiences.length;
   .catalogue-grid-item {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+  }
+
+  .catalogue-grid-item[hidden] {
+    display: none;
   }
 
   .catalogue-grid-item > :global(.xp-card) {
     flex: 1;
   }
 
+  /* ============================================
+     ÉTAT VIDE
+     ============================================ */
   .catalogue-empty {
     text-align: center;
     padding: var(--m360-space-16) 0;
@@ -260,7 +154,11 @@ const total = experiences.length;
     gap: var(--m360-space-4);
   }
 
-  .reset-link {
+  .catalogue-empty[hidden] {
+    display: none;
+  }
+
+  .reset-btn {
     background: none;
     border: none;
     color: var(--m360-blue);
@@ -275,17 +173,13 @@ const total = experiences.length;
      RESPONSIVE
      ============================================ */
   @media (max-width: 967px) {
-    .catalogue-filters-section {
-      top: 64px; /* hauteur header mobile */
+    .catalogue-search-section {
+      top: 64px;
     }
 
-    .filters-bar {
-      flex-direction: column;
+    .catalogue-grid {
+      grid-template-columns: repeat(2, 1fr);
       gap: var(--m360-space-4);
-    }
-
-    .filter-search-wrapper {
-      width: 100%;
     }
   }
 
@@ -297,100 +191,44 @@ const total = experiences.length;
 </style>
 
 <script>
-  const pills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
-  const searchInput = document.getElementById('metier-search') as HTMLInputElement;
+  const searchInput = document.getElementById('catalogue-search') as HTMLInputElement;
   const items = document.querySelectorAll<HTMLLIElement>('.catalogue-grid-item');
-  const countEl = document.getElementById('results-count') as HTMLElement;
   const emptyEl = document.getElementById('catalogue-empty') as HTMLElement;
 
-  let activeThematique = '';
-  let metierQuery = '';
-
-  function applyFilters() {
+  function applySearch(query: string) {
+    const q = query.trim().toLowerCase();
     let visible = 0;
 
     items.forEach(item => {
-      const thematiques = item.dataset.thematiques ?? '';
-      const metiersText = item.dataset.metiersText ?? '';
-
-      const matchesThematique =
-        !activeThematique ||
-        thematiques.split(',').includes(activeThematique);
-
-      const matchesMetier =
-        !metierQuery ||
-        metiersText.includes(metierQuery.toLowerCase());
-
-      const show = matchesThematique && matchesMetier;
+      const text = item.dataset.search ?? '';
+      const show = !q || text.includes(q);
       item.hidden = !show;
       if (show) visible++;
     });
 
-    countEl.textContent = String(visible);
     emptyEl.hidden = visible > 0;
 
-    // Sync URL (remplace sans créer d'entrée historique)
-    const params = new URLSearchParams();
-    if (activeThematique) params.set('thematique', activeThematique);
-    if (metierQuery) params.set('metier', metierQuery);
-    const qs = params.toString();
-    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+    const qs = q ? `?q=${encodeURIComponent(q)}` : location.pathname;
+    history.replaceState(null, '', qs);
   }
 
-  // Lire les params URL au chargement
-  const initialParams = new URLSearchParams(location.search);
-  const initialThematique = initialParams.get('thematique') ?? '';
-  const initialMetier = initialParams.get('metier') ?? '';
-
-  if (initialThematique) {
-    activeThematique = initialThematique;
-    pills.forEach(p => {
-      const isActive = p.dataset.thematique === initialThematique;
-      p.classList.toggle('is-active', isActive);
-      p.setAttribute('aria-pressed', String(isActive));
-    });
+  // Restaurer depuis l'URL au chargement
+  const initialQ = new URLSearchParams(location.search).get('q') ?? '';
+  if (initialQ) {
+    searchInput.value = initialQ;
+    applySearch(initialQ);
   }
 
-  if (initialMetier) {
-    metierQuery = initialMetier;
-    searchInput.value = initialMetier;
-  }
-
-  if (initialThematique || initialMetier) applyFilters();
-
-  // Pills thématiques
-  pills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      activeThematique = pill.dataset.thematique ?? '';
-      pills.forEach(p => {
-        const isActive = p === pill;
-        p.classList.toggle('is-active', isActive);
-        p.setAttribute('aria-pressed', String(isActive));
-      });
-      applyFilters();
-    });
-  });
-
-  // Recherche métier (debounce 200ms)
-  let debounceTimer: ReturnType<typeof setTimeout>;
+  // Debounce 200ms
+  let timer: ReturnType<typeof setTimeout>;
   searchInput.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      metierQuery = searchInput.value.trim();
-      applyFilters();
-    }, 200);
+    clearTimeout(timer);
+    timer = setTimeout(() => applySearch(searchInput.value), 200);
   });
 
-  // Reset
-  document.getElementById('reset-filters')?.addEventListener('click', () => {
-    activeThematique = '';
-    metierQuery = '';
+  document.getElementById('reset-search')?.addEventListener('click', () => {
     searchInput.value = '';
-    pills.forEach(p => {
-      const isToutes = p.dataset.thematique === '';
-      p.classList.toggle('is-active', isToutes);
-      p.setAttribute('aria-pressed', String(isToutes));
-    });
-    applyFilters();
+    applySearch('');
+    searchInput.focus();
   });
 </script>

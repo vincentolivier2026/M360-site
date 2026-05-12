@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { experience } = Astro.props;
-const { titre, slug, sousTitre, descriptionCourte, codeAcces, vignetteUrl, vignetteAlt, thematiques } = experience;
+const { titre, slug, sousTitre, codeAcces, vignetteUrl, vignetteAlt, thematiques } = experience;
 
 const imgSrc = vignetteUrl ? `${vignetteUrl}?w=640&auto=format&q=80` : null;
 const pills = (thematiques ?? []).slice(0, 2);
@@ -36,10 +36,6 @@ const pills = (thematiques ?? []).slice(0, 2);
     </h3>
 
     {sousTitre && <p class="xp-card-sous-titre">{sousTitre}</p>}
-
-    {descriptionCourte && (
-      <p class="xp-card-description">{descriptionCourte}</p>
-    )}
   </div>
 
   <div class="xp-card-footer">
@@ -126,7 +122,7 @@ const pills = (thematiques ?? []).slice(0, 2);
   .xp-card-titre {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 17px;
+    font-size: 15px;
     line-height: 1.25;
     color: var(--m360-text-title);
     margin: 0;

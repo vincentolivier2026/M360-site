@@ -41,12 +41,6 @@ const dateFormatee = new Date(xp.dateSortie).toLocaleDateString('fr-FR', {
     }
     <div class="fiche-hero-overlay">
       <div class="container">
-        <a href="/catalogue" class="fiche-back-link">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Le catalogue
-        </a>
         {thematiques.length > 0 && (
           <div class="fiche-hero-pills">
             {thematiques.slice(0, 2).map(t => (
@@ -123,11 +117,6 @@ const dateFormatee = new Date(xp.dateSortie).toLocaleDateString('fr-FR', {
         <p class="aside-date">{dateFormatee}</p>
       </div>
 
-      <!-- CTA -->
-      <button class="aside-cta" data-open-contact-modal>
-        Nous contacter
-      </button>
-
     </aside>
   </div>
 </BaseLayout>
@@ -170,23 +159,6 @@ const dateFormatee = new Date(xp.dateSortie).toLocaleDateString('fr-FR', {
     display: flex;
     align-items: flex-end;
     padding-bottom: var(--m360-space-10);
-  }
-
-  .fiche-back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--m360-space-2);
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    margin-bottom: var(--m360-space-5);
-    transition: color 0.15s ease;
-  }
-
-  .fiche-back-link:hover {
-    color: #fff;
-    text-decoration: none;
   }
 
   .fiche-hero-pills {
@@ -368,27 +340,6 @@ const dateFormatee = new Date(xp.dateSortie).toLocaleDateString('fr-FR', {
     font-weight: 600;
     color: var(--m360-text-title);
     text-transform: capitalize;
-  }
-
-  .aside-cta {
-    background: var(--m360-blue);
-    color: #fff;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 15px;
-    padding: var(--m360-space-4) var(--m360-space-6);
-    border-radius: var(--m360-radius-lg);
-    border: none;
-    cursor: pointer;
-    box-shadow: var(--m360-shadow-blue);
-    text-align: center;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    width: 100%;
-  }
-
-  .aside-cta:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--m360-shadow-blue-hover);
   }
 
   /* ============================================
