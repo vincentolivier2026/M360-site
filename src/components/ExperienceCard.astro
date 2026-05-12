@@ -1,0 +1,182 @@
+---
+import type { ExperienceListItem } from '../types/catalogue';
+
+interface Props {
+  experience: ExperienceListItem;
+}
+
+const { experience } = Astro.props;
+const { titre, slug, sousTitre, descriptionCourte, codeAcces, vignetteUrl, vignetteAlt, thematiques } = experience;
+
+const imgSrc = vignetteUrl ? `${vignetteUrl}?w=640&auto=format&q=80` : null;
+const pills = (thematiques ?? []).slice(0, 2);
+---
+
+<article class="xp-card">
+  <a href={`/catalogue/${slug}`} class="xp-card-link" tabindex="-1" aria-hidden="true"></a>
+
+  <div class="xp-card-image">
+    {imgSrc
+      ? <img src={imgSrc} alt={vignetteAlt ?? titre} loading="lazy" width="640" height="360" />
+      : <div class="xp-card-placeholder" aria-hidden="true"></div>
+    }
+  </div>
+
+  <div class="xp-card-body">
+    {pills.length > 0 && (
+      <div class="xp-card-pills">
+        {pills.map(t => (
+          <span class="xp-card-pill">{t.titre}</span>
+        ))}
+      </div>
+    )}
+
+    <h3 class="xp-card-titre">
+      <a href={`/catalogue/${slug}`}>{titre}</a>
+    </h3>
+
+    {sousTitre && <p class="xp-card-sous-titre">{sousTitre}</p>}
+
+    {descriptionCourte && (
+      <p class="xp-card-description">{descriptionCourte}</p>
+    )}
+  </div>
+
+  <div class="xp-card-footer">
+    <span class="xp-card-code" title="Code d'accès direct">{codeAcces}</span>
+  </div>
+</article>
+
+<style>
+  .xp-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: var(--m360-radius-card);
+    box-shadow: var(--m360-shadow-sm);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .xp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--m360-shadow-md);
+  }
+
+  /* Overlay de clic sur toute la carte */
+  .xp-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+  }
+
+  .xp-card-image {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--m360-bg-neutral);
+    flex-shrink: 0;
+  }
+
+  .xp-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .xp-card:hover .xp-card-image img {
+    transform: scale(1.04);
+  }
+
+  .xp-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--m360-bg-neutral) 0%, #e8eaed 100%);
+  }
+
+  .xp-card-body {
+    flex: 1;
+    padding: var(--m360-space-5) var(--m360-space-6) var(--m360-space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-2);
+  }
+
+  .xp-card-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--m360-space-2);
+  }
+
+  .xp-card-pill {
+    background: var(--m360-blue-bg);
+    color: var(--m360-blue-text);
+    border-radius: var(--m360-radius-pill);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    white-space: nowrap;
+  }
+
+  .xp-card-titre {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.25;
+    color: var(--m360-text-title);
+    margin: 0;
+  }
+
+  .xp-card-titre a {
+    color: inherit;
+    text-decoration: none;
+    /* z-index > overlay carte pour que le lien reste cliquable */
+    position: relative;
+    z-index: 1;
+  }
+
+  .xp-card-titre a:hover {
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  .xp-card-sous-titre {
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .xp-card-description {
+    font-size: 14px;
+    color: var(--m360-text-body);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .xp-card-footer {
+    padding: var(--m360-space-3) var(--m360-space-6);
+    border-top: 1px solid var(--m360-border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .xp-card-code {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--m360-text-caption);
+    text-transform: uppercase;
+  }
+</style>

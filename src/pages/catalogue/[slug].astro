@@ -1,0 +1,414 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllExperiences, getExperienceBySlug } from '../../lib/queries';
+
+export async function getStaticPaths() {
+  const experiences = await getAllExperiences();
+  const seen = new Set<string>();
+  return experiences
+    .filter(xp => {
+      if (seen.has(xp.slug)) return false;
+      seen.add(xp.slug);
+      return true;
+    })
+    .map(xp => ({ params: { slug: xp.slug } }));
+}
+
+const { slug } = Astro.params;
+const xp = await getExperienceBySlug(slug);
+
+if (!xp) return Astro.redirect('/catalogue');
+
+const thematiques = xp.thematiques ?? [];
+const metiers = xp.metiers ?? [];
+const imgSrc = xp.vignetteUrl ? `${xp.vignetteUrl}?w=1400&auto=format&q=85` : null;
+
+const dateFormatee = new Date(xp.dateSortie).toLocaleDateString('fr-FR', {
+  year: 'numeric',
+  month: 'long',
+});
+---
+
+<BaseLayout
+  title={xp.titre}
+  description={xp.descriptionCourte ?? `Découvrez l'expérience immersive "${xp.titre}" dans le catalogue Métiers 360.`}
+>
+  <!-- HERO -->
+  <section class="fiche-hero" aria-label="En-tête de l'expérience">
+    {imgSrc
+      ? <img class="fiche-hero-img" src={imgSrc} alt={xp.vignetteAlt ?? xp.titre} />
+      : <div class="fiche-hero-placeholder"></div>
+    }
+    <div class="fiche-hero-overlay">
+      <div class="container">
+        <a href="/catalogue" class="fiche-back-link">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Le catalogue
+        </a>
+        {thematiques.length > 0 && (
+          <div class="fiche-hero-pills">
+            {thematiques.slice(0, 2).map(t => (
+              <span class="fiche-hero-pill">{t.titre}</span>
+            ))}
+          </div>
+        )}
+        <h1 class="fiche-hero-titre">{xp.titre}</h1>
+        {xp.sousTitre && <p class="fiche-hero-sous-titre">{xp.sousTitre}</p>}
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENU -->
+  <div class="fiche-body container">
+
+    <!-- DESCRIPTION -->
+    <main class="fiche-main" id="main-content">
+      {xp.descriptionLongue
+        ? <div class="fiche-description">
+            {xp.descriptionLongue.split('\n').filter(Boolean).map(para => (
+              <p>{para}</p>
+            ))}
+          </div>
+        : <p class="fiche-description-vide">Description à venir.</p>
+      }
+
+      <a href="/catalogue" class="fiche-back-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Retour au catalogue
+      </a>
+    </main>
+
+    <!-- ASIDE INFO -->
+    <aside class="fiche-aside" aria-label="Informations sur l'expérience">
+
+      <!-- Code accès -->
+      <div class="aside-block">
+        <p class="aside-label">Code d'accès direct</p>
+        <p class="aside-code">{xp.codeAcces}</p>
+      </div>
+
+      <!-- Thématiques -->
+      {thematiques.length > 0 && (
+        <div class="aside-block">
+          <p class="aside-label">Thématique{thematiques.length > 1 ? 's' : ''}</p>
+          <div class="aside-pills">
+            {thematiques.map(t => (
+              <a href={`/catalogue?thematique=${t.slug}`} class="aside-pill">{t.titre}</a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Métiers -->
+      {metiers.length > 0 && (
+        <div class="aside-block">
+          <p class="aside-label">Métiers abordés</p>
+          <ul class="aside-metiers">
+            {metiers.map(m => (
+              <li>
+                <a href={`/catalogue?metier=${m.libelle.toLowerCase()}`}>{m.libelle}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Date -->
+      <div class="aside-block">
+        <p class="aside-label">Disponible depuis</p>
+        <p class="aside-date">{dateFormatee}</p>
+      </div>
+
+      <!-- CTA -->
+      <button class="aside-cta" data-open-contact-modal>
+        Nous contacter
+      </button>
+
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ============================================
+     HERO
+     ============================================ */
+  .fiche-hero {
+    position: relative;
+    height: clamp(320px, 50vw, 520px);
+    background: var(--m360-navy);
+    overflow: hidden;
+  }
+
+  .fiche-hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .fiche-hero-placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--m360-navy) 0%, #0a3a6e 100%);
+  }
+
+  .fiche-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(2, 31, 63, 0.88) 0%,
+      rgba(2, 31, 63, 0.40) 50%,
+      rgba(2, 31, 63, 0.15) 100%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: var(--m360-space-10);
+  }
+
+  .fiche-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: var(--m360-space-5);
+    transition: color 0.15s ease;
+  }
+
+  .fiche-back-link:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .fiche-hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--m360-space-2);
+    margin-bottom: var(--m360-space-4);
+  }
+
+  .fiche-hero-pill {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--m360-radius-pill);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+  }
+
+  .fiche-hero-titre {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: var(--m360-space-3);
+    text-shadow: 0 2px 8px rgba(2, 31, 63, 0.4);
+  }
+
+  .fiche-hero-sous-titre {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+  }
+
+  /* ============================================
+     BODY — 2 colonnes
+     ============================================ */
+  .fiche-body {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: var(--m360-space-12);
+    align-items: start;
+    padding-top: var(--m360-space-12);
+    padding-bottom: var(--m360-space-16);
+  }
+
+  /* ============================================
+     MAIN — description
+     ============================================ */
+  .fiche-main {
+    min-width: 0;
+  }
+
+  .fiche-description {
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-5);
+    margin-bottom: var(--m360-space-10);
+  }
+
+  .fiche-description p {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--m360-text-body);
+    max-width: 68ch;
+  }
+
+  .fiche-description-vide {
+    font-size: 16px;
+    color: var(--m360-text-caption);
+    font-style: italic;
+    margin-bottom: var(--m360-space-10);
+  }
+
+  .fiche-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    color: var(--m360-blue);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.15s ease;
+  }
+
+  .fiche-back-btn:hover {
+    text-decoration: none;
+    gap: var(--m360-space-3);
+  }
+
+  /* ============================================
+     ASIDE
+     ============================================ */
+  .fiche-aside {
+    position: sticky;
+    top: calc(100px + var(--m360-space-6)); /* hauteur header */
+    background: var(--m360-bg-neutral);
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-2xl);
+    padding: var(--m360-space-7);
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-6);
+  }
+
+  .aside-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-2);
+  }
+
+  .aside-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--m360-text-caption);
+  }
+
+  .aside-code {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: var(--m360-navy);
+  }
+
+  .aside-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--m360-space-2);
+  }
+
+  .aside-pill {
+    background: var(--m360-blue-bg);
+    color: var(--m360-blue-text);
+    border-radius: var(--m360-radius-pill);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+
+  .aside-pill:hover {
+    background: var(--m360-blue);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .aside-metiers {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-2);
+  }
+
+  .aside-metiers a {
+    font-size: 14px;
+    color: var(--m360-text-body);
+    text-decoration: none;
+    display: block;
+    transition: color 0.15s ease;
+  }
+
+  .aside-metiers a:hover {
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  .aside-date {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--m360-text-title);
+    text-transform: capitalize;
+  }
+
+  .aside-cta {
+    background: var(--m360-blue);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: var(--m360-space-4) var(--m360-space-6);
+    border-radius: var(--m360-radius-lg);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--m360-shadow-blue);
+    text-align: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+  }
+
+  .aside-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--m360-shadow-blue-hover);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .fiche-body {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-8);
+    }
+
+    .fiche-aside {
+      position: static;
+      order: -1; /* aside avant la description sur mobile */
+    }
+  }
+
+  @media (max-width: 967px) {
+    .fiche-hero-overlay {
+      padding-bottom: var(--m360-space-7);
+    }
+  }
+</style>

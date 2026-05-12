@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Sous-projets séparés — ne pas commiter (contiennent des tokens Sanity)
+M360-migration/
+M360-studio/
