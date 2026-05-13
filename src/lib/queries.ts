@@ -2,6 +2,7 @@ import { sanityClient } from './sanity';
 import type {
   ExperienceListItem, ExperienceFiche, ThematiqueFilter, MetierFilter,
   SupportCategorie, SupportArticleFiche, SupportArticleListItem,
+  BlogCategorie, BlogPostListItem, BlogPostFiche,
 } from '../types/catalogue';
 
 export async function countExperiencesPubliees(): Promise<number> {
@@ -142,6 +143,73 @@ export async function getSupportArticleBySlug(slug: string): Promise<SupportArti
       "dossierSlug": dossier->slug.current,
       "categorieId": dossier->categorie._ref,
       "categorieTitre": dossier->categorie->titre
+    }
+  `, { slug });
+}
+
+// ─── Blog ─────────────────────────────────────────────────────────────────────
+
+export async function getAllBlogCategories(): Promise<BlogCategorie[]> {
+  return sanityClient.fetch<BlogCategorie[]>(`
+    *[_type == "blogCategorie"] | order(ordre asc) {
+      _id,
+      titre,
+      "slug": slug.current,
+      description,
+      ordre
+    }
+  `);
+}
+
+export async function getAllBlogPosts(): Promise<BlogPostListItem[]> {
+  return sanityClient.fetch<BlogPostListItem[]>(`
+    *[_type == "blogPost" && statut == "publie"] | order(datePublication desc) {
+      _id,
+      titre,
+      "slug": slug.current,
+      extrait,
+      imageUrl,
+      imageAlt,
+      "categorieTitre": categorie->titre,
+      "categorieSlug": categorie->slug.current,
+      datePublication,
+      tags
+    }
+  `);
+}
+
+export async function getBlogPostsByCategory(categorieSlug: string): Promise<BlogPostListItem[]> {
+  return sanityClient.fetch<BlogPostListItem[]>(`
+    *[_type == "blogPost" && statut == "publie" && categorie->slug.current == $categorieSlug]
+    | order(datePublication desc) {
+      _id,
+      titre,
+      "slug": slug.current,
+      extrait,
+      imageUrl,
+      imageAlt,
+      "categorieTitre": categorie->titre,
+      "categorieSlug": categorie->slug.current,
+      datePublication,
+      tags
+    }
+  `, { categorieSlug });
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPostFiche | null> {
+  return sanityClient.fetch<BlogPostFiche | null>(`
+    *[_type == "blogPost" && slug.current == $slug && statut == "publie"][0] {
+      _id,
+      titre,
+      "slug": slug.current,
+      extrait,
+      contenu,
+      imageUrl,
+      imageAlt,
+      "categorieTitre": categorie->titre,
+      "categorieSlug": categorie->slug.current,
+      datePublication,
+      tags
     }
   `, { slug });
 }

@@ -1,0 +1,452 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllBlogPosts, getBlogPostBySlug, getAllBlogPosts as getRelated } from '../../lib/queries';
+
+export async function getStaticPaths() {
+  const posts = await getAllBlogPosts();
+  const seen = new Set<string>();
+  return posts
+    .filter(p => {
+      if (seen.has(p.slug)) return false;
+      seen.add(p.slug);
+      return true;
+    })
+    .map(p => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const post = await getBlogPostBySlug(slug);
+
+if (!post) return Astro.redirect('/blog');
+
+// Articles récents de la même catégorie (max 3, hors article courant)
+const allPosts = await getRelated();
+const relatedPosts = allPosts
+  .filter(p => p.categorieSlug === post.categorieSlug && p.slug !== slug)
+  .slice(0, 3);
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('fr-FR', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
+}
+---
+
+<BaseLayout
+  title={post.titre}
+  description={post.extrait || `${post.titre} — Blog Métiers 360`}
+>
+  <div class="post-layout">
+
+    <!-- HERO IMAGE -->
+    {post.imageUrl && (
+      <div class="post-hero">
+        <img
+          src={post.imageUrl}
+          alt={post.imageAlt || post.titre}
+          class="post-hero-img"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    <div class="container post-content-zone">
+
+      <!-- BREADCRUMB -->
+      <nav class="breadcrumb" aria-label="Fil d'Ariane">
+        <a href="/blog">Blog</a>
+        <span aria-hidden="true">›</span>
+        <a href={`/blog/categorie/${post.categorieSlug}`}>{post.categorieTitre}</a>
+        <span aria-hidden="true">›</span>
+        <span>{post.titre}</span>
+      </nav>
+
+      <div class="post-inner">
+
+        <!-- COLONNE PRINCIPALE -->
+        <main class="post-main" id="main-content">
+          <p class="post-meta">
+            <a href={`/blog/categorie/${post.categorieSlug}`} class="post-cat">{post.categorieTitre}</a>
+            <span aria-hidden="true">·</span>
+            <time datetime={post.datePublication}>{formatDate(post.datePublication)}</time>
+          </p>
+
+          <h1 class="post-titre">{post.titre}</h1>
+
+          {post.extrait && <p class="post-extrait">{post.extrait}</p>}
+
+          <div class="post-contenu" set:html={post.contenu} />
+
+          {post.tags && post.tags.length > 0 && (
+            <div class="post-tags">
+              {post.tags.map(tag => (
+                <span class="post-tag">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          <div class="post-cta-zone">
+            <a href="/blog" class="post-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Retour au blog
+            </a>
+          </div>
+        </main>
+
+        <!-- SIDEBAR : articles liés -->
+        {relatedPosts.length > 0 && (
+          <aside class="post-sidebar" aria-label="Articles similaires">
+            <p class="sidebar-titre">Dans la même catégorie</p>
+            <ul class="sidebar-list" role="list">
+              {relatedPosts.map(p => (
+                <li class="sidebar-item">
+                  <a href={`/blog/${p.slug}`} class="sidebar-card">
+                    {p.imageUrl
+                      ? <img src={p.imageUrl} alt={p.imageAlt || p.titre} class="sidebar-img" loading="lazy" decoding="async" width="80" height="60" />
+                      : <div class="sidebar-img-placeholder" aria-hidden="true" />
+                    }
+                    <div class="sidebar-info">
+                      <p class="sidebar-card-titre">{p.titre}</p>
+                      <time class="sidebar-card-date" datetime={p.datePublication}>
+                        {formatDate(p.datePublication)}
+                      </time>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )}
+
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ============================================
+     HERO
+     ============================================ */
+  .post-hero {
+    width: 100%;
+    max-height: 460px;
+    overflow: hidden;
+    background: var(--m360-navy);
+  }
+
+  .post-hero-img {
+    width: 100%;
+    height: 460px;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  /* ============================================
+     LAYOUT
+     ============================================ */
+  .post-content-zone {
+    padding-top: var(--m360-space-8);
+    padding-bottom: var(--m360-space-16);
+  }
+
+  .post-inner {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--m360-space-12);
+    align-items: start;
+  }
+
+  /* ============================================
+     BREADCRUMB
+     ============================================ */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--m360-space-2);
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-6);
+  }
+
+  .breadcrumb a {
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  /* ============================================
+     ARTICLE
+     ============================================ */
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-3);
+  }
+
+  .post-cat {
+    font-weight: 700;
+    color: var(--m360-blue);
+    text-decoration: none;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .post-cat:hover {
+    text-decoration: underline;
+  }
+
+  .post-titre {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 38px);
+    font-weight: 800;
+    color: var(--m360-navy);
+    margin-bottom: var(--m360-space-5);
+    line-height: 1.2;
+  }
+
+  .post-extrait {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-8);
+    padding-bottom: var(--m360-space-8);
+    border-bottom: 1px solid var(--m360-border);
+    font-style: italic;
+  }
+
+  /* Contenu HTML importé depuis WordPress */
+  .post-contenu {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--m360-text-body);
+    margin-bottom: var(--m360-space-10);
+  }
+
+  .post-contenu :global(p) {
+    margin-bottom: var(--m360-space-5);
+    max-width: 70ch;
+  }
+
+  .post-contenu :global(h2),
+  .post-contenu :global(h3),
+  .post-contenu :global(h4) {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--m360-text-title);
+    margin-top: var(--m360-space-8);
+    margin-bottom: var(--m360-space-3);
+  }
+
+  .post-contenu :global(h2) { font-size: 22px; }
+  .post-contenu :global(h3) { font-size: 18px; }
+
+  .post-contenu :global(ul),
+  .post-contenu :global(ol) {
+    padding-left: var(--m360-space-6);
+    margin-bottom: var(--m360-space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-2);
+  }
+
+  .post-contenu :global(li) {
+    max-width: 70ch;
+  }
+
+  .post-contenu :global(strong) {
+    font-weight: 700;
+    color: var(--m360-text-title);
+  }
+
+  .post-contenu :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--m360-radius-xl);
+    border: 1px solid var(--m360-border);
+    margin: var(--m360-space-6) 0;
+    display: block;
+  }
+
+  .post-contenu :global(a) {
+    color: var(--m360-blue);
+  }
+
+  .post-contenu :global(blockquote) {
+    border-left: 3px solid var(--m360-blue);
+    margin: var(--m360-space-6) 0;
+    padding-left: var(--m360-space-5);
+    color: var(--m360-text-caption);
+    font-style: italic;
+  }
+
+  .post-contenu :global(figure) {
+    margin: var(--m360-space-6) 0;
+  }
+
+  .post-contenu :global(figcaption) {
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    text-align: center;
+    margin-top: var(--m360-space-2);
+  }
+
+  /* ============================================
+     TAGS
+     ============================================ */
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--m360-space-2);
+    margin-bottom: var(--m360-space-8);
+  }
+
+  .post-tag {
+    background: var(--m360-bg-neutral);
+    border: 1px solid var(--m360-border);
+    color: var(--m360-text-caption);
+    font-size: 12px;
+    font-weight: 600;
+    padding: var(--m360-space-1) var(--m360-space-3);
+    border-radius: var(--m360-radius-pill);
+  }
+
+  /* ============================================
+     CTA ZONE
+     ============================================ */
+  .post-cta-zone {
+    padding-top: var(--m360-space-8);
+    border-top: 1px solid var(--m360-border);
+  }
+
+  .post-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    color: var(--m360-blue);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.15s ease;
+  }
+
+  .post-back:hover {
+    gap: var(--m360-space-3);
+    text-decoration: none;
+  }
+
+  /* ============================================
+     SIDEBAR
+     ============================================ */
+  .post-sidebar {
+    position: sticky;
+    top: calc(100px + var(--m360-space-6));
+  }
+
+  .sidebar-titre {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-4);
+  }
+
+  .sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-3);
+  }
+
+  .sidebar-card {
+    display: flex;
+    gap: var(--m360-space-3);
+    text-decoration: none;
+    border-radius: var(--m360-radius-xl);
+    overflow: hidden;
+    transition: background 0.15s ease;
+    padding: var(--m360-space-2);
+    margin: calc(-1 * var(--m360-space-2));
+  }
+
+  .sidebar-card:hover {
+    background: var(--m360-blue-bg);
+  }
+
+  .sidebar-img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--m360-radius-lg);
+    flex-shrink: 0;
+  }
+
+  .sidebar-img-placeholder {
+    width: 80px;
+    height: 60px;
+    border-radius: var(--m360-radius-lg);
+    background: linear-gradient(135deg, var(--m360-navy) 0%, var(--m360-blue) 100%);
+    flex-shrink: 0;
+  }
+
+  .sidebar-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-1);
+    justify-content: center;
+  }
+
+  .sidebar-card-titre {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--m360-text-title);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .sidebar-card-date {
+    font-size: 11px;
+    color: var(--m360-text-caption);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .post-inner {
+      grid-template-columns: 1fr;
+    }
+
+    .post-sidebar {
+      position: static;
+      order: -1;
+    }
+
+    .post-hero-img {
+      height: 280px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .post-hero-img {
+      height: 220px;
+    }
+  }
+</style>

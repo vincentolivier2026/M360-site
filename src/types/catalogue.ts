@@ -91,6 +91,33 @@ export interface SupportCategorie {
   dossiers: SupportDossier[];
 }
 
+// ─── Blog ────────────────────────────────────────────────────────────────────
+
+export interface BlogCategorie {
+  _id: string;
+  titre: string;
+  slug: string;
+  description?: string;
+  ordre: number;
+}
+
+export interface BlogPostListItem {
+  _id: string;
+  titre: string;
+  slug: string;
+  extrait?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  categorieTitre: string;
+  categorieSlug: string;
+  datePublication: string;
+  tags?: string[];
+}
+
+export interface BlogPostFiche extends BlogPostListItem {
+  contenu: string;
+}
+
 // ─── Catalogue ───────────────────────────────────────────────────────────────
 
 export interface Experience {
