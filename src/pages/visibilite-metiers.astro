@@ -1,0 +1,419 @@
+---
+// src/pages/visibilite-metiers.astro
+// Landing "Faire découvrir ses métiers" — cible coproducteurs.
+// Partenaires : branches & fédérations, OPCO, entreprises, filières territoriales.
+//
+// Structure 7 blocs (miroir accompagnement G3) :
+//   1. Hero          — LandingHero
+//   2. Manifeste      — section inline
+//   3. Méthode       — ProcessBlock
+//   4. Pour qui      — TargetGrid (4 nouvelles cartes)
+//   5. Preuve        — mur logos inline + QuoteBlock
+//   6. Réassurance   — ReassuranceGrid (sans encart financement)
+//   7. CTA final     — CtaFinalBlock
+//
+// ⚠️ POINTS OUVERTS À VALIDER (cf. brief éditorial)
+//   - Visuel hero   : photohero.jpg montre-t-il une scène de stand/forum ?
+//   - Citation bloc 5 : placeholder — choisir un témoignage coproducteur réel
+//   - Mur de logos  : remplacer les placeholders textuels par les vrais fichiers
+//   - Chiffres carte réassurance 1 : vérifier 400+, 2000+, 1,7M via chiffres-clefs-m360
+//   - Effectif carte 4 réassurance : confirmer "25 personnes"
+//   - Eyebrow bloc 2 : arbitrer "Notre conviction" vs "Notre parti pris"
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LandingHero from '../components/LandingHero.astro';
+import ProcessBlock from '../components/ProcessBlock.astro';
+import TargetGrid from '../components/TargetGrid.astro';
+import QuoteBlock from '../components/QuoteBlock.astro';
+import ReassuranceGrid from '../components/ReassuranceGrid.astro';
+import CtaFinalBlock from '../components/CtaFinalBlock.astro';
+import EyebrowPill from '../components/EyebrowPill.astro';
+
+// ── Bloc 3 : Méthode ──────────────────────────────────────────────────────────
+const steps = [
+  {
+    num: '1',
+    title: 'Cadrage',
+    text: "Vous identifiez les métiers à révéler, nous co-construisons la note de cadrage : intention, professionnels filmés, sites de tournage, options de production. Validation formelle avant d'engager les équipes.",
+  },
+  {
+    num: '2',
+    title: 'Tournage',
+    text: "Une journée sur site. Nos équipes captent en immersion 360° ; vos professionnels parlent librement, sans script. Direction artistique Métiers 360, logistique légère.",
+  },
+  {
+    num: '3',
+    title: 'Diffusion',
+    text: "Vous récupérez votre expérience immersive et l'utilisez selon vos besoins : sur vos casques pour vos stands et forums, intégrée à votre parcours d'onboarding, dans vos formations, dans vos interventions en milieu scolaire.",
+  },
+];
+
+// ── Bloc 4 : Pour qui ─────────────────────────────────────────────────────────
+const targets = [
+  {
+    iconKey: 'branches' as const,
+    title: 'Branches & fédérations professionnelles',
+    text: "Révéler la diversité des métiers de votre secteur, soutenir son attractivité, équiper vos adhérents d'un patrimoine immersif partagé.",
+  },
+  {
+    iconKey: 'opco' as const,
+    title: 'OPCO',
+    text: "Produire des expériences immersives mutualisées entre vos branches, alimenter vos actions de promotion des métiers à grande échelle.",
+  },
+  {
+    iconKey: 'entreprises' as const,
+    title: 'Entreprises',
+    text: "Montrer vos métiers tels qu'ils se vivent vraiment, faire converger marque employeur et terrain, donner à voir ce qu'aucune plaquette ne raconte.",
+  },
+  {
+    iconKey: 'filieres' as const,
+    title: 'Filières territoriales',
+    text: "Porter la voix des métiers de votre territoire, fédérer les acteurs autour d'expériences immersives partagées, accompagner les politiques publiques d'attractivité.",
+  },
+];
+
+// ── Bloc 5 : Preuve — logos ────────────────────────────────────────────────────
+// ⚠️ Remplacer les textes par les fichiers <img> dès que les logos sont disponibles
+const logos = [
+  { name: 'Ministère de la Défense' },
+  { name: 'SNCF' },
+  { name: 'Région Pays de la Loire' },
+  { name: 'Manpower' },
+  { name: 'France Travail' },
+  { name: 'OPCO Atlas' },
+  { name: 'Mission Locale La Réunion' },
+  { name: 'Métiers 360' },
+];
+
+// ── Bloc 6 : Réassurance ──────────────────────────────────────────────────────
+const reassurance = [
+  {
+    iconKey: 'evolution' as const,
+    title: 'Le plus grand catalogue d\'expériences immersives en France',
+    // ⚠️ Chiffres à vérifier via skill chiffres-clefs-m360 avant mise en ligne
+    text: 'Votre métier rejoint plus de 400 expériences déjà déployées dans 2 000 structures, vues lors de plus de 1,7 million d\'immersions.',
+  },
+  {
+    iconKey: 'check' as const,
+    title: 'Droits clairs et partagés',
+    text: 'Vous gardez l\'usage interne sans limite de durée. Métiers 360 diffuse dans son catalogue. Toute diffusion tierce sur accord écrit préalable.',
+  },
+  {
+    iconKey: 'people' as const,
+    title: 'Une production maîtrisée',
+    text: 'Note de cadrage formelle, calendrier engagé, deux validations contractuelles, équipe de réalisation dédiée.',
+  },
+  {
+    iconKey: 'globe' as const,
+    title: 'Solution française et européenne',
+    // ⚠️ Confirmer l'effectif avant mise en ligne
+    text: 'Conçue, produite et opérée en France. Données hébergées en Europe. Équipe de 25 personnes basée en région parisienne.',
+  },
+];
+---
+
+<BaseLayout
+  title="Faire vivre vos métiers — Métiers 360"
+  description="Des expériences immersives pour révéler vos métiers lors de vos forums, salons et journées portes ouvertes. Partenaires : branches, OPCO, entreprises, filières."
+>
+
+  <!-- ════════════════════════════════════════
+       BLOC 1 — HERO
+       ════════════════════════════════════════ -->
+  <LandingHero
+    eyebrow="Faire connaître vos métiers"
+    title="Faire <strong>vivre</strong> vos métiers, là où vos publics vous rencontrent."
+    photo="/images/photohero.jpg"
+    photoAlt="Stand forum métiers Métiers 360 — un conseiller et un jeune partagent une immersion VR"
+    ctaPrimary={{ label: 'Échanger sur un projet', href: '#contact' }}
+    ctaSecondary={{ label: 'Voir nos références', href: '#references' }}
+  />
+
+  <!-- ════════════════════════════════════════
+       BLOC 2 — MANIFESTE
+       « Le virtuel n'est pas artificiel »
+       ════════════════════════════════════════ -->
+  <section class="manifeste-section">
+    <div class="manifeste-inner">
+      <div class="manifeste-eyebrow">
+        <!-- ⚠️ Arbitrer l'eyebrow : "Notre conviction" ou "Notre parti pris" -->
+        <EyebrowPill tone="blue">Notre conviction</EyebrowPill>
+      </div>
+      <h2 class="manifeste-titre">Le virtuel n'est pas artificiel.</h2>
+      <div class="manifeste-corps">
+        <p>
+          Nous ne fabriquons rien. Nous filmons vos professionnels dans vos vrais lieux, en train
+          d'accomplir leurs vrais gestes. Aucun acteur, aucun script, aucune mise en scène.
+          Le casque ne crée pas une illusion&nbsp;: il efface la distance entre celui qui découvre
+          votre métier et celui qui l'exerce.
+        </p>
+        <p>
+          C'est une <strong>innovation</strong>, oui. Mais une innovation&nbsp;<strong>humaine</strong>&nbsp;:
+          la technologie y est au service du témoignage, pas l'inverse.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       BLOC 3 — MÉTHODE
+       ════════════════════════════════════════ -->
+  <ProcessBlock
+    eyebrow="Comment ça marche"
+    title="Une méthode de production claire, pensée pour respecter votre temps et vos contraintes."
+    steps={steps}
+  />
+
+  <!-- ════════════════════════════════════════
+       BLOC 4 — POUR QUI
+       ════════════════════════════════════════ -->
+  <TargetGrid
+    eyebrow="Pour qui c'est fait"
+    title="Une démarche pensée pour chaque acteur de la valorisation des métiers."
+    targets={targets}
+  />
+
+  <!-- ════════════════════════════════════════
+       BLOC 5 — PREUVE
+       Mur de logos + citation + lien références
+       ════════════════════════════════════════ -->
+  <section class="proof-section" id="references">
+    <div class="proof-inner">
+
+      <header class="proof-header">
+        <EyebrowPill tone="pink">Ils ont choisi Métiers 360</EyebrowPill>
+        <h2 class="proof-titre">
+          Des organisations qui changent le rapport aux métiers, partout en France.
+        </h2>
+      </header>
+
+      <!-- Mur de logos -->
+      <!-- ⚠️ Remplacer les <span> par <img src="..." alt="..."> dès que les logos sont disponibles -->
+      <ul class="logo-wall" role="list" aria-label="Références clients">
+        {logos.map(logo => (
+          <li class="logo-item">
+            <span class="logo-placeholder">{logo.name}</span>
+          </li>
+        ))}
+      </ul>
+
+      <a href="/references" class="proof-link">
+        Voir toutes nos références
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Citation client (sur fond navy, après le mur de logos) -->
+  <!-- ⚠️ Remplacer par un vrai témoignage coproducteur validé -->
+  <QuoteBlock
+    eyebrow="Ce qu'ils en disent"
+    quote="Grâce à Métiers 360, nous pouvons faire découvrir nos métiers à des milliers de jeunes lors de chaque forum — avec un impact que nos brochures n'ont jamais eu."
+    authorName="[Prénom Nom]"
+    authorRole="[Responsable attractivité] · [Organisation coproductrice]"
+  />
+
+  <!-- ════════════════════════════════════════
+       BLOC 6 — RÉASSURANCE
+       ════════════════════════════════════════ -->
+  <ReassuranceGrid items={reassurance} />
+
+  <!-- ════════════════════════════════════════
+       BLOC 7 — CTA FINAL
+       ════════════════════════════════════════ -->
+  <CtaFinalBlock
+    title="Et si on regardait ensemble comment faire entrer vos métiers dans une nouvelle ère de la rencontre&nbsp;?"
+    text="Un premier échange de trente minutes pour comprendre votre contexte, vos publics, vos enjeux. Sans engagement, et toujours utile."
+    cta={{ label: 'Échanger sur un projet', href: '#contact' }}
+  />
+
+</BaseLayout>
+
+<style>
+  /* ============================================
+     BLOC 2 — MANIFESTE
+     ============================================ */
+  .manifeste-section {
+    padding: var(--m360-space-16) var(--m360-space-8);
+    background: #fff;
+  }
+
+  .manifeste-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .manifeste-eyebrow {
+    margin-bottom: var(--m360-space-7);
+  }
+
+  .manifeste-titre {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-8);
+  }
+
+  .manifeste-corps {
+    text-align: left;
+    max-width: 66ch;
+    margin: 0 auto;
+  }
+
+  .manifeste-corps p {
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--m360-text-body);
+    margin: 0 0 var(--m360-space-5);
+  }
+
+  .manifeste-corps p:last-child {
+    margin-bottom: 0;
+  }
+
+  .manifeste-corps strong {
+    font-weight: 700;
+    color: var(--m360-text-title);
+  }
+
+  /* ============================================
+     BLOC 5 — PREUVE (logos uniquement)
+     ============================================ */
+  .proof-section {
+    padding: var(--m360-space-16) var(--m360-space-8) var(--m360-space-10);
+    background: var(--m360-bg-neutral);
+  }
+
+  .proof-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .proof-header {
+    text-align: center;
+    margin-bottom: var(--m360-space-12);
+  }
+
+  .proof-header :global(.eyebrow) {
+    margin-bottom: var(--m360-space-5);
+  }
+
+  .proof-titre {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(26px, 3.2vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--m360-text-title);
+    margin: 0;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Mur de logos */
+  .logo-wall {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--m360-space-10);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--m360-space-4);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .logo-item {
+    flex: 0 0 auto;
+  }
+
+  /* Placeholder texte — à remplacer par <img> */
+  .logo-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    padding: 0 var(--m360-space-6);
+    background: #fff;
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-xl);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    white-space: nowrap;
+    min-width: 120px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .logo-item:hover .logo-placeholder {
+    border-color: var(--m360-blue);
+    box-shadow: var(--m360-shadow-sm);
+  }
+
+  /* Lien références */
+  .proof-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--m360-space-2);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--m360-blue);
+    text-decoration: none;
+    transition: gap 0.15s ease;
+  }
+
+  .proof-link:hover {
+    text-decoration: none;
+    gap: var(--m360-space-3);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .manifeste-corps {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .manifeste-section {
+      padding: var(--m360-space-12) var(--m360-space-5);
+    }
+
+    .manifeste-corps p {
+      font-size: 16px;
+    }
+
+    .proof-section {
+      padding: var(--m360-space-12) var(--m360-space-5) var(--m360-space-8);
+    }
+
+    .logo-placeholder {
+      font-size: 12px;
+      min-width: 100px;
+      padding: 0 var(--m360-space-4);
+    }
+  }
+</style>
+
+<script>
+  // Câbler les CTA "Échanger sur un projet" sur la modale Contact.
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll<HTMLElement>('a[href="#contact"]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const contactBtn = document.querySelector<HTMLElement>('[data-open-contact-modal]');
+        contactBtn?.click();
+      });
+    });
+  });
+</script>
