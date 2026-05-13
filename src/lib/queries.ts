@@ -204,6 +204,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPostFiche | n
       "slug": slug.current,
       extrait,
       contenu,
+      contenuRiche,
       "imageUrl": coalesce(imageCouverture.asset->url, imageUrl),
       "imageAlt": coalesce(imageCouverture.alt, titre),
       "categorieTitre": categorie->titre,

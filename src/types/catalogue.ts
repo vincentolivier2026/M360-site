@@ -115,8 +115,8 @@ export interface BlogPostListItem {
 }
 
 export interface BlogPostFiche extends BlogPostListItem {
-  contenu: string;
-}
+  contenu: string;          // HTML brut (articles WordPress importés)
+  contenuRiche?: unknown[]; // Portable Text (nouveaux articles Studio)
 
 // ─── Catalogue ───────────────────────────────────────────────────────────────
 

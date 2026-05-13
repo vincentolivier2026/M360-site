@@ -1,11 +1,17 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getAllBlogPosts, getBlogPostBySlug, getAllBlogPosts as getRelated } from '../../lib/queries';
+import { portableTextToHtml } from '../../lib/portabletext';
 
 const { slug } = Astro.params;
 const post = await getBlogPostBySlug(slug);
 
 if (!post) return Astro.redirect('/blog');
+
+// Rendu du contenu : Portable Text en priorité, sinon HTML WordPress
+const contenuHtml = post.contenuRiche?.length
+  ? portableTextToHtml(post.contenuRiche as Parameters<typeof portableTextToHtml>[0])
+  : (post.contenu ?? '');
 
 // Articles récents de la même catégorie (max 3, hors article courant)
 const allPosts = await getRelated();
@@ -64,7 +70,7 @@ function formatDate(iso: string) {
 
           {post.extrait && <p class="post-extrait">{post.extrait}</p>}
 
-          <div class="post-contenu" set:html={post.contenu} />
+          <div class="post-contenu" set:html={contenuHtml} />
 
           {post.tags && post.tags.length > 0 && (
             <div class="post-tags">
