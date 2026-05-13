@@ -50,12 +50,18 @@ const autresArticles = (dossier?.articles ?? []).filter(a => a.slug !== slug);
 
       <div class="article-contenu" set:html={article.contenu} />
 
-      <a href="/support" class="article-back">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Retour au centre d'aide
-      </a>
+      <div class="article-cta-zone">
+        <button class="btn-ask-help" data-open-contact-modal>
+          Demandez-nous de l'aide
+        </button>
+
+        <a href="/support" class="article-back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Retour au centre d'aide
+        </a>
+      </div>
 
     </main>
 
@@ -184,6 +190,35 @@ const autresArticles = (dossier?.articles ?? []).filter(a => a.slug !== slug);
 
   .article-contenu :global(br + br) {
     display: none; /* supprime les double-sauts de ligne Freshdesk */
+  }
+
+  .article-cta-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--m360-space-5);
+    padding-top: var(--m360-space-8);
+    border-top: 1px solid var(--m360-border);
+    margin-top: var(--m360-space-2);
+  }
+
+  .btn-ask-help {
+    background: var(--m360-blue);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: var(--m360-space-4) var(--m360-space-7);
+    border-radius: var(--m360-radius-lg);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--m360-shadow-blue);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-ask-help:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--m360-shadow-blue-hover);
   }
 
   .article-back {
