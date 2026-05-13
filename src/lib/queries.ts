@@ -137,6 +137,7 @@ export async function getSupportArticleBySlug(slug: string): Promise<SupportArti
       titre,
       "slug": slug.current,
       contenu,
+      contenuRiche,
       ordre,
       "dossierId": dossier._ref,
       "dossierTitre": dossier->titre,

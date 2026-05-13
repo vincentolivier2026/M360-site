@@ -1,12 +1,17 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getAllSupportArticles, getSupportArticleBySlug, getAllSupportCategories } from '../../lib/queries';
+import { portableTextToHtml } from '../../lib/portabletext';
 
 
 const { slug } = Astro.params;
 const article = await getSupportArticleBySlug(slug);
 
 if (!article) return Astro.redirect('/support');
+
+const contenuHtml = article.contenuRiche?.length
+  ? portableTextToHtml(article.contenuRiche as Parameters<typeof portableTextToHtml>[0])
+  : (article.contenu ?? '');
 
 // Récupère les autres articles du même dossier pour la sidebar
 const categories = await getAllSupportCategories();
@@ -37,7 +42,7 @@ const autresArticles = (dossier?.articles ?? []).filter(a => a.slug !== slug);
 
       <h1 class="article-titre">{article.titre}</h1>
 
-      <div class="article-contenu" set:html={article.contenu} />
+      <div class="article-contenu" set:html={contenuHtml} />
 
       <div class="article-cta-zone">
         <button class="btn-ask-help" data-open-contact-modal>

@@ -70,7 +70,8 @@ export interface SupportArticleListItem {
 }
 
 export interface SupportArticleFiche extends SupportArticleListItem {
-  contenu: string;
+  contenu: string;          // HTML brut (articles Freshdesk importés)
+  contenuRiche?: unknown[]; // Portable Text (nouveaux articles Studio)
   ordre: number;
 }
 
