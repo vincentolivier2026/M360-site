@@ -1,0 +1,285 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllSupportArticles, getSupportArticleBySlug, getAllSupportCategories } from '../../lib/queries';
+
+export async function getStaticPaths() {
+  const articles = await getAllSupportArticles();
+  const seen = new Set<string>();
+  return articles
+    .filter(a => {
+      if (seen.has(a.slug)) return false;
+      seen.add(a.slug);
+      return true;
+    })
+    .map(a => ({ params: { slug: a.slug } }));
+}
+
+const { slug } = Astro.params;
+const article = await getSupportArticleBySlug(slug);
+
+if (!article) return Astro.redirect('/support');
+
+// Récupère les autres articles du même dossier pour la sidebar
+const categories = await getAllSupportCategories();
+const dossier = categories
+  .flatMap(c => c.dossiers)
+  .find(d => d._id === article.dossierId);
+
+const autresArticles = (dossier?.articles ?? []).filter(a => a.slug !== slug);
+---
+
+<BaseLayout
+  title={article.titre}
+  description={`${article.titre} — Centre d'aide Métiers 360`}
+>
+  <div class="article-layout container">
+
+    <!-- COLONNE PRINCIPALE -->
+    <main class="article-main" id="main-content">
+
+      <!-- BREADCRUMB -->
+      <nav class="breadcrumb" aria-label="Fil d'Ariane">
+        <a href="/support">Aide</a>
+        <span aria-hidden="true">›</span>
+        <span>{article.categorieTitre}</span>
+        <span aria-hidden="true">›</span>
+        <span>{article.dossierTitre}</span>
+      </nav>
+
+      <h1 class="article-titre">{article.titre}</h1>
+
+      <div class="article-contenu" set:html={article.contenu} />
+
+      <a href="/support" class="article-back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Retour au centre d'aide
+      </a>
+
+    </main>
+
+    <!-- SIDEBAR -->
+    {autresArticles.length > 0 && (
+      <aside class="article-sidebar" aria-label="Autres articles du dossier">
+        <p class="sidebar-titre">Dans ce dossier</p>
+        <p class="sidebar-dossier">{article.dossierTitre}</p>
+        <ul class="sidebar-list" role="list">
+          {autresArticles.map(a => (
+            <li>
+              <a href={`/support/${a.slug}`} class="sidebar-link">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {a.titre}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )}
+
+  </div>
+</BaseLayout>
+
+<style>
+  /* ============================================
+     LAYOUT 2 COLONNES
+     ============================================ */
+  .article-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: var(--m360-space-12);
+    align-items: start;
+    padding-top: var(--m360-space-10);
+    padding-bottom: var(--m360-space-16);
+  }
+
+  /* ============================================
+     BREADCRUMB
+     ============================================ */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--m360-space-2);
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-6);
+  }
+
+  .breadcrumb a {
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  /* ============================================
+     ARTICLE
+     ============================================ */
+  .article-titre {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 800;
+    color: var(--m360-navy);
+    margin-bottom: var(--m360-space-8);
+    line-height: 1.2;
+  }
+
+  /* Styles du contenu HTML importé de Freshdesk */
+  .article-contenu {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--m360-text-body);
+    margin-bottom: var(--m360-space-10);
+  }
+
+  .article-contenu :global(p) {
+    margin-bottom: var(--m360-space-4);
+    max-width: 68ch;
+  }
+
+  .article-contenu :global(ul),
+  .article-contenu :global(ol) {
+    padding-left: var(--m360-space-6);
+    margin-bottom: var(--m360-space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-2);
+  }
+
+  .article-contenu :global(li) {
+    max-width: 68ch;
+  }
+
+  .article-contenu :global(strong) {
+    font-weight: 700;
+    color: var(--m360-text-title);
+  }
+
+  .article-contenu :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--m360-radius-xl);
+    border: 1px solid var(--m360-border);
+    margin: var(--m360-space-5) 0;
+    display: block;
+  }
+
+  .article-contenu :global(h2),
+  .article-contenu :global(h3) {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--m360-text-title);
+    margin-top: var(--m360-space-8);
+    margin-bottom: var(--m360-space-3);
+  }
+
+  .article-contenu :global(a) {
+    color: var(--m360-blue);
+  }
+
+  .article-contenu :global(br + br) {
+    display: none; /* supprime les double-sauts de ligne Freshdesk */
+  }
+
+  .article-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    color: var(--m360-blue);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.15s ease;
+  }
+
+  .article-back:hover {
+    text-decoration: none;
+    gap: var(--m360-space-3);
+  }
+
+  /* ============================================
+     SIDEBAR
+     ============================================ */
+  .article-sidebar {
+    position: sticky;
+    top: calc(100px + var(--m360-space-6));
+    background: var(--m360-bg-neutral);
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-2xl);
+    padding: var(--m360-space-6);
+  }
+
+  .sidebar-titre {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-1);
+  }
+
+  .sidebar-dossier {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--m360-text-title);
+    margin-bottom: var(--m360-space-4);
+  }
+
+  .sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--m360-space-2);
+    font-size: 13px;
+    color: var(--m360-text-body);
+    text-decoration: none;
+    padding: var(--m360-space-2) var(--m360-space-3);
+    border-radius: var(--m360-radius-md);
+    line-height: 1.4;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .sidebar-link svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    opacity: 0.4;
+  }
+
+  .sidebar-link:hover {
+    background: var(--m360-blue-bg);
+    color: var(--m360-blue);
+    text-decoration: none;
+  }
+
+  .sidebar-link:hover svg {
+    opacity: 1;
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .article-layout {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-8);
+    }
+
+    .article-sidebar {
+      position: static;
+      order: -1;
+    }
+  }
+</style>

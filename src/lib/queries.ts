@@ -1,5 +1,8 @@
 import { sanityClient } from './sanity';
-import type { ExperienceListItem, ExperienceFiche, ThematiqueFilter, MetierFilter } from '../types/catalogue';
+import type {
+  ExperienceListItem, ExperienceFiche, ThematiqueFilter, MetierFilter,
+  SupportCategorie, SupportArticleFiche, SupportArticleListItem,
+} from '../types/catalogue';
 
 export async function countExperiencesPubliees(): Promise<number> {
   return sanityClient.fetch<number>(
@@ -79,4 +82,66 @@ export async function getAllMetiers(): Promise<MetierFilter[]> {
       "slug": slug.current
     }
   `);
+}
+
+// ─── Support / FAQ ────────────────────────────────────────────────────────────
+
+export async function getAllSupportCategories(): Promise<SupportCategorie[]> {
+  return sanityClient.fetch<SupportCategorie[]>(`
+    *[_type == "supportCategorie"] | order(ordre asc) {
+      _id,
+      titre,
+      "slug": slug.current,
+      description,
+      ordre,
+      "dossiers": *[_type == "supportDossier" && references(^._id)] | order(ordre asc) {
+        _id,
+        titre,
+        "slug": slug.current,
+        description,
+        "articles": *[_type == "supportArticle" && references(^._id) && statut == "publie"] | order(ordre asc) {
+          _id,
+          titre,
+          "slug": slug.current,
+          "dossierId": dossier._ref,
+          "dossierTitre": ^.titre,
+          "dossierSlug": ^.slug.current,
+          "categorieId": ^.^._id,
+          "categorieTitre": ^.^.titre
+        }
+      }
+    }
+  `);
+}
+
+export async function getAllSupportArticles(): Promise<SupportArticleListItem[]> {
+  return sanityClient.fetch<SupportArticleListItem[]>(`
+    *[_type == "supportArticle" && statut == "publie"] {
+      _id,
+      titre,
+      "slug": slug.current,
+      "dossierId": dossier._ref,
+      "dossierTitre": dossier->titre,
+      "dossierSlug": dossier->slug.current,
+      "categorieId": dossier->categorie._ref,
+      "categorieTitre": dossier->categorie->titre
+    }
+  `);
+}
+
+export async function getSupportArticleBySlug(slug: string): Promise<SupportArticleFiche | null> {
+  return sanityClient.fetch<SupportArticleFiche | null>(`
+    *[_type == "supportArticle" && slug.current == $slug && statut == "publie"][0] {
+      _id,
+      titre,
+      "slug": slug.current,
+      contenu,
+      ordre,
+      "dossierId": dossier._ref,
+      "dossierTitre": dossier->titre,
+      "dossierSlug": dossier->slug.current,
+      "categorieId": dossier->categorie._ref,
+      "categorieTitre": dossier->categorie->titre
+    }
+  `, { slug });
 }

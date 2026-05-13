@@ -56,6 +56,43 @@ export interface ExperienceListItem {
   metiers: MetierFilter[];
 }
 
+// ─── Support / FAQ ───────────────────────────────────────────────────────────
+
+export interface SupportArticleListItem {
+  _id: string;
+  titre: string;
+  slug: string;
+  dossierId: string;
+  dossierTitre: string;
+  dossierSlug: string;
+  categorieId: string;
+  categorieTitre: string;
+}
+
+export interface SupportArticleFiche extends SupportArticleListItem {
+  contenu: string;
+  ordre: number;
+}
+
+export interface SupportDossier {
+  _id: string;
+  titre: string;
+  slug: string;
+  description?: string;
+  articles: SupportArticleListItem[];
+}
+
+export interface SupportCategorie {
+  _id: string;
+  titre: string;
+  slug: string;
+  description?: string;
+  ordre: number;
+  dossiers: SupportDossier[];
+}
+
+// ─── Catalogue ───────────────────────────────────────────────────────────────
+
 export interface Experience {
   _id: string;
   titre: string;

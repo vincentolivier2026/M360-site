@@ -1,0 +1,369 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllSupportCategories } from '../../lib/queries';
+
+const categories = await getAllSupportCategories();
+
+// Compte total d'articles pour les stats
+const totalArticles = categories.reduce(
+  (n, cat) => n + cat.dossiers.reduce((m, d) => m + d.articles.length, 0),
+  0
+);
+---
+
+<BaseLayout
+  title="Centre d'aide"
+  description="Trouvez rapidement la réponse à vos questions sur l'utilisation de Métiers 360 — casques VR, backoffice, mises à jour, Loader, et plus."
+>
+  <!-- EN-TÊTE -->
+  <section class="support-header">
+    <div class="container">
+      <p class="support-eyebrow">Centre d'aide</p>
+      <h1 class="support-titre">Comment pouvons-nous vous aider ?</h1>
+
+      <!-- RECHERCHE -->
+      <div class="search-wrapper">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M13 13l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="support-search"
+          type="search"
+          placeholder="Rechercher dans l'aide…"
+          autocomplete="off"
+          aria-label="Rechercher dans le centre d'aide"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- CATÉGORIES -->
+  <section class="support-body">
+    <div class="container">
+
+      {categories.map(cat => (
+        <div class="support-categorie" data-cat-id={cat._id}>
+          <h2 class="support-cat-titre">{cat.titre}</h2>
+          {cat.description && <p class="support-cat-desc">{cat.description}</p>}
+
+          <div class="support-dossiers">
+            {cat.dossiers.map(dossier => (
+              <div class="support-dossier" data-dossier-id={dossier._id}>
+                <h3 class="support-dossier-titre">{dossier.titre}</h3>
+                {dossier.description && (
+                  <p class="support-dossier-desc">{dossier.description}</p>
+                )}
+
+                <ul class="support-articles" role="list">
+                  {dossier.articles.map(art => (
+                    <li
+                      class="support-article-item"
+                      data-search={`${art.titre} ${dossier.titre} ${cat.titre}`.toLowerCase()}
+                    >
+                      <a href={`/support/${art.slug}`} class="support-article-link">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                          <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        {art.titre}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <!-- État vide -->
+      <p class="support-empty" id="support-empty" hidden>
+        Aucun article ne correspond à cette recherche.
+        <button class="reset-btn" id="reset-search">Réinitialiser</button>
+      </p>
+
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ============================================
+     EN-TÊTE
+     ============================================ */
+  .support-header {
+    background: var(--m360-navy);
+    padding: var(--m360-space-14) 0 var(--m360-space-10);
+    text-align: center;
+  }
+
+  .support-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--m360-pink);
+    margin-bottom: var(--m360-space-3);
+    max-width: none;
+  }
+
+  .support-titre {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: var(--m360-space-8);
+    max-width: none;
+  }
+
+  .search-wrapper {
+    position: relative;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: var(--m360-space-5);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--m360-text-caption);
+    pointer-events: none;
+  }
+
+  #support-search {
+    width: 100%;
+    padding: var(--m360-space-4) var(--m360-space-5) var(--m360-space-4) var(--m360-space-10);
+    border: none;
+    border-radius: var(--m360-radius-pill);
+    font-size: 15px;
+    background: #fff;
+    color: var(--m360-text-body);
+    box-shadow: var(--m360-shadow-lg);
+    transition: box-shadow 0.15s ease;
+  }
+
+  #support-search:focus {
+    outline: none;
+    box-shadow: var(--m360-shadow-xl), var(--m360-shadow-focus);
+  }
+
+  #support-search::placeholder {
+    color: var(--m360-text-caption);
+  }
+
+  /* ============================================
+     BODY
+     ============================================ */
+  .support-body {
+    padding: var(--m360-space-12) 0 var(--m360-space-16);
+  }
+
+  /* ============================================
+     CATÉGORIE
+     ============================================ */
+  .support-categorie {
+    margin-bottom: var(--m360-space-14);
+  }
+
+  .support-cat-titre {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 800;
+    color: var(--m360-navy);
+    margin-bottom: var(--m360-space-2);
+    padding-bottom: var(--m360-space-4);
+    border-bottom: 2px solid var(--m360-border);
+  }
+
+  .support-cat-desc {
+    font-size: 15px;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-8);
+    margin-top: var(--m360-space-2);
+    max-width: 60ch;
+  }
+
+  /* ============================================
+     DOSSIERS — grille 3 colonnes
+     ============================================ */
+  .support-dossiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--m360-space-5);
+  }
+
+  .support-dossier {
+    background: var(--m360-bg-neutral);
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-2xl);
+    padding: var(--m360-space-6);
+  }
+
+  .support-dossier-titre {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--m360-text-title);
+    margin-bottom: var(--m360-space-2);
+  }
+
+  .support-dossier-desc {
+    font-size: 13px;
+    color: var(--m360-text-caption);
+    margin-bottom: var(--m360-space-4);
+    line-height: 1.5;
+  }
+
+  /* ============================================
+     ARTICLES
+     ============================================ */
+  .support-articles {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-1);
+  }
+
+  .support-article-item[hidden] {
+    display: none;
+  }
+
+  .support-article-link {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--m360-space-2);
+    font-size: 14px;
+    color: var(--m360-blue);
+    text-decoration: none;
+    padding: var(--m360-space-2) 0;
+    line-height: 1.4;
+    transition: gap 0.15s ease;
+  }
+
+  .support-article-link svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    opacity: 0.6;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .support-article-link:hover {
+    text-decoration: none;
+    color: var(--m360-navy);
+    gap: var(--m360-space-3);
+  }
+
+  .support-article-link:hover svg {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+
+  /* ============================================
+     ÉTAT VIDE
+     ============================================ */
+  .support-empty {
+    text-align: center;
+    padding: var(--m360-space-16) 0;
+    color: var(--m360-text-caption);
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--m360-space-4);
+  }
+
+  .support-empty[hidden] {
+    display: none;
+  }
+
+  .reset-btn {
+    background: none;
+    border: none;
+    color: var(--m360-blue);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 967px) {
+    .support-dossiers {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .support-dossiers {
+      grid-template-columns: 1fr;
+    }
+    .support-header {
+      padding: var(--m360-space-10) 0 var(--m360-space-8);
+    }
+  }
+</style>
+
+<script>
+  const searchInput = document.getElementById('support-search') as HTMLInputElement;
+  const items       = document.querySelectorAll<HTMLLIElement>('.support-article-item');
+  const dossiers    = document.querySelectorAll<HTMLDivElement>('.support-dossier');
+  const categories  = document.querySelectorAll<HTMLDivElement>('.support-categorie');
+  const emptyEl     = document.getElementById('support-empty') as HTMLElement;
+
+  function applySearch(query: string) {
+    const q = query.trim().toLowerCase();
+    let totalVisible = 0;
+
+    // Filtre article par article
+    items.forEach(item => {
+      const text = item.dataset.search ?? '';
+      const show = !q || text.includes(q);
+      item.hidden = !show;
+      if (show) totalVisible++;
+    });
+
+    // Masque les dossiers vides
+    dossiers.forEach(dossier => {
+      const hasVisible = [...dossier.querySelectorAll<HTMLLIElement>('.support-article-item')]
+        .some(item => !item.hidden);
+      (dossier as HTMLElement).style.display = hasVisible ? '' : 'none';
+    });
+
+    // Masque les catégories vides
+    categories.forEach(cat => {
+      const hasDossier = [...cat.querySelectorAll<HTMLDivElement>('.support-dossier')]
+        .some(d => (d as HTMLElement).style.display !== 'none');
+      (cat as HTMLElement).style.display = hasDossier ? '' : 'none';
+    });
+
+    emptyEl.hidden = totalVisible > 0;
+
+    const qs = q ? `?q=${encodeURIComponent(q)}` : location.pathname;
+    history.replaceState(null, '', qs);
+  }
+
+  // Restaure depuis l'URL
+  const initialQ = new URLSearchParams(location.search).get('q') ?? '';
+  if (initialQ) {
+    searchInput.value = initialQ;
+    applySearch(initialQ);
+  }
+
+  // Debounce 200 ms
+  let timer: ReturnType<typeof setTimeout>;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => applySearch(searchInput.value), 200);
+  });
+
+  document.getElementById('reset-search')?.addEventListener('click', () => {
+    searchInput.value = '';
+    applySearch('');
+    searchInput.focus();
+  });
+</script>
