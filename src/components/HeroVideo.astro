@@ -1,0 +1,141 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+  /** Chemin vers le fichier MP4 dans /public/ */
+  video: string;
+  /** Image de secours affichée pendant le chargement et sur navigateurs sans vidéo */
+  poster: string;
+  /** Titre principal — peut contenir un <br> */
+  signature: string;
+  /** CTA primaire */
+  ctaPrimary: { label: string; href: string };
+  /** CTA secondaire */
+  ctaSecondary: { label: string; href: string };
+}
+
+const { video, poster, signature, ctaPrimary, ctaSecondary } = Astro.props;
+---
+
+<section class="hero" aria-label="Présentation de Métiers 360">
+  <div class="hero-media-wrapper">
+    <video
+      class="hero-video"
+      autoplay
+      loop
+      muted
+      playsinline
+      disablepictureinpicture
+      poster={poster}
+      aria-hidden="true"
+      preload="auto"
+    >
+      <source src={video} type="video/mp4" />
+    </video>
+  </div>
+
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-signature" set:html={signature}></h1>
+    <div class="hero-ctas">
+      <Button variant="primary" href={ctaPrimary.href} arrow>
+        {ctaPrimary.label}
+      </Button>
+      <Button variant="secondary" href={ctaSecondary.href} arrow>
+        {ctaSecondary.label}
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 640px;
+    max-height: 820px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    overflow: hidden;
+    background: var(--m360-navy);
+    isolation: isolate;
+  }
+
+  .hero-media-wrapper {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(2, 31, 63, 0.45) 0%,
+      rgba(2, 31, 63, 0.65) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 920px;
+    padding: 0 var(--m360-space-8);
+    text-align: center;
+  }
+
+  .hero-signature {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 0 0 var(--m360-space-12);
+    text-shadow:
+      0 2px 24px rgba(2, 31, 63, 0.5),
+      0 1px 4px rgba(2, 31, 63, 0.3);
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: var(--m360-space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 967px) {
+    .hero {
+      height: 88vh;
+      min-height: 560px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .hero-content {
+      padding: 0 var(--m360-space-5);
+    }
+  }
+
+  /* Respect de la préférence "réduire les animations" */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-video {
+      display: none;
+    }
+  }
+</style>
