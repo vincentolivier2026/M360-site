@@ -2,17 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getAllSupportArticles, getSupportArticleBySlug, getAllSupportCategories } from '../../lib/queries';
 
-export async function getStaticPaths() {
-  const articles = await getAllSupportArticles();
-  const seen = new Set<string>();
-  return articles
-    .filter(a => {
-      if (seen.has(a.slug)) return false;
-      seen.add(a.slug);
-      return true;
-    })
-    .map(a => ({ params: { slug: a.slug } }));
-}
 
 const { slug } = Astro.params;
 const article = await getSupportArticleBySlug(slug);

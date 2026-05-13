@@ -2,18 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getAllBlogPosts, getBlogPostBySlug, getAllBlogPosts as getRelated } from '../../lib/queries';
 
-export async function getStaticPaths() {
-  const posts = await getAllBlogPosts();
-  const seen = new Set<string>();
-  return posts
-    .filter(p => {
-      if (seen.has(p.slug)) return false;
-      seen.add(p.slug);
-      return true;
-    })
-    .map(p => ({ params: { slug: p.slug } }));
-}
-
 const { slug } = Astro.params;
 const post = await getBlogPostBySlug(slug);
 
