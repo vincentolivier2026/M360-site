@@ -16,6 +16,8 @@ interface Props {
   photo: string;
   /** Alt de la photo */
   photoAlt?: string;
+  /** Positionnement CSS de la photo dans le cercle (ex. "center 20%") */
+  photoPosition?: string;
   /** CTA principal */
   ctaPrimary: { label: string; href: string };
   /** Lien secondaire en texte souligné */
@@ -27,6 +29,7 @@ const {
   title,
   photo,
   photoAlt = '',
+  photoPosition = '28% 50%',
   ctaPrimary,
   ctaSecondary,
 } = Astro.props;
@@ -51,7 +54,7 @@ const {
 
     <div class="landing-hero-visual" aria-hidden="true">
       <div class="visual-photo">
-        <img src={photo} alt={photoAlt} loading="eager" fetchpriority="high" />
+        <img src={photo} alt={photoAlt} loading="eager" fetchpriority="high" style={`object-position: ${photoPosition}`} />
       </div>
       <div class="visual-pink-shape"></div>
     </div>
@@ -189,7 +192,7 @@ const {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 28% 50%;
+    object-position: 28% 50%; /* overridden per-page via style prop */
   }
 
   /* Ovale rose au "sol" */
