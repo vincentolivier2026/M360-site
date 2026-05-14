@@ -1,12 +1,12 @@
 ---
 // src/pages/espace-client.astro
-// Page hub Espace client — version simplifiée du Sitemap V3.
+// Page hub Espace client — version consolidée (mai 2026).
 //
 // Composition :
 // 1. Hero court avec CTA principal "Accéder au back-office" (lien externe)
-// 2. 4 cartes d'accès rapide (3 externes + 1 interne support)
-// 3. Placeholder visuel "Actualités produit à venir" (mécanisme Sanity à recalibrer)
-// 4. Bloc final "Besoin d'aide ?" avec lien vers /support
+// 2. 4 cartes d'accès rapide (3 externes + 1 ancre #support)
+// 3. Actualités produit (3 derniers posts "Conseils" depuis Sanity)
+// 4. Centre d'aide intégré (catégories → dossiers → articles, avec recherche)
 //
 // Note : page volontairement INDEXABLE pour capter la requête branded
 // "espace client metiers360" sur Google.
@@ -19,9 +19,10 @@
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AccessCard from '../components/AccessCard.astro';
-import { getBlogPostsByCategory } from '../lib/queries';
+import { getBlogPostsByCategory, getAllSupportCategories } from '../lib/queries';
 
 const conseilsPosts = await getBlogPostsByCategory('conseils');
+const supportCategories = await getAllSupportCategories();
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('fr-FR', {
@@ -121,11 +122,11 @@ const URLS = {
         />
 
         <AccessCard
-          href="/support"
+          href="#support"
           icon="?"
-          title="Support technique"
+          title="Centre d'aide"
           desc="FAQ, guides de dépannage et formulaire pour contacter notre équipe support."
-          arrow="Obtenir de l'aide"
+          arrow="Accéder à l'aide"
           tone="pink"
         />
       </div>
@@ -171,27 +172,118 @@ const URLS = {
   </section>
 
   {/* ============================================
-       BLOC "BESOIN D'AIDE ?" — lien support
+       CENTRE D'AIDE INTÉGRÉ
        ============================================ */}
-  <section class="ec-help-section">
-    <div class="ec-help-inner">
-      <h2 class="ec-help-title">Besoin d'aide ?</h2>
-      <p class="ec-help-text">
-        Notre équipe support répond à vos questions techniques et pédagogiques.
-        Consultez la base de connaissances ou contactez-nous directement.
-      </p>
-      <div class="ec-help-actions">
-        <a href="/support" class="ec-help-link">
-          Aller à la page support <span aria-hidden="true">→</span>
-        </a>
-        <button class="ec-help-contact" data-open-contact-modal>
-          Nous contacter
+  <section class="ec-support-section" id="support">
+    <div class="ec-support-inner">
+
+      <header class="ec-support-header">
+        <div class="ec-support-header-text">
+          <h2 class="ec-support-title">Centre d'aide</h2>
+          <p class="ec-support-subtitle">
+            Trouvez rapidement la réponse à vos questions.
+          </p>
+        </div>
+        <button class="ec-support-contact" data-open-contact-modal>
+          Nous écrire
         </button>
+      </header>
+
+      <!-- Recherche -->
+      <div class="ec-support-search-wrap">
+        <svg class="ec-support-search-icon" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M13 13l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="ec-search"
+          type="search"
+          placeholder="Rechercher dans l'aide…"
+          autocomplete="off"
+          aria-label="Rechercher dans le centre d'aide"
+          class="ec-support-search"
+        />
       </div>
+
+      <!-- Catégories, dossiers, articles -->
+      <div class="ec-support-body" id="ec-support-body">
+        {supportCategories.map(cat => (
+          <div class="ec-support-cat" data-cat-id={cat._id}>
+            <h3 class="ec-support-cat-title">{cat.titre}</h3>
+
+            <div class="ec-support-dossiers">
+              {cat.dossiers.map(dossier => (
+                <div class="ec-support-dossier" data-dossier-id={dossier._id}>
+                  <h4 class="ec-support-dossier-title">{dossier.titre}</h4>
+                  <ul class="ec-support-articles" role="list">
+                    {dossier.articles.map(art => (
+                      <li
+                        data-search={`${art.titre} ${dossier.titre} ${cat.titre}`.toLowerCase()}
+                      >
+                        <a href={`/support/${art.slug}`} class="ec-support-article-link">
+                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                            <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          {art.titre}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <p class="ec-support-empty" id="ec-support-empty" hidden>
+          Aucun résultat pour cette recherche.
+        </p>
+      </div>
+
     </div>
   </section>
 
 </BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('ec-search') as HTMLInputElement | null;
+  const emptyMsg    = document.getElementById('ec-support-empty') as HTMLElement | null;
+
+  searchInput?.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let totalVisible = 0;
+
+    document.querySelectorAll<HTMLElement>('.ec-support-cat').forEach(cat => {
+      let catVisible = 0;
+
+      cat.querySelectorAll<HTMLElement>('.ec-support-dossier').forEach(dossier => {
+        let dossierVisible = 0;
+
+        dossier.querySelectorAll<HTMLElement>('li[data-search]').forEach(li => {
+          const match = !q || li.dataset.search!.includes(q);
+          li.hidden = !match;
+          if (match) dossierVisible++;
+        });
+
+        if (dossierVisible === 0) {
+          dossier.setAttribute('data-hidden', '');
+        } else {
+          dossier.removeAttribute('data-hidden');
+          catVisible += dossierVisible;
+        }
+      });
+
+      if (catVisible === 0) {
+        cat.setAttribute('data-hidden', '');
+      } else {
+        cat.removeAttribute('data-hidden');
+        totalVisible += catVisible;
+      }
+    });
+
+    if (emptyMsg) emptyMsg.hidden = totalVisible > 0;
+  });
+</script>
 
 <style>
   /* ============================================
@@ -467,80 +559,197 @@ const URLS = {
   }
 
   /* ============================================
-     SECTION "BESOIN D'AIDE ?"
+     CENTRE D'AIDE INTÉGRÉ
      ============================================ */
-  .ec-help-section {
-    padding: var(--m360-space-12) var(--m360-space-8) var(--m360-space-14);
+  .ec-support-section {
+    padding: var(--m360-space-14) var(--m360-space-8) var(--m360-space-16);
     background: #fff;
   }
 
-  .ec-help-inner {
-    max-width: 720px;
+  .ec-support-inner {
+    max-width: 1080px;
     margin: 0 auto;
-    text-align: center;
-    padding: var(--m360-space-12) var(--m360-space-8);
-    background: var(--m360-blue-bg);
-    border-radius: var(--m360-radius-card);
   }
 
-  .ec-help-title {
+  .ec-support-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--m360-space-5);
+    margin-bottom: var(--m360-space-8);
+  }
+
+  .ec-support-title {
     font-family: var(--font-display);
     font-weight: 800;
     font-size: clamp(24px, 3vw, 32px);
     color: var(--m360-text-title);
-    margin: 0 0 var(--m360-space-4);
     letter-spacing: -0.02em;
+    margin: 0 0 var(--m360-space-1);
   }
 
-  .ec-help-text {
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--m360-text-body);
-    margin: 0 auto var(--m360-space-7);
-    max-width: 50ch;
-  }
-
-  .ec-help-actions {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--m360-space-6);
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .ec-help-link {
-    font-family: var(--font-heading);
-    font-weight: 700;
+  .ec-support-subtitle {
     font-size: 15px;
-    color: var(--m360-blue);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--m360-space-2);
+    color: var(--m360-text-caption);
+    margin: 0;
   }
 
-  .ec-help-link:hover {
-    text-decoration: underline;
-  }
-
-  .ec-help-contact {
+  .ec-support-contact {
     background: var(--m360-blue);
     color: #fff;
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 15px;
-    padding: var(--m360-space-4) var(--m360-space-7);
+    font-size: 14px;
+    padding: var(--m360-space-3) var(--m360-space-6);
     border-radius: var(--m360-radius-lg);
     border: none;
     cursor: pointer;
     box-shadow: var(--m360-shadow-blue);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+    white-space: nowrap;
   }
 
-  .ec-help-contact:hover {
+  .ec-support-contact:hover {
     transform: translateY(-1px);
     box-shadow: var(--m360-shadow-blue-hover);
+  }
+
+  /* Recherche */
+  .ec-support-search-wrap {
+    position: relative;
+    margin-bottom: var(--m360-space-10);
+  }
+
+  .ec-support-search-icon {
+    position: absolute;
+    left: var(--m360-space-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--m360-text-caption);
+    pointer-events: none;
+  }
+
+  .ec-support-search {
+    width: 100%;
+    padding: var(--m360-space-4) var(--m360-space-4) var(--m360-space-4) 42px;
+    font-family: var(--font-heading);
+    font-size: 15px;
+    color: var(--m360-text-title);
+    background: var(--m360-bg-neutral);
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-xl);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+  }
+
+  .ec-support-search:focus {
+    border-color: var(--m360-blue);
+    box-shadow: 0 0 0 3px rgba(0, 100, 210, 0.1);
+  }
+
+  /* Grille catégories */
+  .ec-support-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-12);
+  }
+
+  .ec-support-cat-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(18px, 2vw, 22px);
+    color: var(--m360-text-title);
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--m360-space-6);
+    padding-bottom: var(--m360-space-4);
+    border-bottom: 2px solid var(--m360-blue);
+  }
+
+  /* Dossiers : grille 3 colonnes */
+  .ec-support-dossiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--m360-space-6);
+  }
+
+  .ec-support-dossier {
+    background: var(--m360-bg-neutral);
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-2xl);
+    padding: var(--m360-space-5) var(--m360-space-6);
+  }
+
+  .ec-support-dossier-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--m360-text-caption);
+    margin: 0 0 var(--m360-space-4);
+  }
+
+  .ec-support-articles {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ec-support-article-link {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--m360-space-2);
+    font-family: var(--font-heading);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--m360-text-body);
+    text-decoration: none;
+    padding: var(--m360-space-2) var(--m360-space-2);
+    border-radius: var(--m360-radius-md);
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+
+  .ec-support-article-link svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    opacity: 0.35;
+    transition: opacity 0.12s ease;
+  }
+
+  .ec-support-article-link:hover {
+    background: var(--m360-blue-bg);
+    color: var(--m360-blue);
+  }
+
+  .ec-support-article-link:hover svg {
+    opacity: 1;
+  }
+
+  /* Article masqué par la recherche */
+  .ec-support-articles li[hidden] {
+    display: none;
+  }
+
+  /* Dossier vide après recherche */
+  .ec-support-dossier[data-hidden] {
+    display: none;
+  }
+
+  /* Catégorie vide après recherche */
+  .ec-support-cat[data-hidden] {
+    display: none;
+  }
+
+  .ec-support-empty {
+    text-align: center;
+    color: var(--m360-text-caption);
+    font-size: 15px;
+    padding: var(--m360-space-8) 0;
   }
 
   /* ============================================
@@ -565,13 +774,19 @@ const URLS = {
     }
   }
 
+  @media (max-width: 860px) {
+    .ec-support-dossiers {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
   @media (max-width: 639px) {
     .ec-hero {
       padding: var(--m360-space-12) var(--m360-space-5) var(--m360-space-10);
     }
     .ec-cards-section,
     .ec-news-section,
-    .ec-help-section {
+    .ec-support-section {
       padding-left: var(--m360-space-5);
       padding-right: var(--m360-space-5);
     }
@@ -582,12 +797,12 @@ const URLS = {
     .ec-news-grid {
       grid-template-columns: 1fr;
     }
-    .ec-help-inner {
-      padding: var(--m360-space-9) var(--m360-space-5);
+    .ec-support-dossiers {
+      grid-template-columns: 1fr;
     }
-    .ec-help-actions {
+    .ec-support-header {
       flex-direction: column;
-      gap: var(--m360-space-4);
+      align-items: flex-start;
     }
   }
 </style>
