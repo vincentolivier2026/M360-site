@@ -14,13 +14,12 @@
 
     <a href="/" class="logo-link" aria-label="Métiers 360 — accueil">
       <img
-        src="/logos/m360-logo.svg"
-        alt=""
-        width="64"
-        height="64"
+        src="/logos/m360-logo.png"
+        alt="Métiers 360"
+        width="48"
+        height="48"
         class="logo-img"
       />
-      <span class="logo-text">métiers360</span>
     </a>
 
     {/* Navigation desktop — masquée sous 968px */}
@@ -85,7 +84,7 @@
     <div class="mobile-drawer-overlay" data-close-drawer></div>
     <div class="mobile-drawer-panel" role="dialog" aria-label="Menu de navigation" aria-modal="true">
       <div class="mobile-drawer-header">
-        <span class="logo-text">métiers360</span>
+        <img src="/logos/m360-logo.png" alt="Métiers 360" width="40" height="40" style="border-radius:50%" />
         <button class="drawer-close-btn" aria-label="Fermer le menu" data-close-drawer>×</button>
       </div>
 
@@ -151,18 +150,11 @@
   .logo-link:hover { text-decoration: none; }
 
   .logo-img {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     flex-shrink: 0;
-  }
-
-  .logo-text {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 22px;
-    letter-spacing: -0.02em;
-    color: var(--m360-navy);
+    display: block;
   }
 
   /* ============================================
@@ -535,9 +527,6 @@
     .logo-img {
       width: 40px;
       height: 40px;
-    }
-    .logo-text {
-      font-size: 18px;
     }
     .nav-desktop {
       display: none;
