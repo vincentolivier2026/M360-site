@@ -1,0 +1,1193 @@
+---
+// src/pages/pedagogie.astro
+// Page "Pédagogie & recherche" — V1 (mai 2026)
+//
+// Structure (9 blocs) :
+//   1. Hero sobre
+//   2. Ce que la recherche dit     — texte + biblio-card #1
+//   3. Recherche à 2 niveaux       — 3a Psy-DREPI + card #2 / 3b Collectif + liste
+//   4. La séquence en 3 temps      — 01 Prép + card #3 / 02 Immersion + card #4 / 03 Débrief + card #5
+//   5. L'effet multiplicateur      — texte + card #6
+//   6. De la théorie aux modules   — 3 cartes typologie + note référentiels
+//   7. Portes de sortie
+//   8. Bibliographie sobre
+//   9. Prolonger (pied sobre)
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EyebrowPill from '../components/EyebrowPill.astro';
+---
+
+<BaseLayout
+  title="Pédagogie & recherche — Métiers 360"
+  description="Découvrez l'approche pédagogique de Métiers 360, fondée sur la recherche en sciences de l'éducation et en psychologie sociale. Un programme de recherche conduit avec le laboratoire Psy-DREPI de l'Université de Bourgogne et une contribution active au Collectif Orientation."
+>
+
+  <!-- ════════════════════════════════════════
+       1 · HERO
+       ════════════════════════════════════════ -->
+  <section class="ped-hero">
+    <div class="ped-hero-inner">
+      <EyebrowPill tone="pink">Pédagogie & recherche</EyebrowPill>
+      <h1 class="ped-hero-title">L&rsquo;immersion ne suffit pas.</h1>
+      <p class="ped-hero-lead">
+        Un casque VR produit des émotions fortes &mdash; pas des apprentissages durables.
+        Ce qui transforme l&rsquo;expérience en orientation, c&rsquo;est la séquence
+        pédagogique qui l&rsquo;encadre. C&rsquo;est sur ce principe, étayé par la recherche
+        en sciences de l&rsquo;éducation et en psychologie sociale, qu&rsquo;est construite
+        l&rsquo;approche Métiers&nbsp;360.
+      </p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       2 · CE QUE LA RECHERCHE DIT
+       ════════════════════════════════════════ -->
+  <section class="ped-section ped-section--white">
+    <div class="ped-container ped-container--narrow">
+      <EyebrowPill tone="blue">Fondements</EyebrowPill>
+      <h2 class="ped-h2">Ce que la recherche dit</h2>
+      <p class="ped-body">
+        Métiers 360 ne déduit pas sa méthode d&rsquo;intuitions commerciales, mais d&rsquo;un
+        corpus scientifique stabilisé en sciences de l&rsquo;éducation, en psychologie cognitive
+        et en psychologie sociale. Plusieurs décennies de recherche convergent sur un
+        point&nbsp;: la réalité virtuelle est un outil pédagogique puissant &mdash; à condition
+        d&rsquo;être encadrée.
+      </p>
+
+      <div class="bib-card">
+        <span class="bib-tag">Référence scientifique</span>
+        <blockquote class="bib-quote">
+          &laquo;&nbsp;La réalité virtuelle surpasse la vidéo et le livre comme support
+          d&rsquo;apprentissage, mais uniquement lorsqu&rsquo;elle est suivie d&rsquo;une
+          consolidation guidée. Sans cette consolidation, l&rsquo;effet immersif
+          s&rsquo;évanouit.&nbsp;&raquo;
+        </blockquote>
+        <p class="bib-source">
+          <strong>Allcoat, D. &amp; von Mühlenen, A.</strong> &middot; <em>Psychonomic Bulletin &amp;
+          Review</em>, 2018 &middot; Étude comparative de la VR comme outil pédagogique.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       3 · UNE RECHERCHE MENÉE À DEUX NIVEAUX
+       ════════════════════════════════════════ -->
+  <section class="ped-section ped-section--neutral">
+    <div class="ped-container ped-container--narrow">
+      <EyebrowPill tone="blue">Notre contribution</EyebrowPill>
+      <h2 class="ped-h2">Une recherche menée à deux niveaux</h2>
+      <p class="ped-lead">
+        Métiers 360 ne se contente pas de mobiliser la littérature scientifique&nbsp;: nous
+        contribuons activement à la produire. Sur deux fronts complémentaires &mdash;
+        l&rsquo;étude approfondie des effets de l&rsquo;immersion sur la projection
+        professionnelle, et la transformation collective du système d&rsquo;orientation en
+        France.
+      </p>
+    </div>
+
+    <!-- ── 3a · Psy-DREPI ─────────────────────────────────────── -->
+    <div class="ped-container ped-container--narrow ped-subsection">
+      <h3 class="ped-h3">Un programme de recherche en psychologie sociale du travail</h3>
+      <div class="ped-body-block">
+        <p>
+          Métiers 360 conduit, en partenariat avec le laboratoire <strong>Psy-DREPI</strong> de
+          l&rsquo;Université de Bourgogne, un programme de recherche pluriannuel sur les effets
+          des expériences immersives dans les parcours d&rsquo;orientation et d&rsquo;insertion
+          professionnelle.
+        </p>
+        <p>
+          Au cœur de ces travaux&nbsp;: la notion de <strong>&laquo;&nbsp;soi futur
+          professionnel&nbsp;&raquo;</strong> &mdash; la capacité d&rsquo;une personne à se
+          représenter, de façon crédible et désirable, dans un avenir professionnel possible.
+          La littérature scientifique identifie cette capacité comme un levier majeur
+          d&rsquo;engagement, particulièrement déterminant pour les publics éloignés de
+          l&rsquo;emploi.
+        </p>
+        <p>Trois axes structurent le programme&nbsp;:</p>
+        <ul>
+          <li>
+            <strong>Mesurer empiriquement l&rsquo;effet d&rsquo;une exposition immersive sur la
+            projection professionnelle</strong> &mdash; démontrer ce que la réalité virtuelle
+            change dans la manière dont une personne se représente son futur.
+          </li>
+          <li>
+            <strong>Comprendre les freins psychosociaux</strong> qui inhibent ou facilitent
+            cette projection, pour concevoir des dispositifs qui corrigent les inégalités
+            d&rsquo;accès à l&rsquo;orientation plutôt qu&rsquo;elles ne les aggravent.
+          </li>
+          <li>
+            <strong>Outiller les professionnels de l&rsquo;accompagnement</strong>, afin que la
+            réalité virtuelle ne soit pas un objet isolé mais un support pleinement intégré à
+            la pratique des conseillers.
+          </li>
+        </ul>
+        <p>
+          Le programme s&rsquo;appuie sur une démarche qualitative de terrain &mdash;
+          observations dans des missions locales, structures d&rsquo;insertion et organismes de
+          formation &mdash; articulée à un cadre théorique solide en psychologie sociale.
+        </p>
+      </div>
+
+      <div class="bib-card">
+        <span class="bib-tag">Cadre théorique</span>
+        <blockquote class="bib-quote">
+          &laquo;&nbsp;Ce que nous pensons, espérons ou craignons de devenir guide nos attitudes
+          et nos comportements dans le présent. Le soi est une entité dynamique intégrant des
+          visions passées, présentes et futures.&nbsp;&raquo;
+        </blockquote>
+        <p class="bib-source">
+          <strong>Markus, H. &amp; Nurius, P.</strong> &middot; <em>American Psychologist</em>,
+          1986 &middot; <em>Possible Selves</em> &mdash; concept fondateur de la psychologie
+          sociale du soi.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── 3b · Collectif Orientation ───────────────────────────── -->
+    <div class="ped-container ped-container--narrow ped-subsection">
+      <h3 class="ped-h3">Une contribution active au Collectif Orientation</h3>
+      <div class="ped-body-block">
+        <p>
+          Métiers 360 est <strong>membre fondateur et membre du bureau du Collectif
+          Orientation</strong>, association qui réunit les acteurs de l&rsquo;orientation
+          scolaire et professionnelle en France. Le Collectif porte une démarche de
+          recherche-action collaborative dont l&rsquo;ambition est de transformer durablement
+          le système d&rsquo;orientation &mdash; par le diagnostic des obstacles systémiques,
+          l&rsquo;expérimentation de solutions concrètes sur le terrain, et la diffusion
+          publique des enseignements.
+        </p>
+        <p>
+          Cette posture engage Métiers 360 au-delà de son périmètre commercial&nbsp;: nous
+          contribuons à la réflexion collective sur ce que devrait être une politique
+          d&rsquo;orientation efficace, aux côtés d&rsquo;acteurs de terrain qui accompagnent
+          quotidiennement des jeunes et des publics en insertion.
+        </p>
+      </div>
+
+      <ul class="collectif-list">
+        <li>
+          <strong>Enquête sur les immersions professionnelles</strong> (2024) &mdash; en
+          partenariat avec le Medef et VersLeHaut. Plus de 2&nbsp;700 personnes interrogées,
+          6 recommandations sur la dimension pédagogique des stages.
+        </li>
+        <li>
+          <strong>Badge numérique &laquo;&nbsp;1stage1badge&nbsp;&raquo;</strong> (2025) &mdash;
+          en partenariat avec le Medef et la Région académique Île-de-France, à destination
+          des stagiaires de seconde.
+        </li>
+        <li>
+          <strong>La Boussole de l&rsquo;orientation</strong> (2026) &mdash; diagnostic
+          territorial conduit avec la Cité éducative de Paris 18e.
+        </li>
+        <li>
+          <strong>L&rsquo;orientation dans les établissements scolaires&nbsp;: une ambition
+          entravée</strong> (2026) &mdash; enquête nationale auprès de plus de 720 personnels
+          de direction.
+        </li>
+      </ul>
+
+      <a
+        href="https://www.collectif-orientation.fr/notre-demarche-de-recherche-action/"
+        class="ped-link-ext"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Découvrir les travaux du Collectif Orientation
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       4 · LA SÉQUENCE EN TROIS TEMPS
+       ════════════════════════════════════════ -->
+  <section class="ped-section ped-section--white">
+    <div class="ped-container ped-container--narrow">
+      <EyebrowPill tone="pink">La méthode</EyebrowPill>
+      <h2 class="ped-h2">Trois temps qui font la différence</h2>
+      <p class="ped-lead">
+        De la recherche aux pratiques de terrain, une logique stable émerge&nbsp;:
+        l&rsquo;expérience immersive ne porte ses fruits que lorsqu&rsquo;elle est encadrée
+        par une préparation et un débrief. C&rsquo;est cette séquence en trois temps qui
+        structure les modules pédagogiques Métiers&nbsp;360.
+      </p>
+    </div>
+
+    <!-- ── 01 · La préparation ───────────────────────────── -->
+    <div class="ped-container ped-container--narrow ped-subsection">
+      <div class="step-header">
+        <span class="step-num" aria-hidden="true">01</span>
+        <h3 class="step-title">La préparation</h3>
+      </div>
+      <div class="ped-body-block">
+        <p>
+          Avant même que le casque ne soit enfilé, un travail décisif a lieu. La préparation
+          active les schémas cognitifs de l&rsquo;apprenant, réduit la charge mentale liée à
+          l&rsquo;interface technique, et oriente l&rsquo;attention vers les éléments
+          significatifs du métier. Elle crée surtout une <strong>intention
+          d&rsquo;apprentissage</strong> &mdash; la condition pour que ce qui sera vu soit
+          retenu, et non simplement éprouvé.
+        </p>
+        <p>
+          Cette préparation prend des formes variées selon les publics et les contextes&nbsp;:
+          photolangage pour libérer la parole sans poser de question anxiogène, choix par
+          centres d&rsquo;intérêt pour que la VR réponde à une envie exprimée plutôt
+          qu&rsquo;à une prescription externe, travail sur les préjugés pour rendre visibles
+          les représentations initiales, choix social en binôme pour activer la réflexivité
+          dès avant l&rsquo;immersion. Chaque modalité est documentée dans un module
+          pédagogique clés en main.
+        </p>
+      </div>
+      <div class="bib-card">
+        <span class="bib-tag">Recherche fondamentale</span>
+        <blockquote class="bib-quote">
+          &laquo;&nbsp;Une préparation préalable réduit significativement la charge cognitive
+          extrinsèque associée à un environnement d&rsquo;apprentissage complexe, et libère les
+          ressources mentales nécessaires à l&rsquo;apprentissage effectif.&nbsp;&raquo;
+        </blockquote>
+        <p class="bib-source">
+          <strong>Sweller, J.</strong> &middot; <em>Cognitive Science</em>, 1988 &middot;
+          <em>Cognitive Load Theory</em> &mdash; théorie de référence sur la charge cognitive
+          en situation d&rsquo;apprentissage.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── 02 · L'immersion ──────────────────────────────── -->
+    <div class="ped-container ped-container--narrow ped-step-sep">
+      <div class="step-header">
+        <span class="step-num" aria-hidden="true">02</span>
+        <h3 class="step-title">L&rsquo;immersion</h3>
+      </div>
+      <div class="ped-body-block">
+        <p>
+          L&rsquo;expérience immersive elle-même produit ce qu&rsquo;aucun autre format ne sait
+          produire&nbsp;: un sentiment de présence, une projection dans le quotidien réel
+          d&rsquo;un métier, une implication émotionnelle qui touche y compris les publics les
+          moins réceptifs aux approches classiques &mdash; jeunes peu à l&rsquo;aise à
+          l&rsquo;écrit, adultes en reconversion intimidés par les codes de l&rsquo;orientation
+          institutionnelle.
+        </p>
+        <p>
+          Mais cette puissance a une limite, documentée par la recherche&nbsp;: sans
+          encadrement, la charge cognitive de l&rsquo;interface technique peut court-circuiter
+          l&rsquo;apprentissage. L&rsquo;émotion ressentie ne devient pas automatiquement une
+          connaissance utilisable. C&rsquo;est précisément ce que la préparation, en amont, et
+          le débrief, en aval, permettent de transformer.
+        </p>
+      </div>
+      <div class="bib-card">
+        <span class="bib-tag">Recherche fondamentale</span>
+        <blockquote class="bib-quote">
+          &laquo;&nbsp;La présence ressentie en réalité virtuelle est un puissant moteur de
+          motivation, mais la rétention durable des contenus dépend du travail de réflexion
+          post-immersion. L&rsquo;immersion seule produit de l&rsquo;expérience, pas de la
+          connaissance.&nbsp;&raquo;
+        </blockquote>
+        <p class="bib-source">
+          <strong>Makransky, G. &amp; Lilleholt, L.</strong> &middot; <em>Computers in Human
+          Behavior</em>, 2018 &middot; Étude sur les conditions d&rsquo;efficacité de la VR
+          éducative.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── 03 · Le débrief ──────────────────────────────── -->
+    <div class="ped-container ped-container--narrow ped-step-sep">
+      <div class="step-header">
+        <span class="step-num" aria-hidden="true">03</span>
+        <h3 class="step-title">Le débrief</h3>
+      </div>
+      <div class="ped-body-block">
+        <p>
+          Le débrief est le temps le plus déterminant &mdash; et celui qui distingue
+          l&rsquo;orientation par la VR d&rsquo;une simple animation technologique. Il
+          transforme le vécu émotionnel en connaissance utilisable, ancre les contenus dans
+          des concepts généraux, et &mdash; surtout &mdash; engage la projection personnelle.
+        </p>
+        <p>Métiers 360 structure ce temps en trois moments distincts&nbsp;:</p>
+        <ul class="debrief-list">
+          <li>
+            <strong>Observer</strong> &mdash;
+            <em>&laquo;&nbsp;Qu&rsquo;est-ce que j&rsquo;ai vu&nbsp;?&nbsp;&raquo;</em>
+            &mdash; verbaliser ce qui a été perçu.
+          </li>
+          <li>
+            <strong>Conceptualiser</strong> &mdash;
+            <em>&laquo;&nbsp;Qu&rsquo;est-ce que ça m&rsquo;apprend sur ce métier, ce secteur,
+            ces compétences&nbsp;?&nbsp;&raquo;</em> &mdash; passer de l&rsquo;expérience
+            concrète à la connaissance abstraite.
+          </li>
+          <li>
+            <strong>Se projeter</strong> &mdash;
+            <em>&laquo;&nbsp;Est-ce que ça me correspond&nbsp;? Est-ce que ça
+            m&rsquo;intéresse&nbsp;? Est-ce que ça pourrait être pour moi&nbsp;?&nbsp;&raquo;</em>
+            &mdash; le moment où la découverte d&rsquo;un métier devient une piste
+            d&rsquo;orientation réelle.
+          </li>
+        </ul>
+        <p>
+          Ce troisième moment est aussi celui qui légitime le rôle du professionnel
+          d&rsquo;orientation&nbsp;: c&rsquo;est dans la projection accompagnée que se joue
+          la construction identitaire &mdash; un travail qu&rsquo;un casque ne fera jamais
+          seul.
+        </p>
+      </div>
+      <div class="bib-card">
+        <span class="bib-tag">Cadre théorique</span>
+        <blockquote class="bib-quote">
+          &laquo;&nbsp;L&rsquo;apprentissage expérientiel suppose un cycle complet&nbsp;:
+          expérience concrète &rarr; observation réfléchie &rarr; conceptualisation abstraite
+          &rarr; expérimentation active. Tronquer le cycle dégrade radicalement
+          l&rsquo;apprentissage.&nbsp;&raquo;
+        </blockquote>
+        <p class="bib-source">
+          <strong>Kolb, D.</strong> &middot; <em>Experiential Learning</em>, 1984 &middot;
+          Modèle de référence en sciences de l&rsquo;éducation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       5 · L'EFFET MULTIPLICATEUR
+       ════════════════════════════════════════ -->
+  <section class="ped-section ped-section--navy">
+    <div class="ped-container ped-container--narrow">
+      <EyebrowPill tone="pink">Effet de séquence</EyebrowPill>
+      <h2 class="ped-h2 ped-h2--light">Le tout vaut bien plus que la somme des parties</h2>
+      <div class="ped-body-block ped-body-block--light">
+        <p>
+          Préparation, immersion, débrief&nbsp;: ces trois temps pris ensemble produisent des
+          effets nettement supérieurs à ce qu&rsquo;ils produisent isolément. Dans le champ
+          spécifique de l&rsquo;orientation, la recherche montre que les interventions
+          combinant activité expérientielle et réflexivité guidée produisent des effets
+          durables sur la clarté de l&rsquo;identité vocationnelle et sur la capacité des
+          adolescents à se projeter dans une trajectoire personnelle.
+        </p>
+        <p>
+          C&rsquo;est cet effet multiplicateur que Métiers 360 cherche à industrialiser &mdash;
+          non pas en standardisant rigidement la séquence, mais en outillant les animateurs
+          avec des protocoles éprouvés, adaptables à la diversité réelle des publics et des
+          contextes.
+        </p>
+      </div>
+      <div class="bib-card bib-card--light">
+        <span class="bib-tag bib-tag--light">Étude terrain</span>
+        <blockquote class="bib-quote bib-quote--light">
+          &laquo;&nbsp;Les interventions d&rsquo;orientation combinant expérience directe et
+          réflexivité accompagnée produisent un effet mesurable et durable sur la clarté
+          vocationnelle des adolescents &mdash; indicateur central des politiques
+          d&rsquo;orientation.&nbsp;&raquo;
+        </blockquote>
+        <p class="bib-source bib-source--light">
+          <strong>Nota, L., Ferrari, L., Solberg, V.S. &amp; Soresi, S.</strong> &middot;
+          <em>International Journal for Educational and Vocational Guidance</em>, 2014.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       6 · DE LA THÉORIE AUX MODULES
+       ════════════════════════════════════════ -->
+  <section class="ped-section ped-section--neutral">
+    <div class="ped-container">
+      <div class="modules-header">
+        <EyebrowPill tone="blue">Trois univers d'usage</EyebrowPill>
+        <h2 class="ped-h2">De la théorie aux modules</h2>
+        <p class="ped-lead ped-lead--center">
+          Les principes pédagogiques ne sont pas une intention. Ils sont incarnés dans une
+          bibliothèque de modules clés en main, conçus avec des professionnels de
+          l&rsquo;orientation, et organisés selon trois univers d&rsquo;usage.
+          L&rsquo;animateur n&rsquo;a pas à inventer sa séance&nbsp;: il dispose d&rsquo;un
+          protocole éprouvé, adaptable à son public.
+        </p>
+      </div>
+
+      <div class="typo-grid">
+
+        <!-- Orientation scolaire -->
+        <article class="typo-card">
+          <span class="typo-letter" aria-hidden="true">O</span>
+          <div class="typo-body">
+            <h3 class="typo-title">Orientation scolaire</h3>
+            <p class="typo-subtitle">Collège &middot; lycée &middot; CFA</p>
+            <p class="typo-text">
+              Découvrir le monde professionnel, élargir le champ des possibles, travailler les
+              stéréotypes de genre, construire un projet d&rsquo;orientation.
+            </p>
+            <div class="typo-chips">
+              <span class="typo-chip">Derrière les images</span>
+              <span class="typo-chip">Les métiers sont-ils genrés&nbsp;?</span>
+              <span class="typo-chip">Trouver son stage comme un·e pro</span>
+              <span class="typo-chip">Créer une fiche métier</span>
+              <span class="typo-chip">La chasse aux métiers</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Insertion professionnelle -->
+        <article class="typo-card">
+          <span class="typo-letter" aria-hidden="true">I</span>
+          <div class="typo-body">
+            <h3 class="typo-title">Insertion professionnelle</h3>
+            <p class="typo-subtitle">Missions Locales &middot; France Travail &middot; structures d&rsquo;insertion</p>
+            <p class="typo-text">
+              Se familiariser avec les codes de l&rsquo;entreprise, identifier ses savoir-être,
+              préparer ses entretiens, reprendre confiance dans son rapport au monde du travail.
+            </p>
+            <div class="typo-chips">
+              <span class="typo-chip">Vis ma vie de recruteur·euse</span>
+              <span class="typo-chip">Découvrir les savoir-être</span>
+              <span class="typo-chip">Duo et débat</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Reconversion -->
+        <article class="typo-card">
+          <span class="typo-letter" aria-hidden="true">R</span>
+          <div class="typo-body">
+            <h3 class="typo-title">Reconversion</h3>
+            <p class="typo-subtitle">Adultes en transition professionnelle</p>
+            <p class="typo-text">
+              Explorer des secteurs inconnus, identifier des compétences transversales
+              mobilisables, construire un nouveau projet professionnel.
+            </p>
+            <div class="typo-chips">
+              <span class="typo-chip">Découvrir les compétences transversales</span>
+              <span class="typo-chip">Découvrir les savoir-être</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <p class="modules-note">
+        Les modules s&rsquo;articulent avec les référentiels reconnus du champ &mdash;
+        <strong>ROME&nbsp;4.0</strong> de France Travail pour les métiers et les savoir-être,
+        <strong>Rectec</strong> pour les compétences transversales. Ce n&rsquo;est pas un
+        outil parallèle, c&rsquo;est un outil intégrable dans l&rsquo;ingénierie pédagogique
+        existante.
+      </p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       7 · PORTES DE SORTIE
+       ════════════════════════════════════════ -->
+  <section class="ped-section ped-section--white">
+    <div class="ped-container ped-container--narrow">
+      <h2 class="ped-h2">Aller plus loin</h2>
+      <div class="exit-links">
+        <a href="/catalogue" class="exit-link">
+          Explorer les 300 métiers du catalogue
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <div class="exit-espace">
+          <p class="exit-espace-text">Découvrir les fiches d&rsquo;animation des modules</p>
+          <p class="exit-espace-note">
+            Les fiches d&rsquo;animation détaillées de chaque module sont mises à disposition
+            des structures équipées dans leur espace client.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       8 · BIBLIOGRAPHIE
+       ════════════════════════════════════════ -->
+  <section class="ped-section ped-section--neutral">
+    <div class="ped-container ped-container--narrow">
+      <h2 class="ped-h2">Références</h2>
+      <ul class="biblio">
+        <li>
+          <strong>Allcoat, D. &amp; von Mühlenen, A.</strong> (2018).
+          <em>Learning in Virtual Reality: Effects on Performance, Emotion and Engagement</em>.
+          Psychonomic Bulletin &amp; Review. &rarr; La VR surpasse vidéo et livre comme
+          support d&rsquo;apprentissage uniquement avec consolidation guidée.
+        </li>
+        <li>
+          <strong>Bailenson, J.</strong> (2018).
+          <em>Experience on Demand: What Virtual Reality Is, How It Works, and What It Can
+          Do</em>. Stanford Virtual Human Interaction Lab. &rarr; L&rsquo;interface VR crée
+          une charge cognitive qui peut court-circuiter l&rsquo;apprentissage si elle
+          n&rsquo;est pas encadrée.
+        </li>
+        <li>
+          <strong>Dalgarno, B. &amp; Lee, M.J.W.</strong> (2010).
+          <em>What are the learning affordances of 3-D virtual environments?</em>. British
+          Journal of Educational Technology. &rarr; La réflexion structurée est la condition
+          du transfert d&rsquo;apprentissage en environnement immersif.
+        </li>
+        <li>
+          <strong>Gruber, M.J., Gelman, B.D. &amp; Ranganath, C.</strong> (2014).
+          <em>States of Curiosity Modulate Hippocampus-Dependent Learning</em>. Neuron.
+          &rarr; L&rsquo;activation de la curiosité améliore mesurablement la mémorisation.
+        </li>
+        <li>
+          <strong>Kolb, D.</strong> (1984).
+          <em>Experiential Learning: Experience as the Source of Learning and
+          Development</em>. Prentice-Hall. &rarr; Cycle expérience &rarr; réflexion &rarr;
+          conceptualisation &rarr; action&nbsp;: modèle fondateur de l&rsquo;apprentissage
+          expérientiel.
+        </li>
+        <li>
+          <strong>Makransky, G. &amp; Lilleholt, L.</strong> (2018).
+          <em>A structural equation modeling investigation of the emotional value of immersive
+          virtual reality in education</em>. Computers in Human Behavior. &rarr; Présence VR
+          &rarr; motivation&nbsp;; rétention durable &rarr; réflexion post-expérience.
+        </li>
+        <li>
+          <strong>Markus, H. &amp; Nurius, P.</strong> (1986). <em>Possible Selves</em>.
+          American Psychologist. &rarr; Concept fondateur des représentations de soi futures
+          comme moteur de la conduite présente.
+        </li>
+        <li>
+          <strong>Mayer, R.</strong> (2001/2009). <em>Multimedia Learning</em>. Cambridge
+          University Press. &rarr; Théorie de référence sur l&rsquo;orientation de
+          l&rsquo;attention dans les environnements multimédias.
+        </li>
+        <li>
+          <strong>Nota, L., Ferrari, L., Solberg, V.S. &amp; Soresi, S.</strong> (2014).
+          <em>Career Search Self-Efficacy, Family Support and Career Indecision with Italian
+          Youth</em>. International Journal for Educational and Vocational Guidance. &rarr;
+          Interventions combinant expérientiel et réflexivité produisent une clarté
+          vocationnelle durable.
+        </li>
+        <li>
+          <strong>Sweller, J.</strong> (1988).
+          <em>Cognitive Load During Problem Solving: Effects on Learning</em>. Cognitive
+          Science. &rarr; Théorie de la charge cognitive&nbsp;: la préparation réduit la
+          charge extrinsèque et libère les ressources d&rsquo;apprentissage.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       9 · PROLONGER
+       ════════════════════════════════════════ -->
+  <section class="prolonger-section">
+    <div class="ped-container">
+      <p class="prolonger-label">Prolonger</p>
+      <nav class="prolonger-links" aria-label="Liens de navigation — pédagogie">
+        <a href="/catalogue" class="prolonger-link">Voir le catalogue</a>
+        <span class="prolonger-sep" aria-hidden="true">&middot;</span>
+        <a href="/references" class="prolonger-link">Lire les cas clients</a>
+        <span class="prolonger-sep" aria-hidden="true">&middot;</span>
+        <a href="/contact" class="prolonger-link">Nous écrire</a>
+      </nav>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ============================================
+     HERO
+     ============================================ */
+  .ped-hero {
+    background: var(--m360-navy);
+    padding: var(--m360-space-16) var(--m360-space-8) var(--m360-space-14);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ped-hero::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: var(--m360-blue);
+    opacity: 0.07;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  .ped-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .ped-hero-inner :global(.eyebrow) {
+    margin-bottom: var(--m360-space-7);
+    background: rgba(232, 181, 229, 0.15) !important;
+    color: var(--m360-pink) !important;
+  }
+
+  .ped-hero-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 0 0 var(--m360-space-8);
+  }
+
+  .ped-hero-lead {
+    font-size: 18px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 auto;
+    max-width: 64ch;
+  }
+
+  /* ============================================
+     SECTIONS
+     ============================================ */
+  .ped-section {
+    padding: var(--m360-space-16) var(--m360-space-8);
+  }
+
+  .ped-section--white   { background: #fff; }
+  .ped-section--neutral { background: var(--m360-bg-neutral); }
+  .ped-section--navy    { background: var(--m360-navy); }
+
+  .ped-container {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  .ped-container--narrow {
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ped-section :global(.eyebrow) {
+    margin-bottom: var(--m360-space-5);
+  }
+
+  .ped-subsection {
+    margin-top: var(--m360-space-14);
+  }
+
+  .ped-step-sep {
+    margin-top: var(--m360-space-12);
+    padding-top: var(--m360-space-10);
+    border-top: 1px solid var(--m360-border);
+  }
+
+  /* ============================================
+     TYPOGRAPHIE
+     ============================================ */
+  .ped-h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(26px, 3.2vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-6);
+  }
+
+  .ped-h2--light { color: #fff; }
+
+  .ped-h3 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(17px, 2vw, 22px);
+    line-height: 1.3;
+    color: var(--m360-text-title);
+    border-top: 2px solid var(--m360-blue);
+    padding-top: var(--m360-space-4);
+    margin: 0 0 var(--m360-space-5);
+  }
+
+  .ped-lead {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--m360-text-body);
+    margin: 0 0 var(--m360-space-8);
+    max-width: 68ch;
+  }
+
+  .ped-lead--center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* corps de texte avec paragraphes et listes */
+  .ped-body-block {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--m360-text-body);
+    margin-bottom: var(--m360-space-6);
+  }
+
+  .ped-body-block p {
+    margin-bottom: var(--m360-space-4);
+    max-width: 68ch;
+  }
+
+  .ped-body-block ul {
+    list-style: disc;
+    padding-left: var(--m360-space-6);
+    margin: var(--m360-space-4) 0 var(--m360-space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-3);
+  }
+
+  .ped-body-block li {
+    max-width: 64ch;
+  }
+
+  .ped-body-block--light {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  /* single-paragraph shorthand */
+  .ped-body {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--m360-text-body);
+    margin-bottom: var(--m360-space-6);
+    max-width: 68ch;
+  }
+
+  /* ============================================
+     BIBLIO-CARD (DS V0.12 § 13)
+     bord gauche bleu 3px · tag uppercase Karla 700 10px
+     citation italique Karla 14px · source Karla 12px auteur gras
+     ============================================ */
+  .bib-card {
+    border-left: 3px solid var(--m360-blue);
+    background: #f2f5fa;
+    border-radius: 0 var(--m360-radius-lg) var(--m360-radius-lg) 0;
+    padding: var(--m360-space-5) var(--m360-space-6);
+    margin-top: var(--m360-space-6);
+  }
+
+  .bib-card--light {
+    background: rgba(255, 255, 255, 0.07);
+    border-left-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .bib-tag {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--m360-blue);
+    margin-bottom: var(--m360-space-3);
+  }
+
+  .bib-tag--light {
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .bib-quote {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.72;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-3);
+    quotes: none;
+  }
+
+  .bib-quote--light {
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .bib-source {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--m360-text-caption);
+    margin: 0;
+  }
+
+  .bib-source--light {
+    color: rgba(255, 255, 255, 0.48);
+  }
+
+  .bib-source strong {
+    color: var(--m360-text-body);
+    font-weight: 700;
+  }
+
+  .bib-card--light .bib-source strong {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* ============================================
+     COLLECTIF — liste à puces stylée
+     ============================================ */
+  .collectif-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--m360-space-6) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-4);
+  }
+
+  .collectif-list li {
+    padding-left: var(--m360-space-7);
+    position: relative;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--m360-text-body);
+    max-width: 68ch;
+  }
+
+  .collectif-list li::before {
+    content: '';
+    position: absolute;
+    left: var(--m360-space-1);
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--m360-blue);
+  }
+
+  .ped-link-ext {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    color: var(--m360-blue);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: var(--m360-space-4);
+    transition: gap 0.15s ease;
+  }
+
+  .ped-link-ext:hover {
+    gap: var(--m360-space-3);
+  }
+
+  /* ============================================
+     ÉTAPES NUMÉROTÉES 01 / 02 / 03
+     Montserrat 800, gros calibre, couleur marque
+     ============================================ */
+  .step-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--m360-space-4);
+    margin-bottom: var(--m360-space-6);
+  }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(56px, 8vw, 96px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--m360-blue);
+    opacity: 0.15;
+    flex-shrink: 0;
+    user-select: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(20px, 2.4vw, 28px);
+    line-height: 1.15;
+    color: var(--m360-text-title);
+    margin: 0;
+  }
+
+  /* ============================================
+     DÉBRIEF — liste Observer / Conceptualiser / Se projeter
+     ============================================ */
+  .debrief-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--m360-space-4) 0 var(--m360-space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-3);
+  }
+
+  .debrief-list li {
+    padding-left: var(--m360-space-6);
+    position: relative;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--m360-text-body);
+    max-width: 68ch;
+  }
+
+  .debrief-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--m360-blue);
+    font-weight: 700;
+  }
+
+  /* ============================================
+     MODULES — en-tête centré
+     ============================================ */
+  .modules-header {
+    text-align: center;
+    margin-bottom: var(--m360-space-12);
+  }
+
+  .modules-header :global(.eyebrow) {
+    margin-bottom: var(--m360-space-4);
+  }
+
+  .modules-header .ped-h2 {
+    margin-bottom: var(--m360-space-5);
+  }
+
+  /* ============================================
+     CARTES TYPOLOGIE — lettrine débordante (DS § 14)
+     ============================================ */
+  .typo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--m360-space-6);
+    margin-bottom: var(--m360-space-10);
+    /* espace pour la lettrine débordante */
+    padding-top: var(--m360-space-8);
+  }
+
+  .typo-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-2xl);
+    padding: var(--m360-space-8) var(--m360-space-7) var(--m360-space-7);
+  }
+
+  .typo-letter {
+    position: absolute;
+    top: -28px;
+    left: var(--m360-space-5);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 88px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--m360-blue);
+    opacity: 0.11;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .typo-body { position: relative; z-index: 1; }
+
+  .typo-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-1);
+  }
+
+  .typo-subtitle {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--m360-text-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin: 0 0 var(--m360-space-4);
+  }
+
+  .typo-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--m360-text-body);
+    margin: 0 0 var(--m360-space-5);
+  }
+
+  .typo-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--m360-space-2);
+  }
+
+  .typo-chip {
+    display: inline-block;
+    background: var(--m360-blue-bg, #e8f0fb);
+    color: var(--m360-blue);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px var(--m360-space-3);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .modules-note {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--m360-text-caption);
+    text-align: center;
+    max-width: 68ch;
+    margin: 0 auto;
+    padding-top: var(--m360-space-8);
+    border-top: 1px solid var(--m360-border);
+  }
+
+  /* ============================================
+     PORTES DE SORTIE
+     ============================================ */
+  .exit-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-7);
+    margin-top: var(--m360-space-4);
+  }
+
+  .exit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    color: var(--m360-blue);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: gap 0.15s ease;
+  }
+
+  .exit-link:hover { gap: var(--m360-space-3); }
+
+  .exit-espace-text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-2);
+  }
+
+  .exit-espace-note {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--m360-text-caption);
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  /* ============================================
+     BIBLIOGRAPHIE — liste sobre (Karla 13px)
+     ============================================ */
+  .biblio {
+    list-style: none;
+    padding: 0;
+    margin: var(--m360-space-6) 0 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .biblio li {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    line-height: 1.72;
+    color: var(--m360-text-body);
+    padding: var(--m360-space-4) 0;
+    border-bottom: 1px solid var(--m360-border);
+    max-width: 72ch;
+  }
+
+  .biblio li:first-child {
+    border-top: 1px solid var(--m360-border);
+  }
+
+  /* ============================================
+     PROLONGER
+     ============================================ */
+  .prolonger-section {
+    background: var(--m360-bg-neutral);
+    border-top: 1px solid var(--m360-border);
+    padding: var(--m360-space-10) var(--m360-space-8);
+    text-align: center;
+  }
+
+  .prolonger-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--m360-text-caption);
+    margin: 0 0 var(--m360-space-5);
+  }
+
+  .prolonger-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--m360-space-4);
+  }
+
+  .prolonger-link {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--m360-blue);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .prolonger-link:hover { opacity: 0.7; }
+
+  .prolonger-sep {
+    color: var(--m360-text-caption);
+    font-size: 18px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 900px) {
+    .typo-grid {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-10);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ped-section {
+      padding: var(--m360-space-12) var(--m360-space-5);
+    }
+
+    .step-header {
+      gap: var(--m360-space-3);
+    }
+
+    .step-num {
+      font-size: 48px;
+    }
+
+    .prolonger-links {
+      flex-direction: column;
+      gap: var(--m360-space-4);
+    }
+
+    .prolonger-sep { display: none; }
+  }
+</style>
