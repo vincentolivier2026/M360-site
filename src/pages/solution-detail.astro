@@ -1,0 +1,1035 @@
+---
+// src/pages/solution-detail.astro
+// Page "La solution en détail" — présentation complète de l'offre Métiers 360.
+// Blocs : Hero · Casque · Plateforme (3 cartes alternées) · Webapp · Matrice usage · CTA final
+// Images à remplacer : casque-G3-fond-blanc.jpg, backoffice-playlist.png,
+//   backoffice-modules-pedagogiques.png, webapp.jpg (placeholders actifs en attendant)
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LandingHero from '../components/LandingHero.astro';
+---
+
+<BaseLayout
+  title="La solution en détail"
+  description="Casques VR Pico G3, plateforme logicielle, modules p&eacute;dagogiques&nbsp;: d&eacute;couvrez tous les composants de la solution M&eacute;tiers&nbsp;360."
+>
+
+  <!-- ═══════════════════════════════════════════════════
+       BLOC 1 — HERO
+       ═══════════════════════════════════════════════════ -->
+  <LandingHero
+    eyebrow="La solution compl&egrave;te"
+    title="Tout ce dont vous avez besoin&nbsp;pour faire vivre l&rsquo;orientation par l&rsquo;exp&eacute;rience"
+    photo="/images/photohero.jpg"
+    photoAlt="Casque VR Pico G3 Métiers 360"
+    ctaPrimary={{ label: "Demander une d&eacute;mo", href: "#contact-demo" }}
+    ctaSecondary={{ label: "Voir le catalogue", href: "/catalogue" }}
+  />
+
+  <!-- ═══════════════════════════════════════════════════
+       BLOC 2 — LE CASQUE
+       ═══════════════════════════════════════════════════ -->
+  <section class="sd-section sd-casque">
+    <div class="container sd-casque-inner">
+
+      <div class="sd-casque-text">
+        <p class="sd-eyebrow">Le mat&eacute;riel</p>
+        <h2 class="sd-section-title">Un casque VR pr&ecirc;t &agrave; l&rsquo;emploi,<br/>d&egrave;s la premi&egrave;re s&eacute;ance</h2>
+        <p class="sd-body">
+          M&eacute;tiers&nbsp;360 s&rsquo;appuie sur le casque Pico&nbsp;G3, s&eacute;lectionn&eacute; pour sa robustesse en usage intensif et sa simplicit&eacute; de prise en main. Pas de smartphone, pas de PC&nbsp;: les exp&eacute;riences sont install&eacute;es en local sur l&rsquo;appareil. Branchez, allumez, immergez.
+        </p>
+
+        <ul class="sd-mini-cards">
+          <li class="sd-mini-card">
+            <span class="sd-mini-card-icon" aria-hidden="true">
+              <!-- Icône : check cercle -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="var(--m360-blue)" stroke-width="1.8"/>
+                <path d="M8 12l3 3 5-5" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Pr&ecirc;t &agrave; l&rsquo;emploi</strong>
+              <p>Les exp&eacute;riences sont pr&eacute;install&eacute;es. Z&eacute;ro configuration le jour J.</p>
+            </div>
+          </li>
+          <li class="sd-mini-card">
+            <span class="sd-mini-card-icon" aria-hidden="true">
+              <!-- Icône : wifi barré -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M3 7c5-4 13-4 18 0" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M6.5 11c3-2.5 8-2.5 11 0" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M10 15c1.1-1 3-1 4 0" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="12" cy="18.5" r="1.2" fill="var(--m360-blue)"/>
+                <line x1="3" y1="3" x2="21" y2="21" stroke="var(--m360-pink)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Hors-ligne</strong>
+              <p>Aucun acc&egrave;s Wi-Fi requis pendant la s&eacute;ance. Id&eacute;al en d&eacute;placement.</p>
+            </div>
+          </li>
+          <li class="sd-mini-card">
+            <span class="sd-mini-card-icon" aria-hidden="true">
+              <!-- Icône : boîte/colis -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linejoin="round"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="12" y1="22.08" x2="12" y2="12" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Location ou achat</strong>
+              <p>Choisissez la formule adapt&eacute;e &agrave; votre structure : flotte permanente ou location ponctuelle.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sd-casque-visual" aria-hidden="true">
+        <!-- Placeholder : remplacer par casque-G3-fond-blanc.jpg -->
+        <div class="sd-casque-img-wrap">
+          <img
+            src="/images/photohero.jpg"
+            alt="Casque VR Pico G3"
+            class="sd-casque-img"
+            loading="lazy"
+          />
+        </div>
+        <div class="sd-casque-badge">
+          <span class="sd-badge-num">+200</span>
+          <span class="sd-badge-label">exp&eacute;riences<br/>immersives</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       BLOC 3 — LA PLATEFORME LOGICIELLE
+       ═══════════════════════════════════════════════════ -->
+  <section class="sd-section sd-platform">
+    <div class="container">
+      <div class="sd-platform-header">
+        <p class="sd-eyebrow">La plateforme</p>
+        <h2 class="sd-section-title">Trois outils int&eacute;gr&eacute;s pour piloter<br/>votre flotte de bout en bout</h2>
+        <p class="sd-chapeau">
+          Au-del&agrave; du casque, M&eacute;tiers&nbsp;360 vous fournit tout l&rsquo;outillage logiciel pour g&eacute;rer vos contenus, tenir vos casques &agrave; jour et suivre vos usages &mdash; sans comp&eacute;tences techniques requises.
+        </p>
+      </div>
+
+      <!-- Carte 3a — Backoffice (image droite) -->
+      <article class="sd-feature-card sd-feature-card--img-right">
+        <div class="sd-feature-card-text">
+          <span class="sd-feature-num" aria-hidden="true">01</span>
+          <h3 class="sd-feature-title">Le backoffice &mdash; votre catalogue en main</h3>
+          <p class="sd-feature-body">
+            Depuis votre interface web, composez vos playlists en choisissant parmi les exp&eacute;riences disponibles dans votre abonnement. Organisez les contenus par public, par objectif, par secteur. Envoyez vos mises &agrave; jour directement sur les casques via le Loader.
+          </p>
+          <ul class="sd-feature-list">
+            <li>Catalogue de +&nbsp;200&nbsp;exp&eacute;riences class&eacute;es par m&eacute;tier et niveau</li>
+            <li>Cr&eacute;ation de playlists personnalis&eacute;es par groupe</li>
+            <li>Statistiques d&rsquo;usage par exp&eacute;rience et par p&eacute;riode</li>
+          </ul>
+        </div>
+        <div class="sd-feature-card-img">
+          <!-- Placeholder : remplacer par backoffice-playlist.png -->
+          <img
+            src="/images/backoffice.jpg"
+            alt="Interface backoffice Métiers 360 — gestion des playlists"
+            loading="lazy"
+            class="sd-feature-img"
+          />
+        </div>
+      </article>
+
+      <!-- Carte 3b — Loader (image gauche) -->
+      <article class="sd-feature-card sd-feature-card--img-left">
+        <div class="sd-feature-card-img">
+          <!-- Illustration Loader — SVG inline placeholder -->
+          <div class="sd-loader-illustration" aria-hidden="true">
+            <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" class="sd-loader-svg">
+              <!-- Fond arrondi -->
+              <rect width="400" height="300" rx="24" fill="var(--m360-bg-neutral)"/>
+              <!-- Écran laptop stylisé -->
+              <rect x="80" y="60" width="240" height="150" rx="12" fill="var(--m360-navy)" opacity="0.9"/>
+              <rect x="95" y="75" width="210" height="120" rx="6" fill="#0a2340"/>
+              <!-- Barres de progression -->
+              <rect x="115" y="100" width="170" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+              <rect x="115" y="100" width="130" height="8" rx="4" fill="var(--m360-blue)"/>
+              <rect x="115" y="118" width="170" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+              <rect x="115" y="118" width="90" height="8" rx="4" fill="var(--m360-blue)" opacity="0.7"/>
+              <rect x="115" y="136" width="170" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+              <rect x="115" y="136" width="50" height="8" rx="4" fill="var(--m360-blue)" opacity="0.4"/>
+              <!-- Icône sync -->
+              <circle cx="200" cy="170" r="0" fill="none"/>
+              <!-- Base du laptop -->
+              <rect x="60" y="210" width="280" height="12" rx="6" fill="var(--m360-navy)" opacity="0.5"/>
+              <!-- Casques flottants -->
+              <circle cx="120" cy="240" r="18" fill="var(--m360-blue)" opacity="0.15"/>
+              <text x="120" y="245" text-anchor="middle" font-size="18" fill="var(--m360-blue)">⬡</text>
+              <circle cx="200" cy="248" r="18" fill="var(--m360-blue)" opacity="0.15"/>
+              <text x="200" y="253" text-anchor="middle" font-size="18" fill="var(--m360-blue)">⬡</text>
+              <circle cx="280" cy="240" r="18" fill="var(--m360-blue)" opacity="0.15"/>
+              <text x="280" y="245" text-anchor="middle" font-size="18" fill="var(--m360-blue)">⬡</text>
+              <!-- Flèches sync -->
+              <path d="M138 238 L182 248" stroke="var(--m360-blue)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+              <path d="M218 248 L262 240" stroke="var(--m360-blue)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="sd-feature-card-text">
+          <span class="sd-feature-num" aria-hidden="true">02</span>
+          <h3 class="sd-feature-title">Le Loader &mdash; vos casques toujours &agrave; jour</h3>
+          <p class="sd-feature-body">
+            Le Loader est une application Windows simple &agrave; installer qui synchronise vos casques avec votre backoffice. Branchez votre flotte en USB, lancez le Loader&nbsp;: il t&eacute;l&eacute;charge et installe automatiquement toutes les exp&eacute;riences de votre playlist. Cinq minutes pour vingt casques.
+          </p>
+          <ul class="sd-feature-list">
+            <li>Mise &agrave; jour simultan&eacute;e de toute votre flotte</li>
+            <li>D&eacute;tection automatique des nouvelles exp&eacute;riences</li>
+            <li>Journal des versions install&eacute;es par casque</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Carte 3c — Modules (image droite) -->
+      <article class="sd-feature-card sd-feature-card--img-right">
+        <div class="sd-feature-card-text">
+          <span class="sd-feature-num" aria-hidden="true">03</span>
+          <h3 class="sd-feature-title">Les modules p&eacute;dagogiques &mdash; un catalogue vivant</h3>
+          <p class="sd-feature-body">
+            Chaque exp&eacute;rience Métiers&nbsp;360 est con&ccedil;ue avec un professionnel du m&eacute;tier et valid&eacute;e sur le terrain. Le catalogue s&rsquo;&eacute;toffe r&eacute;guli&egrave;rement&nbsp;: de nouveaux m&eacute;tiers, de nouveaux secteurs, de nouvelles r&eacute;gions. Votre abonnement vous donne acc&egrave;s &agrave; toutes les nouvelles sorties sans surco&ucirc;t.
+          </p>
+          <ul class="sd-feature-list">
+            <li>+&nbsp;200&nbsp;m&eacute;tiers issus de +&nbsp;50&nbsp;secteurs professionnels</li>
+            <li>Nouvelles exp&eacute;riences incluses dans l&rsquo;abonnement</li>
+            <li>Fiches p&eacute;dagogiques t&eacute;l&eacute;chargeables pour chaque exp&eacute;rience</li>
+          </ul>
+        </div>
+        <div class="sd-feature-card-img">
+          <!-- Placeholder : remplacer par backoffice-modules-pedagogiques.png -->
+          <img
+            src="/images/backoffice.jpg"
+            alt="Catalogue de modules pédagogiques Métiers 360"
+            loading="lazy"
+            class="sd-feature-img"
+          />
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       BLOC 4 — LA WEBAPP DE SUIVI
+       ═══════════════════════════════════════════════════ -->
+  <section class="sd-section sd-webapp">
+    <div class="container sd-webapp-inner">
+
+      <div class="sd-webapp-visual">
+        <!-- Placeholder : remplacer par webapp.jpg -->
+        <div class="sd-webapp-img-wrap">
+          <img
+            src="/images/forum-jeunes.jpg"
+            alt="Webapp de suivi Métiers 360"
+            class="sd-webapp-img"
+            loading="lazy"
+          />
+          <!-- Badge PDF -->
+          <div class="sd-webapp-pdf-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <line x1="9" y1="15" x2="15" y2="15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="9" y1="11" x2="15" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <span>Trace PDF g&eacute;n&eacute;r&eacute;e automatiquement</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-webapp-text">
+        <p class="sd-eyebrow">Le suivi</p>
+        <h2 class="sd-section-title">Une webapp pour garder la main &agrave; chaque &eacute;tape</h2>
+        <p class="sd-body">
+          Sur tablette ou smartphone, l&rsquo;animateur dispose d&rsquo;une interface web pour piloter sa s&eacute;ance en temps r&eacute;el&nbsp;: lancement synchronis&eacute;, minutage des immersions, recueil des retours. La s&eacute;ance termin&eacute;e, une trace p&eacute;dagogique en PDF est g&eacute;n&eacute;r&eacute;e automatiquement.
+        </p>
+
+        <ul class="sd-mini-cards sd-mini-cards--vertical">
+          <li class="sd-mini-card">
+            <span class="sd-mini-card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="var(--m360-blue)" stroke-width="1.8"/>
+                <polyline points="12 6 12 12 16 14" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Pilotage en direct</strong>
+              <p>D&eacute;marrez et synchronisez les casques depuis votre &eacute;cran d&rsquo;animateur.</p>
+            </div>
+          </li>
+          <li class="sd-mini-card">
+            <span class="sd-mini-card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="9" cy="7" r="4" stroke="var(--m360-blue)" stroke-width="1.8"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Recueil des impressions</strong>
+              <p>Les participants notent leurs ressentis apr&egrave;s chaque exp&eacute;rience.</p>
+            </div>
+          </li>
+          <li class="sd-mini-card">
+            <span class="sd-mini-card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linejoin="round"/>
+                <polyline points="14 2 14 8 20 8" stroke="var(--m360-blue)" stroke-width="1.8"/>
+                <line x1="16" y1="13" x2="8" y2="13" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="16" y1="17" x2="8" y2="17" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+                <polyline points="10 9 9 9 8 9" stroke="var(--m360-blue)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Trace p&eacute;dagogique PDF</strong>
+              <p>Un compte-rendu de s&eacute;ance t&eacute;l&eacute;chargeable, pr&ecirc;t pour le dossier de suivi.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       BLOC 5 — MATRICE USAGE 3 × 3
+       ═══════════════════════════════════════════════════ -->
+  <section class="sd-section sd-matrix">
+    <div class="container">
+      <div class="sd-matrix-header">
+        <p class="sd-eyebrow">Pour chaque moment, chaque acteur</p>
+        <h2 class="sd-section-title">Une solution structur&eacute;e autour de votre s&eacute;ance</h2>
+        <p class="sd-chapeau">
+          Avant, pendant, apr&egrave;s &mdash; chaque temps de la s&eacute;ance est pens&eacute; pour chaque type d&rsquo;acteur. La solution M&eacute;tiers&nbsp;360 s&rsquo;int&egrave;gre dans votre processus sans le remplacer.
+        </p>
+      </div>
+
+      <div class="sd-matrix-table" role="table" aria-label="Matrice d&apos;usage avant, pendant, après par type d&apos;acteur">
+
+        <!-- En-têtes colonnes -->
+        <div class="sd-matrix-row sd-matrix-header-row" role="row">
+          <div class="sd-matrix-cell sd-matrix-cell--corner" role="columnheader" aria-label="Acteur / Moment"></div>
+          <div class="sd-matrix-cell sd-matrix-cell--col-head" role="columnheader">
+            <span class="sd-matrix-col-label">Avant</span>
+          </div>
+          <div class="sd-matrix-cell sd-matrix-cell--col-head" role="columnheader">
+            <span class="sd-matrix-col-label">Pendant</span>
+          </div>
+          <div class="sd-matrix-cell sd-matrix-cell--col-head" role="columnheader">
+            <span class="sd-matrix-col-label">Apr&egrave;s</span>
+          </div>
+        </div>
+
+        <!-- Ligne Animateur -->
+        <div class="sd-matrix-row" role="row">
+          <div class="sd-matrix-cell sd-matrix-cell--row-head" role="rowheader">
+            <span class="sd-matrix-row-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/></svg>
+            </span>
+            Animateur
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">S&eacute;lectionne les exp&eacute;riences dans le backoffice et pr&eacute;pare sa playlist pour le public du jour.</p>
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">Pilote la s&eacute;ance depuis la webapp&nbsp;: lancement, timing, observation des r&eacute;actions.</p>
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">T&eacute;l&eacute;charge la trace PDF et l&rsquo;int&egrave;gre au dossier de suivi de chaque participant.</p>
+          </div>
+        </div>
+
+        <!-- Ligne Bénéficiaire -->
+        <div class="sd-matrix-row" role="row">
+          <div class="sd-matrix-cell sd-matrix-cell--row-head" role="rowheader">
+            <span class="sd-matrix-row-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            B&eacute;n&eacute;ficiaire
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">Re&ccedil;oit une br&egrave;ve pr&eacute;sentation du dispositif et des exp&eacute;riences qu&rsquo;il va vivre.</p>
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">S&rsquo;immerge dans les m&eacute;tiers choisis, renseigne ses ressentis sur la webapp apr&egrave;s chaque exp&eacute;rience.</p>
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">Prend part au d&eacute;brief, articule son exp&eacute;rience v&eacute;cue &agrave; son projet professionnel.</p>
+          </div>
+        </div>
+
+        <!-- Ligne Structure -->
+        <div class="sd-matrix-row" role="row">
+          <div class="sd-matrix-cell sd-matrix-cell--row-head" role="rowheader">
+            <span class="sd-matrix-row-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            Structure
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">Configure sa flotte via le backoffice, met &agrave; jour les casques avec le Loader avant la session.</p>
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">Dispose de statistiques en temps r&eacute;el sur les exp&eacute;riences en cours.</p>
+          </div>
+          <div class="sd-matrix-cell" role="cell">
+            <p class="sd-matrix-cell-content">Consulte les rapports d&rsquo;usage agrég&eacute;s par p&eacute;riode pour &eacute;valuer l&rsquo;activit&eacute; et justifier le renouvellement.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       BLOC 6 — CTA FINAL
+       ═══════════════════════════════════════════════════ -->
+  <section class="sd-section sd-cta-final" id="contact-demo">
+    <div class="container sd-cta-inner">
+      <p class="sd-eyebrow sd-eyebrow--light">Passez &agrave; l&rsquo;&eacute;tape suivante</p>
+      <h2 class="sd-cta-title">Voyez la solution en action<br/>dans votre contexte</h2>
+      <p class="sd-cta-sub">
+        En 30&nbsp;minutes, nous vous montrons le mat&eacute;riel, la plateforme et les exp&eacute;riences adaptées &agrave; vos publics.
+      </p>
+      <div class="sd-cta-actions">
+        <button class="sd-cta-btn-primary" data-open-contact-modal>
+          Demander une d&eacute;mo
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <a href="/catalogue" class="sd-cta-link">Explorer le catalogue</a>
+        <a href="/accompagnement" class="sd-cta-link">D&eacute;couvrir les usages</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ============================================
+     UTILITAIRES PARTAGÉS
+     ============================================ */
+  .sd-section {
+    padding: var(--m360-space-16) 0;
+  }
+
+  .sd-eyebrow {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--m360-blue);
+    margin: 0 0 var(--m360-space-4);
+  }
+
+  .sd-section-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 3.5vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-6);
+  }
+
+  .sd-body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--m360-text-body);
+    max-width: 60ch;
+    margin: 0 0 var(--m360-space-8);
+  }
+
+  .sd-chapeau {
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--m360-text-body);
+    max-width: 64ch;
+    margin: 0 0 var(--m360-space-10);
+  }
+
+  /* ============================================
+     MINI-CARDS (attributs produit)
+     ============================================ */
+  .sd-mini-cards {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-4);
+  }
+
+  .sd-mini-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--m360-space-4);
+    background: var(--m360-bg-neutral);
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-xl);
+    padding: var(--m360-space-4) var(--m360-space-5);
+  }
+
+  .sd-mini-card-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .sd-mini-card strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--m360-text-title);
+    margin-bottom: 2px;
+  }
+
+  .sd-mini-card p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--m360-text-body);
+    margin: 0;
+  }
+
+  /* ============================================
+     BLOC 2 — CASQUE
+     ============================================ */
+  .sd-casque {
+    background: var(--m360-bg-neutral);
+    border-top: 1px solid var(--m360-border);
+    border-bottom: 1px solid var(--m360-border);
+  }
+
+  .sd-casque-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--m360-space-16);
+    align-items: center;
+  }
+
+  .sd-casque-visual {
+    position: relative;
+  }
+
+  .sd-casque-img-wrap {
+    border-radius: var(--m360-radius-2xl);
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(2, 31, 63, 0.12);
+    background: #fff;
+  }
+
+  .sd-casque-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .sd-casque-badge {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    background: var(--m360-blue);
+    color: #fff;
+    border-radius: var(--m360-radius-2xl);
+    padding: var(--m360-space-4) var(--m360-space-5);
+    text-align: center;
+    box-shadow: var(--m360-shadow-blue);
+    min-width: 100px;
+  }
+
+  .sd-badge-num {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .sd-badge-label {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0.85;
+    line-height: 1.3;
+  }
+
+  /* ============================================
+     BLOC 3 — PLATEFORME
+     ============================================ */
+  .sd-platform-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto var(--m360-space-14);
+  }
+
+  .sd-platform-header .sd-eyebrow,
+  .sd-platform-header .sd-section-title {
+    text-align: center;
+  }
+
+  .sd-platform-header .sd-chapeau {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* Feature card alternée */
+  .sd-feature-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--m360-space-12);
+    align-items: center;
+    margin-bottom: var(--m360-space-16);
+    padding-bottom: var(--m360-space-16);
+    border-bottom: 1px solid var(--m360-border);
+  }
+
+  .sd-feature-card:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .sd-feature-card--img-left .sd-feature-card-img {
+    order: -1;
+  }
+
+  .sd-feature-num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 48px;
+    color: var(--m360-blue);
+    opacity: 0.18;
+    line-height: 1;
+    display: block;
+    margin-bottom: var(--m360-space-2);
+    letter-spacing: -0.04em;
+  }
+
+  .sd-feature-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(20px, 2.5vw, 26px);
+    color: var(--m360-text-title);
+    margin: 0 0 var(--m360-space-4);
+    line-height: 1.25;
+  }
+
+  .sd-feature-body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--m360-text-body);
+    margin-bottom: var(--m360-space-5);
+  }
+
+  .sd-feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m360-space-2);
+  }
+
+  .sd-feature-list li {
+    font-size: 14px;
+    color: var(--m360-text-body);
+    padding-left: var(--m360-space-5);
+    position: relative;
+  }
+
+  .sd-feature-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--m360-blue);
+    opacity: 0.6;
+  }
+
+  .sd-feature-img {
+    width: 100%;
+    border-radius: var(--m360-radius-2xl);
+    box-shadow: 0 16px 48px rgba(2, 31, 63, 0.1);
+    display: block;
+    border: 1px solid var(--m360-border);
+  }
+
+  /* Loader illustration */
+  .sd-loader-illustration {
+    background: var(--m360-bg-neutral);
+    border-radius: var(--m360-radius-2xl);
+    border: 1px solid var(--m360-border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--m360-space-6);
+    aspect-ratio: 4/3;
+  }
+
+  .sd-loader-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ============================================
+     BLOC 4 — WEBAPP
+     ============================================ */
+  .sd-webapp {
+    background: var(--m360-bg-neutral);
+    border-top: 1px solid var(--m360-border);
+    border-bottom: 1px solid var(--m360-border);
+  }
+
+  .sd-webapp-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--m360-space-16);
+    align-items: center;
+  }
+
+  .sd-webapp-visual {
+    position: relative;
+  }
+
+  .sd-webapp-img-wrap {
+    border-radius: var(--m360-radius-2xl);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(2, 31, 63, 0.12);
+  }
+
+  .sd-webapp-img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .sd-webapp-pdf-badge {
+    position: absolute;
+    bottom: var(--m360-space-5);
+    left: var(--m360-space-5);
+    right: var(--m360-space-5);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: var(--m360-radius-xl);
+    padding: var(--m360-space-3) var(--m360-space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--m360-space-3);
+    box-shadow: 0 4px 16px rgba(2, 31, 63, 0.12);
+    border: 1px solid var(--m360-border);
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--m360-text-title);
+  }
+
+  .sd-webapp-pdf-badge svg {
+    flex-shrink: 0;
+    color: var(--m360-blue);
+  }
+
+  .sd-mini-cards--vertical {
+    gap: var(--m360-space-3);
+  }
+
+  /* ============================================
+     BLOC 5 — MATRICE
+     ============================================ */
+  .sd-matrix {
+    background: #fff;
+  }
+
+  .sd-matrix-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto var(--m360-space-12);
+  }
+
+  .sd-matrix-header .sd-eyebrow,
+  .sd-matrix-header .sd-section-title {
+    text-align: center;
+  }
+
+  .sd-matrix-header .sd-chapeau {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .sd-matrix-table {
+    border: 1px solid var(--m360-border);
+    border-radius: var(--m360-radius-2xl);
+    overflow: hidden;
+  }
+
+  .sd-matrix-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--m360-border);
+  }
+
+  .sd-matrix-row:last-child {
+    border-bottom: none;
+  }
+
+  .sd-matrix-cell {
+    padding: var(--m360-space-5) var(--m360-space-6);
+    border-right: 1px solid var(--m360-border);
+  }
+
+  .sd-matrix-cell:last-child {
+    border-right: none;
+  }
+
+  .sd-matrix-header-row {
+    background: var(--m360-navy);
+  }
+
+  .sd-matrix-cell--corner {
+    background: transparent;
+  }
+
+  .sd-matrix-cell--col-head {
+    background: transparent;
+  }
+
+  .sd-matrix-col-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.9);
+    display: block;
+    text-align: center;
+  }
+
+  .sd-matrix-cell--row-head {
+    background: var(--m360-bg-neutral);
+    display: flex;
+    align-items: center;
+    gap: var(--m360-space-3);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--m360-text-title);
+  }
+
+  .sd-matrix-row-icon {
+    flex-shrink: 0;
+    color: var(--m360-blue);
+    opacity: 0.7;
+  }
+
+  .sd-matrix-cell-content {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--m360-text-body);
+    margin: 0;
+  }
+
+  /* ============================================
+     BLOC 6 — CTA FINAL
+     ============================================ */
+  .sd-cta-final {
+    background: var(--m360-navy);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sd-cta-final::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: var(--m360-blue);
+    opacity: 0.08;
+    filter: blur(80px);
+    top: -150px;
+    right: -100px;
+    pointer-events: none;
+  }
+
+  .sd-cta-final::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: var(--m360-pink);
+    opacity: 0.1;
+    filter: blur(80px);
+    bottom: -150px;
+    left: -100px;
+    pointer-events: none;
+  }
+
+  .sd-cta-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+    padding-top: var(--m360-space-4);
+    padding-bottom: var(--m360-space-4);
+  }
+
+  .sd-eyebrow--light {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .sd-cta-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: #fff;
+    margin: 0 0 var(--m360-space-5);
+  }
+
+  .sd-cta-sub {
+    font-size: 17px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 0 var(--m360-space-8);
+  }
+
+  .sd-cta-actions {
+    display: flex;
+    gap: var(--m360-space-6);
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .sd-cta-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m360-space-2);
+    background: var(--m360-blue);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    padding: var(--m360-space-4) var(--m360-space-7);
+    border-radius: var(--m360-radius-lg);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--m360-shadow-blue);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .sd-cta-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--m360-shadow-blue-hover);
+  }
+
+  .sd-cta-link {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    padding-bottom: 2px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .sd-cta-link:hover {
+    color: #fff;
+    border-bottom-color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+  }
+
+  /* ============================================
+     RESPONSIVE — 968px
+     ============================================ */
+  @media (max-width: 967px) {
+    .sd-casque-inner,
+    .sd-webapp-inner {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-10);
+    }
+
+    .sd-casque-visual {
+      order: -1;
+    }
+
+    .sd-casque-badge {
+      bottom: var(--m360-space-3);
+      right: var(--m360-space-3);
+    }
+
+    .sd-feature-card {
+      grid-template-columns: 1fr;
+      gap: var(--m360-space-8);
+    }
+
+    .sd-feature-card--img-left .sd-feature-card-img {
+      order: 0;
+    }
+
+    .sd-matrix-row {
+      grid-template-columns: 120px 1fr 1fr 1fr;
+    }
+
+    .sd-matrix-cell {
+      padding: var(--m360-space-4);
+    }
+  }
+
+  /* ============================================
+     RESPONSIVE — 640px
+     ============================================ */
+  @media (max-width: 639px) {
+    .sd-section {
+      padding: var(--m360-space-12) 0;
+    }
+
+    .sd-casque-img,
+    .sd-webapp-img {
+      height: 280px;
+    }
+
+    .sd-matrix-table {
+      overflow-x: auto;
+    }
+
+    .sd-matrix-row {
+      min-width: 600px;
+    }
+
+    .sd-cta-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--m360-space-4);
+    }
+
+    .sd-cta-btn-primary {
+      justify-content: center;
+    }
+  }
+</style>
