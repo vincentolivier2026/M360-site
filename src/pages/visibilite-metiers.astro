@@ -72,17 +72,6 @@ const targets = [
   },
 ];
 
-// ── Bloc 5 : Preuve — logos ────────────────────────────────────────────────────
-// ⚠️ Remplacer les textes par les fichiers <img> dès que les logos sont disponibles
-const logos = [
-  { name: 'Ministère de la Défense' },
-  { name: 'SNCF' },
-  { name: 'Région Pays de la Loire' },
-  { name: 'Manpower' },
-  { name: 'France Travail' },
-  { name: 'OPCO Atlas' },
-  { name: 'Mission Locale La Réunion' },
-];
 
 // ── Bloc 6 : Réassurance ──────────────────────────────────────────────────────
 const reassurance = [
@@ -187,19 +176,26 @@ const reassurance = [
       </header>
 
       <!-- Mur de logos -->
-      <!-- ⚠️ Remplacer les <span> par <img src="..." alt="..."> dès que les logos sont disponibles -->
       <ul class="logo-wall" role="list" aria-label="Références clients">
-        {logos.map(logo => (
-          <li class="logo-item">
-            <span class="logo-placeholder">{logo.name}</span>
-          </li>
-        ))}
+        <li class="logo-item">
+          <img src="/images/logo-armee.png" alt="Ministère des Armées" class="logo-img" loading="lazy" />
+        </li>
+        <li class="logo-item">
+          <img src="/images/logo-snfc.jpeg" alt="SNCF" class="logo-img" loading="lazy" />
+        </li>
+        <li class="logo-item">
+          <img src="/images/logo-manpower.png" alt="Manpower Talent Solutions" class="logo-img" loading="lazy" />
+        </li>
+        <li class="logo-item">
+          <img src="/images/logo-france-travail.png" alt="France Travail" class="logo-img" loading="lazy" />
+        </li>
+        <li class="logo-item">
+          <img src="/images/logo-bfc.jpeg" alt="Région Bourgogne-Franche-Comté" class="logo-img" loading="lazy" />
+        </li>
+        <li class="logo-item">
+          <img src="/images/logo-opcommerce.png" alt="OPCO Commerce" class="logo-img" loading="lazy" />
+        </li>
       </ul>
-
-      <a href="/references" class="proof-link">
-        Voir toutes nos références
-        <span aria-hidden="true">→</span>
-      </a>
     </div>
   </section>
 
@@ -329,49 +325,35 @@ const reassurance = [
 
   .logo-item {
     flex: 0 0 auto;
-  }
-
-  /* Placeholder texte — à remplacer par <img> */
-  .logo-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 60px;
-    padding: 0 var(--m360-space-6);
     background: #fff;
     border: 1px solid var(--m360-border);
     border-radius: var(--m360-radius-xl);
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--m360-text-caption);
-    white-space: nowrap;
-    min-width: 120px;
+    padding: var(--m360-space-3) var(--m360-space-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .logo-item:hover .logo-placeholder {
+  .logo-item:hover {
     border-color: var(--m360-blue);
     box-shadow: var(--m360-shadow-sm);
   }
 
-  /* Lien références */
-  .proof-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--m360-space-2);
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--m360-blue);
-    text-decoration: none;
-    transition: gap 0.15s ease;
+  .logo-img {
+    height: 44px;
+    width: auto;
+    max-width: 140px;
+    object-fit: contain;
+    display: block;
+    filter: grayscale(100%);
+    opacity: 0.75;
+    transition: filter 0.2s ease, opacity 0.2s ease;
   }
 
-  .proof-link:hover {
-    text-decoration: none;
-    gap: var(--m360-space-3);
+  .logo-item:hover .logo-img {
+    filter: grayscale(0%);
+    opacity: 1;
   }
 
   /* ============================================
